@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
+
+/* custom-font workSans */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-work-sans: 'Work Sans', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Tailwind v4 design tokens */
+@theme {
+  /* Premium neutral scale */
+  --color-neutral-50:  #fafafa;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-500: #71717a;
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-800: #27272a;
+  --color-neutral-900: #18181b;
+  --color-neutral-950: #09090b;
+
+  /* Brand teal/cyan */
+  --color-primary-50:  #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488;
+  --color-primary-700: #0f766e;
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+  --color-primary-950: #042f2e;
+
+  /* Semantic tokens */
+  --color-background: var(--color-neutral-50);
+  --color-foreground: var(--color-neutral-900);
+  --color-border: var(--color-neutral-200);
+  --color-surface: var(--color-neutral-50);
+  --color-surface-foreground: var(--color-neutral-900);
+  --color-primary: var(--color-primary-600);
+  --radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark theme overrides */
+@theme .dark {
+  --color-background: var(--color-neutral-950);
+  --color-foreground: var(--color-neutral-50);
+  --color-border: var(--color-neutral-800);
+  --color-surface: var(--color-neutral-900);
+  --color-surface-foreground: var(--color-neutral-50);
+  --color-primary: var(--color-primary-500);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Short semantic utilities with @apply */
+@utility app { @apply bg-background text-foreground antialiased; }
+@utility brand { @apply text-primary; }
+@utility bg-brand { @apply bg-primary text-white; }
+@utility border-base { border-color: var(--color-border); }
+@utility surface { background-color: var(--color-surface); color: var(--color-surface-foreground); }
+@utility card { @apply rounded-xl shadow-sm p-4 border; border-color: var(--color-border); background-color: var(--color-surface); color: var(--color-surface-foreground); }
+@utility muted { @apply text-neutral-500; }
+
+@utility btn {
+  @apply inline-flex items-center justify-center font-semibold rounded-md h-10 px-4 gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none cursor-pointer;
 }
+@utility btn-primary { @apply inline-flex items-center justify-center font-semibold rounded-md h-10 px-4 gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none bg-primary text-white hover:bg-primary-700; }
+@utility btn-ghost { @apply inline-flex items-center justify-center font-semibold rounded-md h-10 px-4 gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none bg-transparent text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800; }
+@utility btn-outline { @apply inline-flex items-center justify-center font-semibold rounded-md h-10 px-4 gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none border hover:bg-neutral-50 dark:hover:bg-neutral-900; border-color: var(--color-border); }
+
+@utility input { @apply h-10 w-full rounded-md border bg-transparent px-3 text-foreground placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500; border-color: var(--color-border); }
+@utility badge { @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200; }
+@utility link { @apply underline underline-offset-4 text-primary-600 hover:text-primary-700; }
+
