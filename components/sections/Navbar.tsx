@@ -12,7 +12,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Badge } from "@/components/ui/badge";
-import { SCHOOL_CONFIG } from "@/lib/constants";
+import { SCHOOL_INFO } from "@/lib/constants/school-info";
+import { NAVIGATION_MENU } from "@/lib/constants/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
@@ -21,17 +22,8 @@ import {
   Mail,
   MapPin,
   GraduationCap,
-  Calendar,
   Sparkles,
-  BookOpen,
-  Award,
   Users,
-  Building,
-  MessageSquare,
-  Star,
-  Trophy,
-  Palette,
-  Globe,
 } from "lucide-react";
 
 export function Navbar() {
@@ -46,170 +38,6 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Premium dropdown menu configuration
-  const menuItems = [
-    {
-      title: "About",
-      href: "#about",
-      icon: Building,
-      description: "Discover our heritage and mission",
-      items: [
-        { 
-          title: "Our Story", 
-          href: "#story", 
-          description: "Founded with a vision for excellence",
-          icon: BookOpen 
-        },
-        { 
-          title: "Mission & Vision", 
-          href: "#mission", 
-          description: "Our guiding principles and goals",
-          icon: Star 
-        },
-        { 
-          title: "Leadership Team", 
-          href: "#team", 
-          description: "Meet our dedicated educators",
-          icon: Users 
-        },
-        { 
-          title: "Awards & Recognition", 
-          href: "#awards", 
-          description: "Celebrating our achievements",
-          icon: Trophy 
-        },
-      ],
-    },
-    {
-      title: "Academics",
-      href: "#academics",
-      icon: BookOpen,
-      description: "Excellence in education",
-      items: [
-        { 
-          title: "Curriculum", 
-          href: "#curriculum", 
-          description: "Comprehensive academic framework",
-          icon: BookOpen 
-        },
-        { 
-          title: "Programs", 
-          href: "#programs", 
-          description: "Early Years to Higher Secondary",
-          icon: GraduationCap 
-        },
-        { 
-          title: "Facilities", 
-          href: "#facilities", 
-          description: "Modern learning environments",
-          icon: Building 
-        },
-        { 
-          title: "Digital Learning", 
-          href: "#technology", 
-          description: "Technology-enhanced education",
-          icon: Globe 
-        },
-      ],
-    },
-    {
-      title: "Student Life",
-      href: "#student-life",
-      icon: Award,
-      description: "Beyond the classroom",
-      items: [
-        { 
-          title: "Sports & Athletics", 
-          href: "#sports", 
-          description: "Physical excellence and teamwork",
-          icon: Trophy 
-        },
-        { 
-          title: "Arts & Culture", 
-          href: "#arts", 
-          description: "Creative expression and talent",
-          icon: Palette 
-        },
-        { 
-          title: "Clubs & Societies", 
-          href: "#clubs", 
-          description: "Student organizations and interests",
-          icon: Users 
-        },
-        { 
-          title: "Events & Activities", 
-          href: "#events", 
-          description: "Celebrations and competitions",
-          icon: Calendar 
-        },
-      ],
-    },
-    {
-      title: "Admissions",
-      href: "#admissions",
-      icon: GraduationCap,
-      description: "Join our community",
-      items: [
-        { 
-          title: "Application Process", 
-          href: "#application", 
-          description: "Step-by-step admission guide",
-          icon: BookOpen 
-        },
-        { 
-          title: "Requirements", 
-          href: "#requirements", 
-          description: "Eligibility and documentation",
-          icon: Star 
-        },
-        { 
-          title: "Fee Structure", 
-          href: "#fees", 
-          description: "Transparent pricing information",
-          icon: Building 
-        },
-        { 
-          title: "Scholarships", 
-          href: "#scholarships", 
-          description: "Financial assistance programs",
-          icon: Award 
-        },
-      ],
-    },
-    {
-      title: "Contact",
-      href: "#contact",
-      icon: MessageSquare,
-      description: "Get in touch with us",
-      items: [
-        { 
-          title: "Contact Information", 
-          href: "#contact-info", 
-          description: "Phone, email, and address details",
-          icon: Phone 
-        },
-        { 
-          title: "Visit Campus", 
-          href: "#visit", 
-          description: "Schedule a campus tour",
-          icon: MapPin 
-        },
-        { 
-          title: "Send Message", 
-          href: "#message", 
-          description: "Contact form and inquiries",
-          icon: Mail 
-        },
-        { 
-          title: "Directions", 
-          href: "#directions", 
-          description: "Location and travel information",
-          icon: Globe 
-        },
-      ],
-    },
-  ];
 
   return (
     <motion.nav
@@ -239,15 +67,15 @@ export function Navbar() {
             }`}>
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3" />
-                <span>{SCHOOL_CONFIG.CONTACT.PHONE}</span>
+                <span>{SCHOOL_INFO.contact.phone}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3" />
-                <span>{SCHOOL_CONFIG.CONTACT.EMAIL}</span>
+                <span>{SCHOOL_INFO.contact.email}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-3 w-3" />
-                <span>{SCHOOL_CONFIG.CONTACT.ADDRESS}</span>
+                <span>{SCHOOL_INFO.contact.address}</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -282,7 +110,7 @@ export function Navbar() {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full blur-lg opacity-20 animate-pulse" />
                 <img
                   src="/school-logo.svg"
-                  alt={SCHOOL_CONFIG.SCHOOL_NAME}
+                  alt={SCHOOL_INFO.name}
                   className="h-12 w-12 relative z-10"
                 />
               </div>
@@ -290,12 +118,12 @@ export function Navbar() {
                 <h1 className={`font-bold text-xl transition-colors duration-300 ${
                   isScrolled ? 'text-gray-900' : 'text-white'
                 }`}>
-                  {SCHOOL_CONFIG.SCHOOL_NAME}
+                  {SCHOOL_INFO.name}
                 </h1>
                 <p className={`text-sm transition-colors duration-300 ${
                   isScrolled ? 'text-gray-600' : 'text-white/80'
                 }`}>
-                  {SCHOOL_CONFIG.TAGLINE}
+                  {SCHOOL_INFO.tagline}
                 </p>
               </div>
             </Link>
@@ -308,8 +136,9 @@ export function Navbar() {
             transition={{ delay: 0.4 }}
             className="hidden lg:block"
           >
-            <NavigationMenu>
-              <NavigationMenuList className="flex space-x-2">              {menuItems.map((item) => {
+            <NavigationMenu viewport={false}>
+              <NavigationMenuList className="flex space-x-2">
+                {NAVIGATION_MENU.map((item) => {
                   const Icon = item.icon;
                   return (
                     <NavigationMenuItem key={item.title}>
@@ -428,7 +257,7 @@ export function Navbar() {
           >
             <div className="container mx-auto px-6 py-6">
               <div className="space-y-4">
-                {menuItems.map((item, index) => {
+                {NAVIGATION_MENU.map((item, index) => {
                   const Icon = item.icon;
                   return (
                     <motion.div

@@ -85,7 +85,7 @@ export function Programs() {
                     </CardDescription>
                     
                     <div className="space-y-3 py-4">
-                      {program.features.map((feature, idx) => (
+                      {program.features.map((feature: string, idx: number) => (
                         <motion.div 
                           key={idx} 
                           className="flex items-center text-sm text-gray-600"
