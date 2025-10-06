@@ -51,7 +51,7 @@ export function Testimonials() {
                 <Quote className="w-12 h-12 text-blue-600 mx-auto mb-6" />
                 
                 <blockquote className="text-lg lg:text-xl text-gray-700 mb-8 leading-relaxed">
-                  "{SCHOOL_CONFIG.TESTIMONIALS[currentIndex].content}"
+                  &quot;{SCHOOL_CONFIG.TESTIMONIALS[currentIndex].content}&quot;
                 </blockquote>
                 
                 <div className="flex items-center justify-center space-x-4">
@@ -125,7 +125,7 @@ export function Testimonials() {
                 <CardContent className="p-6">
                   <Quote className="w-8 h-8 text-blue-600 mb-4" />
                   <p className="text-gray-600 mb-6 line-clamp-4">
-                    "{testimonial.content}"
+                    &quot;{testimonial.content}&quot;
                   </p>
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 relative rounded-full overflow-hidden">

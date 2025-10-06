@@ -31,7 +31,7 @@ export function Highlights() {
             Why Choose {SCHOOL_CONFIG.SCHOOL_NAME}?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover what makes our school exceptional and why families trust us with their children's education.
+            Discover what makes our school exceptional and why families trust us with their children&apos;s education.
           </p>
         </motion.div>
 

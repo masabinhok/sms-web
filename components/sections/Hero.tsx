@@ -16,7 +16,7 @@ export function Hero() {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 lg:pt-20">
       {/* Premium Background with Parallax Effect */}
       <motion.div 
         className="absolute inset-0 z-0"

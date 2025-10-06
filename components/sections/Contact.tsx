@@ -46,7 +46,7 @@ export function Contact() {
             Get in Touch
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Have questions about admissions, programs, or campus life? We're here to help you learn more about {SCHOOL_CONFIG.SCHOOL_NAME}.
+            Have questions about admissions, programs, or campus life? We&apos;re here to help you learn more about {SCHOOL_CONFIG.SCHOOL_NAME}.
           </p>
         </motion.div>
 
