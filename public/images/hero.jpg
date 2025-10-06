@@ -1,0 +1,26 @@
+<!-- Hero Background Placeholder -->
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="url(#gradient)"/>
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E3A8A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- School building silhouette -->
+  <rect x="100" y="400" width="200" height="300" fill="rgba(255,255,255,0.1)"/>
+  <rect x="350" y="300" width="250" height="400" fill="rgba(255,255,255,0.1)"/>
+  <rect x="650" y="350" width="200" height="350" fill="rgba(255,255,255,0.1)"/>
+  <rect x="900" y="250" width="300" height="450" fill="rgba(255,255,255,0.1)"/>
+  <rect x="1250" y="400" width="200" height="300" fill="rgba(255,255,255,0.1)"/>
+  <rect x="1500" y="350" width="250" height="350" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- Trees -->
+  <circle cx="50" cy="600" r="50" fill="rgba(34,197,94,0.3)"/>
+  <circle cx="1870" cy="580" r="60" fill="rgba(34,197,94,0.3)"/>
+  
+  <!-- Text overlay -->
+  <text x="960" y="540" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">
+    School Campus
+  </text>
+</svg>
