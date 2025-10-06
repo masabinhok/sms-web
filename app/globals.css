@@ -71,6 +71,9 @@
   --gradient-hero: linear-gradient(135deg, var(--school-blue-950) 0%, var(--school-blue-700) 50%, var(--school-blue-500) 100%);
 }
 
+button{
+  cursor: pointer;
+}
 
 .dark {
   --background: 222.2 84% 4.9%;

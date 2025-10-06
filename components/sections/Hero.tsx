@@ -119,7 +119,7 @@ export function Hero() {
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="premium-button border-2 border-white text-white hover:bg-white hover:text-blue-900 font-semibold px-8 py-4 text-lg glass-effect"
+                    className="premium-button border-2 border-white text-white hover:bg-white  font-semibold px-8 py-4 text-lg glass-effect"
                   >
                     <Play className="h-5 w-5 mr-2" />
                     Watch Virtual Tour
