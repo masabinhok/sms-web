@@ -1,0 +1,9 @@
+<!-- Testimonial 2 - Alumni -->
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f3f4f6"/>
+  <circle cx="100" cy="100" r="80" fill="#10b981"/>
+  <circle cx="100" cy="80" r="25" fill="white"/>
+  <path d="M60 140 Q100 120 140 140 L140 160 Q100 180 60 160 Z" fill="white"/>
+  <rect x="80" y="60" width="40" height="8" fill="#1f2937"/>
+  <text x="100" y="190" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#374151">Alumni</text>
+</svg>

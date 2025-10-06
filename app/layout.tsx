@@ -1,16 +1,32 @@
 import type { Metadata } from "next";
-import { Work_Sans} from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { SCHOOL_CONFIG } from "@/lib/constants";
 
-const workSans = Work_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-work-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "School Management System",
-  description: "A simple school management system built with Next.js and Tailwind CSS",
+  title: `${SCHOOL_CONFIG.SCHOOL_NAME} – ${SCHOOL_CONFIG.MOTTO}`,
+  description: `${SCHOOL_CONFIG.SCHOOL_NAME} - Excellence in education, nurturing young minds for a brighter future. Comprehensive academic programs from early years to higher secondary.`,
+  keywords: ["school", "education", "academics", "students", "learning", SCHOOL_CONFIG.SCHOOL_NAME],
+  authors: [{ name: SCHOOL_CONFIG.SCHOOL_NAME }],
+  openGraph: {
+    title: `${SCHOOL_CONFIG.SCHOOL_NAME} – ${SCHOOL_CONFIG.MOTTO}`,
+    description: `${SCHOOL_CONFIG.SCHOOL_NAME} - Excellence in education, nurturing young minds for a brighter future.`,
+    url: SCHOOL_CONFIG.CONTACT.WEBSITE,
+    siteName: SCHOOL_CONFIG.SCHOOL_NAME,
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SCHOOL_CONFIG.SCHOOL_NAME} – ${SCHOOL_CONFIG.MOTTO}`,
+    description: `${SCHOOL_CONFIG.SCHOOL_NAME} - Excellence in education, nurturing young minds for a brighter future.`,
+  }
 };
 
 export default function RootLayout({
@@ -19,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`app ${workSans.className}`}>
+    <html lang="en" className={inter.variable}>
+      <body className="font-inter antialiased">
         {children}
       </body>
     </html>
