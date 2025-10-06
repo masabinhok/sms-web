@@ -308,12 +308,12 @@ export function Navbar() {
             transition={{ delay: 0.4 }}
             className="hidden lg:block"
           >
-            <NavigationMenu className="relative">
+            <NavigationMenu viewport={false}>
               <NavigationMenuList className="flex space-x-2">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <NavigationMenuItem key={item.title} className="relative">
+                    <NavigationMenuItem key={item.title}>
                       <NavigationMenuTrigger 
                         className={`group bg-transparent hover:bg-white/10 ${
                           isScrolled ? 'text-gray-900 hover:text-blue-600' : 'text-white hover:text-blue-200'
@@ -322,46 +322,45 @@ export function Navbar() {
                         <Icon className="h-4 w-4" />
                         <span>{item.title}</span>
                       </NavigationMenuTrigger>
-                      <NavigationMenuContent className="absolute left-0 top-full mt-2 z-50">
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="w-[400px] bg-white/95 backdrop-blur-xl border border-white/20 shadow-xl rounded-lg overflow-hidden"
-                        >
-                          <div className="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-blue-100">
-                            <h4 className="text-lg font-semibold text-gray-900 flex items-center">
-                              <Icon className="h-5 w-5 mr-2 text-blue-600" />
-                              {item.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {item.description}
-                            </p>
-                          </div>
-                          <div className="p-2">
-                            {item.items.map((subItem) => {
-                              const SubIcon = subItem.icon;
-                              return (
-                                <NavigationMenuLink
-                                  key={subItem.title}
-                                  href={subItem.href}
-                                  className="group block select-none rounded-md p-3 leading-none no-underline outline-none transition-all hover:bg-blue-50 hover:shadow-sm"
-                                >
-                                  <div className="flex items-start space-x-3">
-                                    <SubIcon className="h-4 w-4 mt-0.5 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0" />
-                                    <div className="space-y-1">
-                                      <div className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                                        {subItem.title}
+                      <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 bg-white rounded-lg shadow-xl border border-gray-200">
+                          <li className="row-span-3">
+                            <div className="py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-lg -mx-4 -mt-4 mb-3 px-6 pt-4 pb-3">
+                              <h4 className="text-lg font-semibold text-gray-900 flex items-center">
+                                <Icon className="h-5 w-5 mr-2 text-blue-600" />
+                                {item.title}
+                              </h4>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {item.description}
+                              </p>
+                            </div>
+                          </li>
+                          {item.items.map((subItem) => {
+                            const SubIcon = subItem.icon;
+                            return (
+                              <li key={subItem.title}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    href={subItem.href}
+                                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  >
+                                    <div className="flex items-start space-x-3">
+                                      <SubIcon className="h-4 w-4 mt-0.5 text-gray-400 hover:text-blue-500 transition-colors flex-shrink-0" />
+                                      <div className="space-y-1">
+                                        <div className="text-sm font-medium leading-none text-gray-900 hover:text-blue-600">
+                                          {subItem.title}
+                                        </div>
+                                        <p className="line-clamp-2 text-xs leading-snug text-gray-500">
+                                          {subItem.description}
+                                        </p>
                                       </div>
-                                      <p className="text-xs text-gray-500 leading-snug">
-                                        {subItem.description}
-                                      </p>
                                     </div>
-                                  </div>
+                                  </Link>
                                 </NavigationMenuLink>
-                              );
-                            })}
-                          </div>
-                        </motion.div>
+                              </li>
+                            );
+                          })}
+                        </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                   );
