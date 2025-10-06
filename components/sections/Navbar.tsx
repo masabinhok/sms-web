@@ -308,9 +308,8 @@ export function Navbar() {
             transition={{ delay: 0.4 }}
             className="hidden lg:block"
           >
-            <NavigationMenu viewport={false}>
-              <NavigationMenuList className="flex space-x-2">
-                {menuItems.map((item) => {
+            <NavigationMenu>
+              <NavigationMenuList className="flex space-x-2">              {menuItems.map((item) => {
                   const Icon = item.icon;
                   return (
                     <NavigationMenuItem key={item.title}>
