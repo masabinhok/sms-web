@@ -24,7 +24,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      await authApi.login(formData.username, formData.password)
+      await authApi.login(formData.username, formData.password, formData.role)
 
       // Redirect based on role
       const roleRoutes: Record<UserRole, string> = {

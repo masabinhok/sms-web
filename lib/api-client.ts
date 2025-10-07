@@ -61,8 +61,8 @@ export const api = new ApiClient(API_BASE_URL)
 
 // Auth API methods
 export const authApi = {
-  login: (username: string, password: string) =>
-    api.post('/auth/login', { username, password }),
+  login: (username: string, password: string, role: string) =>
+    api.post('/auth/login', { username, password, role }),
 
   logout: () =>
     api.post('/auth/logout'),
