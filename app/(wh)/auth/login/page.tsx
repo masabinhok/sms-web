@@ -50,16 +50,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex justify-center  pt-10 bg-gray-50">
       <div className="w-full max-w-md px-6">
         
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Sign In
-          </h1>
-          <p className="text-gray-600">
-            School Management System
+          <p className=" font-bold text-2xl">
+            <b>SMS - AUTHENTICATION</b>
           </p>
         </div>
 
@@ -154,16 +151,6 @@ export default function LoginPage() {
             </Link>
           </div>
         </form>
-
-        {/* Back to Home */}
-        <div className="mt-8 text-center">
-          <Link 
-            href="/" 
-            className="text-sm text-gray-500 hover:text-gray-900"
-          >
-            ← Back to Home
-          </Link>
-        </div>
       </div>
     </div>
   )

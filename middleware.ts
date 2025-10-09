@@ -48,6 +48,7 @@ export function middleware(req: NextRequest) {
           return NextResponse.redirect(refreshUrl);
         } else {
           // No refresh token, redirect to login
+          localStorage.clear();
           const loginUrl = new URL('/auth/login', req.url);
           loginUrl.searchParams.set('from', pathname);
           return NextResponse.redirect(loginUrl);
