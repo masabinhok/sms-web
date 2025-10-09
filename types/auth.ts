@@ -15,8 +15,18 @@ export interface User {
   id: string
   username: string
   role: UserRole
+  profileId?: string
+  profileEmail?: string
   email?: string
   name?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface ApiUserResponse {
+  success: boolean
+  message: string
+  user: User
 }
 
 export interface AuthContextType {

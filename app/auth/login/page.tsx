@@ -1,43 +1,51 @@
 "use client"
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-import { authApi } from '@/lib/api-client'
+import { useAuth } from '@/store/authStore'
 import { UserRole } from '@/types/auth'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { login, loading, error, clearError, isAuthenticated } = useAuth()
+  
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    role: 'STUDENT' as UserRole
+    role: 'ADMIN' as UserRole
   })
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = searchParams.get('from') || `/${formData.role.toLowerCase()}`
+      router.push(from)
+    }
+  }, [isAuthenticated, router, searchParams, formData.role])
+
+  // Clear error when component mounts
+  useEffect(() => {
+    clearError()
+  }, [clearError])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    clearError()
 
     try {
-      await authApi.login(formData.username, formData.password, formData.role)
+      await login(
+        { username: formData.username, password: formData.password },
+        formData.role
+      )
 
-      // Redirect based on role
-      const roleRoutes: Record<UserRole, string> = {
-        ADMIN: '/admin',
-        TEACHER: '/teacher',
-        STUDENT: '/student',
-      }
-
-      router.push(roleRoutes[formData.role])
+      // Redirect will be handled by the useEffect above
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.')
-    } finally {
-      setIsLoading(false)
+      // Error is already handled by the store
+      console.error('Login error:', err)
     }
   }
 
@@ -78,7 +86,7 @@ export default function LoginPage() {
               placeholder="Enter your username"
               required
               className="w-full border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
 
@@ -96,7 +104,7 @@ export default function LoginPage() {
               required
               minLength={6}
               className="w-full border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-              disabled={isLoading}
+              disabled={loading}
             />
           </div>
 
@@ -111,7 +119,7 @@ export default function LoginPage() {
                   key={role}
                   type="button"
                   onClick={() => setFormData({ ...formData, role })}
-                  disabled={isLoading}
+                  disabled={loading}
                   className={`
                     px-4 py-3 text-sm font-medium border transition-colors
                     ${formData.role === role 
@@ -131,9 +139,9 @@ export default function LoginPage() {
           <Button
             type="submit"
             className="w-full bg-black text-white hover:bg-gray-800 py-6 text-base font-medium"
-            disabled={isLoading}
+            disabled={loading}
           >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </Button>
 
           {/* Forgot Password Link */}

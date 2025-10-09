@@ -1,3 +1,5 @@
+import { ApiUserResponse } from "@/types/auth"
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
 interface ApiOptions extends RequestInit {
@@ -6,6 +8,8 @@ interface ApiOptions extends RequestInit {
 
 class ApiClient {
   private baseUrl: string
+  private isRefreshing = false
+  private refreshPromise: Promise<any> | null = null
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
@@ -30,7 +34,23 @@ class ApiClient {
       config.body = JSON.stringify(data)
     }
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, config)
+    let response = await fetch(`${this.baseUrl}${endpoint}`, config)
+
+    // Handle 401 - token expired
+    if (response.status === 401 && endpoint !== '/auth/refresh') {
+      // Try to refresh token
+      const refreshed = await this.refreshToken()
+      
+      if (refreshed) {
+        // Retry original request
+        response = await fetch(`${this.baseUrl}${endpoint}`, config)
+      } else {
+        // Refresh failed, redirect to login
+        window.location.href = '/auth/login'
+        throw new Error('Session expired. Please log in again.')
+      }
+    }
+
     const responseData = await response.json()
 
     if (!response.ok) {
@@ -38,6 +58,38 @@ class ApiClient {
     }
 
     return responseData
+  }
+
+  private async refreshToken(): Promise<boolean> {
+    // Prevent multiple refresh attempts
+    if (this.isRefreshing) {
+      return this.refreshPromise || Promise.resolve(false)
+    }
+
+    this.isRefreshing = true
+    this.refreshPromise = this.performRefresh()
+
+    try {
+      const result = await this.refreshPromise
+      return result
+    } finally {
+      this.isRefreshing = false
+      this.refreshPromise = null
+    }
+  }
+
+  private async performRefresh(): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      return response.ok
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+      return false
+    }
   }
 
   async get<T>(endpoint: string, options?: ApiOptions): Promise<T> {
@@ -72,4 +124,9 @@ export const authApi = {
 
   changePassword: (oldPassword: string, newPassword: string) =>
     api.post('/auth/change-password', { oldPassword, newPassword }),
+
+  getProfile: async () => {
+    const response = await api.get<ApiUserResponse>('/auth/me')
+    return response.user // Extract just the user object
+  }
 }
