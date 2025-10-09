@@ -1,4 +1,4 @@
-import { authApi } from '@/lib/api-client';
+import { authApi, ApiError } from '@/lib/api-client';
 import { User, UserRole, LoginCredentials } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -100,6 +100,59 @@ export const useAuth = create<AuthState>()(
 
       setLoading: (loading: boolean) => {
         set({ loading });
+      },
+
+      refreshTokenIfExists: async () => {
+        // Check if we have any authentication cookies
+        const hasAuthCookie = document.cookie.includes('refresh_token=') || 
+                             document.cookie.includes('refreshToken=') ||
+                             document.cookie.includes('connect.sid=') ||
+                             document.cookie.includes('session=') ||
+                             document.cookie.includes('access_token=');
+
+        if (!hasAuthCookie) {
+          console.log('No authentication cookies found');
+          return false;
+        }
+
+        set({ loading: true, error: null });
+        
+        try {
+          // Try to refresh the token using the API client method
+          const refreshSuccess = await authApi.checkAndRefreshToken();
+          
+          if (refreshSuccess) {
+            // If refresh successful, fetch user profile
+            const user = await authApi.getProfile();
+            set({ 
+              user, 
+              loading: false, 
+              error: null, 
+              isAuthenticated: true 
+            });
+            
+            console.log('Token refreshed and user profile fetched successfully');
+            return true;
+          } else {
+            // Refresh failed
+            set({ 
+              loading: false, 
+              error: null, // Don't show error for failed refresh
+              user: null, 
+              isAuthenticated: false 
+            });
+            return false;
+          }
+        } catch (error) {
+          console.error('Token refresh failed:', error);
+          set({ 
+            loading: false, 
+            error: null, // Don't show error for failed refresh on login page
+            user: null, 
+            isAuthenticated: false 
+          });
+          return false;
+        }
       }
     }),
     {

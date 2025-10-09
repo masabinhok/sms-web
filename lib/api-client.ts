@@ -6,6 +6,12 @@ interface ApiOptions extends RequestInit {
   data?: any
 }
 
+interface ApiError {
+  status: number
+  message: string
+  data?: any
+}
+
 class ApiClient {
   private baseUrl: string
   private isRefreshing = false
@@ -45,19 +51,63 @@ class ApiClient {
         // Retry original request
         response = await fetch(`${this.baseUrl}${endpoint}`, config)
       } else {
-        // Refresh failed, redirect to login
-        window.location.href = '/auth/login'
-        throw new Error('Session expired. Please log in again.')
+        // Refresh failed, emit auth failure event
+        this.handleAuthFailure()
+        throw this.createApiError(401, 'Session expired. Please log in again.')
       }
     }
 
-    const responseData = await response.json()
+    // Handle JSON parsing safely
+    let responseData = null
+    try {
+      const text = await response.text()
+      responseData = text ? JSON.parse(text) : null
+    } catch (error) {
+      console.warn('Failed to parse response JSON:', error)
+      responseData = null
+    }
 
     if (!response.ok) {
-      throw new Error(responseData.message || 'API request failed')
+      throw this.createApiError(
+        response.status,
+        responseData?.message || `Request failed with status ${response.status}`,
+        responseData
+      )
     }
 
     return responseData
+  }
+
+  private createApiError(status: number, message: string, data?: any): ApiError {
+    return { status, message, data }
+  }
+
+  private handleAuthFailure(): void {
+    // Option 1: Emit custom event for auth failure
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:failure'))
+    }
+
+    // Option 2: Use Zustand store to reset auth (if available)
+    try {
+      // Import dynamically to avoid issues in SSR
+      import('@/store/authStore').then(({ useAuth }) => {
+        const store = useAuth.getState()
+        if (store.logout) {
+          store.logout()
+        }
+      }).catch(() => {
+        // Store not available, fall back to redirect
+        if (typeof window !== 'undefined') {
+          window.location.href = '/auth/login'
+        }
+      })
+    } catch {
+      // Fallback to direct redirect
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login'
+      }
+    }
   }
 
   private async refreshToken(): Promise<boolean> {
@@ -80,12 +130,28 @@ class ApiClient {
 
   private async performRefresh(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+      // Use Next.js API route for refresh
+      const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include',
       })
 
-      return response.ok
+      if (response.ok) {
+        // Parse response to get token info if available
+        try {
+          const data = await response.text()
+          const result = data ? JSON.parse(data) : {}
+          console.log('Token refreshed successfully:', result)
+          return true
+        } catch {
+          // Even if JSON parsing fails, if response is ok, consider it success
+          console.log('Token refreshed successfully')
+          return true
+        }
+      } else {
+        console.log('Token refresh failed with status:', response.status)
+        return false
+      }
     } catch (error) {
       console.error('Token refresh failed:', error)
       return false
@@ -111,7 +177,7 @@ class ApiClient {
 
 export const api = new ApiClient(API_BASE_URL)
 
-// Auth API methods
+// Auth API methods with improved error handling
 export const authApi = {
   login: (username: string, password: string, role: string) =>
     api.post('/auth/login', { username, password, role }),
@@ -128,5 +194,30 @@ export const authApi = {
   getProfile: async () => {
     const response = await api.get<ApiUserResponse>('/auth/me')
     return response.user // Extract just the user object
+  },
+
+  // Enhanced method to check and refresh token via Next.js API route
+  checkAndRefreshToken: async (): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      if (response.ok) {
+        console.log('Token refreshed successfully via API route')
+        return true
+      } else {
+        const errorText = await response.text().catch(() => '')
+        console.log('Token refresh failed:', response.status, errorText)
+        return false
+      }
+    } catch (error) {
+      console.error('Token refresh error:', error)
+      return false
+    }
   }
 }
+
+// Export ApiError type for better error handling in components
+export type { ApiError }
