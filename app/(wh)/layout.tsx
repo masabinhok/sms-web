@@ -1,10 +1,20 @@
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
+import { WhiteNavbar } from "@/components/sections/WhiteNavbar";
+
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      {children}
+      <section>
+    <WhiteNavbar />
+    <div className="pt-32 bg-gray-50">
+
+{children}
+    </div>
+
+      </section>
+      
     </ProtectedRoute>
   );
 }

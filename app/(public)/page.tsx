@@ -18,7 +18,6 @@ export default function Homepage() {
       <Gallery />
       <Testimonials />
       <Contact />
-      <Footer />
     </div>
   )
 }

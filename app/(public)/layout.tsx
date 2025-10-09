@@ -1,14 +1,15 @@
-import { Navbar } from "@/components/sections/Navbar";
+import { Navbar } from "@/components/sections/Navbar"
+import { ReactNode } from "react"
 
 export default function PublicLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children
+}: {
+  children: ReactNode
+}) {
   return (
-    <main>
-        <Navbar/>
-        {children}
-    </main>
-  );
+    <section>
+      <Navbar />
+      {children}
+    </section>
+  )
 }

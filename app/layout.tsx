@@ -4,6 +4,8 @@ import "./globals.css";
 import { SCHOOL_CONFIG } from "@/lib/constants";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
+import { Footer } from "@/components/sections/Footer";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,6 +44,7 @@ export default function RootLayout({
         <AuthProvider>
           <AuthFailureHandler />
           {children}
+          <Footer />
         </AuthProvider>
       </body>
     </html>

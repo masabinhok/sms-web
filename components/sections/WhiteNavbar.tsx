@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ import {
 import { useAuth } from "@/store/authStore";
 
 // Create a client-only component for user authentication UI
-const UserAuthButton = dynamic(() => Promise.resolve(({ isScrolled }: { isScrolled: boolean }) => {
+const UserAuthButton = dynamic(() => Promise.resolve(() => {
   const { user } = useAuth();
   
   return (
@@ -37,11 +37,7 @@ const UserAuthButton = dynamic(() => Promise.resolve(({ isScrolled }: { isScroll
       variant="outline" 
       size="sm"
       asChild
-      className={`transition-all duration-300 ${
-        isScrolled 
-          ? 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white' 
-          : 'border-white text-white hover:bg-white hover:text-blue-900'
-      }`}
+      className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300"
     >
       {user ? (
         <Link href={`/${user.role.toLowerCase()}`}>
@@ -100,45 +96,25 @@ const MobileUserAuthButton = dynamic(() => Promise.resolve(({ onClose }: { onClo
   )
 });
 
-export function Navbar() {
+export function WhiteNavbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-[100] bg-white shadow-lg border-b border-gray-200"
     >
       {/* Top Bar - Contact Info */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className={`hidden lg:block transition-all duration-300 ${
-          isScrolled 
-            ? "py-1 bg-blue-900/5" 
-            : "py-2 bg-gradient-to-r from-blue-950/90 to-blue-900/90"
-        }`}
+        className="hidden lg:block py-2 bg-gray-50 border-b border-gray-100"
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between text-sm">
-            <div className={`flex items-center space-x-6 transition-colors ${
-              isScrolled ? "text-gray-600" : "text-white/90"
-            }`}>
+            <div className="flex items-center space-x-6 text-gray-600">
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3" />
                 <span>{SCHOOL_INFO.contact.phone}</span>
@@ -155,11 +131,7 @@ export function Navbar() {
             <div className="flex items-center space-x-4">
               <Badge 
                 variant="secondary" 
-                className={`transition-all ${
-                  isScrolled 
-                    ? "bg-blue-100 text-blue-800 border-blue-200" 
-                    : "bg-yellow-500/20 text-yellow-100 border-yellow-400/30"
-                }`}
+                className="bg-blue-100 text-blue-800 border-blue-200"
               >
                 <Sparkles className="h-3 w-3 mr-1" />
                 Admissions Open 2025
@@ -189,14 +161,10 @@ export function Navbar() {
                 />
               </div>
               <div>
-                <h1 className={`font-bold text-xl transition-colors duration-300 ${
-                  isScrolled ? 'text-gray-900' : 'text-white'
-                }`}>
+                <h1 className="font-bold text-xl text-gray-900">
                   {SCHOOL_INFO.name}
                 </h1>
-                <p className={`text-sm transition-colors duration-300 ${
-                  isScrolled ? 'text-gray-600' : 'text-white/80'
-                }`}>
+                <p className="text-sm text-gray-600">
                   {SCHOOL_INFO.tagline}
                 </p>
               </div>
@@ -217,9 +185,7 @@ export function Navbar() {
                   return (
                     <NavigationMenuItem key={item.title}>
                       <NavigationMenuTrigger 
-                        className={`group bg-transparent hover:bg-white/10 ${
-                          isScrolled ? 'text-gray-900 hover:text-blue-600' : 'text-white hover:text-blue-200'
-                        } transition-all duration-300 font-medium px-4 py-2 h-10 flex items-center space-x-2 data-[state=open]:bg-white/10`}
+                        className="group bg-transparent hover:bg-gray-100 text-gray-900 hover:text-blue-600 transition-all duration-300 font-medium px-4 py-2 h-10 flex items-center space-x-2 data-[state=open]:bg-gray-100"
                       >
                         <Icon className="h-4 w-4" />
                         <span>{item.title}</span>
@@ -278,7 +244,7 @@ export function Navbar() {
             transition={{ delay: 0.5 }}
             className="hidden lg:flex items-center space-x-4"
           >
-            <UserAuthButton isScrolled={isScrolled} />
+            <UserAuthButton />
 
             <Button 
               asChild
@@ -296,9 +262,7 @@ export function Navbar() {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6 }}
-            className={`lg:hidden p-2 rounded-md transition-colors duration-300 ${
-              isScrolled ? 'text-gray-900' : 'text-white'
-            }`}
+            className="lg:hidden p-2 rounded-md text-gray-900 hover:bg-gray-100 transition-colors duration-300"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -314,7 +278,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/50"
+            className="lg:hidden bg-white border-t border-gray-200"
           >
             <div className="container mx-auto px-6 py-6">
               <div className="space-y-4">
