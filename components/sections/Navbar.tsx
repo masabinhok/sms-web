@@ -25,10 +25,12 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { useAuth } from "@/store/authStore";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const {user} = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -214,11 +216,26 @@ export function Navbar() {
                   : 'border-white text-white hover:bg-white hover:text-blue-900'
               }`}
             >
-              <Link href="/auth/login">
-                <Users className="h-4 w-4 mr-2" />
-                Login
-              </Link>
+
+          {
+            user ? (
+                <Link href={`${(user.role).toLocaleLowerCase()}/profile`}>
+                          <Users className="h-4 w-4 mr-2" />
+                          {user.username}
+                        </Link>
+            ) : (
+                <Link href="/auth/login">
+                          <Users className="h-4 w-4 mr-2" />
+                          Login
+                        </Link>
+            )
+          }
+
+            
+
+
             </Button>
+
             <Button 
               asChild
               className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 hover:from-yellow-500 hover:to-yellow-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
