@@ -54,14 +54,8 @@ export function middleware(req: NextRequest) {
         }
       }
 
-      // ADMIN can access all routes
-      if (userRole === 'ADMIN') {
-        console.log('Admin access granted for:', pathname);
-        return NextResponse.next();
-      }
-
       // For non-admin users, enforce role restrictions
-      if (pathname.startsWith('/admin')) {
+      if (pathname.startsWith('/admin') && userRole !== 'ADMIN') {
         return NextResponse.redirect(new URL('/unauthorized', req.url));
       }
 
