@@ -219,7 +219,7 @@ export function Navbar() {
 
           {
             user ? (
-                <Link href={`${(user.role).toLocaleLowerCase()}/profile`}>
+                <Link href={`${(user.role).toLocaleLowerCase()}`}>
                           <Users className="h-4 w-4 mr-2" />
                           {user.username}
                         </Link>
