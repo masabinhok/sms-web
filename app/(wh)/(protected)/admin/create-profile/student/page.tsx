@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useState } from "react";
 import { GraduationCap, User, Mail, Calendar, MapPin, Phone, Hash, Users } from "lucide-react";
+import { api } from "@/lib/api-client";
 
 type GenderOption = "Male" | "Female" | "Other";
 
@@ -27,9 +28,8 @@ export default function CreateStudentProfileForm() {
   const onSubmit = async (data: StudentProfileFormData) => {
     setLoading(true);
     try {
-      console.log("Form Data:", data);
-      // Example: await fetch("/api/students", { method: "POST", body: JSON.stringify(data) });
-      alert("Student profile created successfully!");
+      const response = await api.post('/student/create-profile', data);
+      console.log("Response:", response)
       reset();
     } catch (err) {
       console.error(err);

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { ShieldCheck, User, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
+import { api } from "@/lib/api-client";
 
 export default function CreateAdminProfilePage() {
   const [loading, setLoading] = useState(false);
@@ -24,9 +25,8 @@ export default function CreateAdminProfilePage() {
   const onSubmit = async (data: AdminProfileFormData) => {
     setLoading(true);
     try {
-      console.log("Form Data:", data);
-      // Example: await fetch("/api/admin", { method: "POST", body: JSON.stringify(data) });
-      alert("Admin profile created successfully!");
+      const response = await api.post('/auth/create-admin', data);
+      console.log("Response:", response)
       reset();
     } catch (err) {
       console.error(err);

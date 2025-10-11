@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useState } from "react";
 import { Users, User, Mail, Calendar, MapPin, Phone, BookOpen, GraduationCap } from "lucide-react";
+import { api } from "@/lib/api-client";
 
 type GenderOption = "Male" | "Female" | "Other";
 
@@ -62,9 +63,8 @@ export default function CreateTeacherProfileForm() {
   const onSubmit = async (data: TeacherProfileFormData) => {
     setLoading(true);
     try {
-      console.log("Form Data:", data);
-      // Example: await fetch("/api/teachers", { method: "POST", body: JSON.stringify(data) });
-      alert("Teacher profile created successfully!");
+      const response = await api.post('/teacher/create-profile', data);
+      console.log("Response:", response)
       reset();
       setSelectedSubjects([]);
       setSelectedClasses([]);
