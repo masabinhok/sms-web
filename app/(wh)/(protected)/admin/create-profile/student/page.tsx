@@ -10,11 +10,13 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { useState } from "react";
 import { GraduationCap, User, Mail, Calendar, MapPin, Phone, Hash, Users } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { useMessage } from "@/store/messageStore";
 
 type GenderOption = "Male" | "Female" | "Other";
 
 export default function CreateStudentProfileForm() {
   const [loading, setLoading] = useState(false);
+  const { addMessage } = useMessage();
   const {
     register,
     handleSubmit,
@@ -28,12 +30,12 @@ export default function CreateStudentProfileForm() {
   const onSubmit = async (data: StudentProfileFormData) => {
     setLoading(true);
     try {
-      const response = await api.post('/student/create-profile', data);
-      console.log("Response:", response)
+      const response = await api.post<{message?: string}>('/student/create-profile', data);
+      addMessage(response.message || "Student profile created successfully!", 'success');
       reset();
     } catch (err) {
       console.error(err);
-      alert("Failed to create student profile. Please try again.");
+      addMessage("Failed to create student profile. Please try again.", 'error');
     } finally {
       setLoading(false);
     }

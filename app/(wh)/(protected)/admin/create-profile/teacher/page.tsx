@@ -10,6 +10,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { useState } from "react";
 import { Users, User, Mail, Calendar, MapPin, Phone, BookOpen, GraduationCap } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { useMessage } from "@/store/messageStore";
 
 type GenderOption = "Male" | "Female" | "Other";
 
@@ -50,6 +51,8 @@ export default function CreateTeacherProfileForm() {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
 
+  const { addMessage } = useMessage();
+
   const {
     register,
     handleSubmit,
@@ -63,14 +66,14 @@ export default function CreateTeacherProfileForm() {
   const onSubmit = async (data: TeacherProfileFormData) => {
     setLoading(true);
     try {
-      const response = await api.post('/teacher/create-profile', data);
-      console.log("Response:", response)
+      const response = await api.post<{message?: string}>('/teacher/create-profile', data);
+      addMessage(response.message || "Teacher profile created successfully!", 'success');
       reset();
       setSelectedSubjects([]);
       setSelectedClasses([]);
     } catch (err) {
       console.error(err);
-      alert("Failed to create teacher profile. Please try again.");
+      addMessage("Failed to create teacher profile. Please try again.", 'error');
     } finally {
       setLoading(false);
     }
