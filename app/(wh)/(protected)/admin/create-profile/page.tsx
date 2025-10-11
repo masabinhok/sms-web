@@ -9,9 +9,11 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { ShieldCheck, User, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { useMessage } from "@/store/messageStore";
 
 export default function CreateAdminProfilePage() {
   const [loading, setLoading] = useState(false);
+  const { addMessage } = useMessage();
   
   const {
     register,
@@ -25,12 +27,12 @@ export default function CreateAdminProfilePage() {
   const onSubmit = async (data: AdminProfileFormData) => {
     setLoading(true);
     try {
-      const response = await api.post('/auth/create-admin', data);
-      console.log("Response:", response)
+      const response = await api.post<{ message?: string }>('/auth/create-admin', data);
+      addMessage(response.message! || "Admin profile created successfully!", 'success');
       reset();
     } catch (err) {
       console.error(err);
-      alert("Failed to create admin profile. Please try again.");
+      addMessage("Failed to create admin profile. Please try again.", 'error');
     } finally {
       setLoading(false);
     }
@@ -65,6 +67,7 @@ export default function CreateAdminProfilePage() {
         </div>
       </div>
 
+   
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Admin Information Section */}

@@ -5,6 +5,7 @@ import { SCHOOL_CONFIG } from "@/lib/constants";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
 import { Footer } from "@/components/sections/Footer";
+import MessageList from "@/components/MessageList";
 
 
 const inter = Inter({
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className="font-inter antialiased">
         <AuthProvider>
           <AuthFailureHandler />
+          <MessageList />
           {children}
           <Footer />
         </AuthProvider>
