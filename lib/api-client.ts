@@ -180,16 +180,16 @@ export const api = new ApiClient(API_BASE_URL)
 // Auth API methods with improved error handling
 export const authApi = {
   login: (username: string, password: string, role: string) =>
-    api.post('/auth/login', { username, password, role }),
+    api.post<{message?: string}>('/auth/login', { username, password, role }),
 
   logout: () =>
-    api.post('/auth/logout'),
+    api.post<{message?: string}>('/auth/logout'),
 
   refresh: () =>
-    api.post('/auth/refresh'),
+    api.post<{message?: string}>('/auth/refresh'),
 
   changePassword: (oldPassword: string, newPassword: string) =>
-    api.post('/auth/change-password', { oldPassword, newPassword }),
+    api.post<{message?: string}>('/auth/change-password', { oldPassword, newPassword }),
 
   getProfile: async () => {
     const response = await api.get<ApiUserResponse>('/auth/me')

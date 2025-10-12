@@ -1,11 +1,86 @@
 'use client'
 
 import { useAuth } from '@/store/authStore'
-import React from 'react'
+import React, { useState } from 'react'
 import { User, Mail, Shield, Calendar, Key } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { passwordChangeSchema, type PasswordChangeFormData } from '@/lib/validation/password-change-schema'
+import { authApi } from '@/lib/api-client'
+import { useMessage } from '@/store/messageStore'
 
 export default function AdminProfile() {
   const { user, loading } = useAuth();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const {addMessage} = useMessage();
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+  });
+
+  // React Hook Form for password change with Zod validation
+  const {
+    register,
+    handleSubmit: handlePasswordFormSubmit,
+    formState: { errors, isSubmitting },
+    reset: resetPasswordForm,
+    watch,
+  } = useForm<PasswordChangeFormData>({
+    resolver: zodResolver(passwordChangeSchema),
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+  });
+
+  const newPassword = watch('newPassword');
+  const confirmPassword = watch('confirmPassword');
+
+  // Initialize edit form when dialog opens
+  const handleEditOpen = () => {
+    if (user) {
+      setEditFormData({
+        name: user.username, // Use username instead of name for admin
+        email: user.email || user.profileEmail || '',
+      });
+    }
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement API call to update profile
+    console.log('Updating profile:', editFormData);
+    setIsEditDialogOpen(false);
+  };
+
+  const handlePasswordSubmit = async (data: PasswordChangeFormData) => {
+    try {
+      const response = await authApi.changePassword(data.currentPassword, data.newPassword)
+      addMessage(`${response.message ? response.message : 'Password changed successfully'}`);
+      
+      // Success - close dialog and reset form
+      setIsPasswordDialogOpen(false);
+      resetPasswordForm();
+      
+    } catch (error) {
+      console.error('Password change failed:', error);
+      // TODO: Show error message
+      addMessage('Password change failed. Please try again.', 'error');
+    }
+  };
 
   if (loading) {
     return (
@@ -39,13 +114,6 @@ export default function AdminProfile() {
       bg: 'bg-green-50'
     },
     {
-      label: 'Name',
-      value: user.name || 'Not provided',
-      icon: User,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50'
-    },
-    {
       label: 'Role',
       value: user.role,
       icon: Shield,
@@ -58,13 +126,6 @@ export default function AdminProfile() {
       icon: Key,
       color: 'text-gray-600',
       bg: 'bg-gray-50'
-    },
-    {
-      label: 'Profile ID',
-      value: user.profileId || 'Not linked',
-      icon: Key,
-      color: 'text-indigo-600',
-      bg: 'bg-indigo-50'
     },
   ]
 
@@ -88,8 +149,8 @@ export default function AdminProfile() {
             {user.username.charAt(0).toUpperCase()}
           </div>
           <div>
-            <h1 className="text-3xl font-bold">{user.name || user.username}</h1>
-            <p className="text-blue-100 mt-1">Administrator Profile</p>
+            <h1 className="text-3xl font-bold">{user.username}</h1>
+            <p className="text-blue-100 mt-1">Administrator Account</p>
             <div className="flex items-center gap-2 mt-2">
               <Shield className="w-4 h-4" />
               <span className="text-sm font-medium">{user.role}</span>
@@ -151,13 +212,154 @@ export default function AdminProfile() {
 
       {/* Actions */}
       <div className="flex gap-4">
-        <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+        <button 
+          onClick={handleEditOpen}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+        >
           Edit Profile
         </button>
-        <button className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+        <button 
+          onClick={() => setIsPasswordDialogOpen(true)}
+          className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+        >
           Change Password
         </button>
       </div>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">Edit Profile</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Update your profile information. Click save when you&apos;re done.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email" className="text-gray-700">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  placeholder="Enter your email"
+                  className="bg-white border-gray-300 text-gray-900"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="username" className="text-gray-700">Username</Label>
+                <Input
+                  id="username"
+                  value={user?.username || ''}
+                  disabled
+                  className="bg-gray-100 cursor-not-allowed border-gray-300 text-gray-600"
+                />
+                <p className="text-xs text-gray-500">Username cannot be changed</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={() => setIsEditDialogOpen(false)}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Save Changes
+              </button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={(open) => {
+        setIsPasswordDialogOpen(open);
+        if (!open) resetPasswordForm();
+      }}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">Change Password</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Enter your current password and choose a new password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handlePasswordFormSubmit(handlePasswordSubmit)}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="currentPassword" className="text-gray-700">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  placeholder="Enter current password"
+                  className="bg-white border-gray-300 text-gray-900"
+                  {...register('currentPassword')}
+                />
+                {errors.currentPassword && (
+                  <p className="text-sm text-red-600">{errors.currentPassword.message}</p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="newPassword" className="text-gray-700">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  placeholder="Enter new password"
+                  className="bg-white border-gray-300 text-gray-900"
+                  {...register('newPassword')}
+                />
+                {errors.newPassword && (
+                  <p className="text-sm text-red-600">{errors.newPassword.message}</p>
+                )}
+                <p className="text-xs text-gray-500">
+                  Password must be at least 8 characters and contain uppercase, lowercase, number, and special character (@$!%*?&)
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="confirmPassword" className="text-gray-700">Confirm New Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm new password"
+                  className="bg-white border-gray-300 text-gray-900"
+                  {...register('confirmPassword')}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                )}
+              </div>
+              {newPassword && confirmPassword && newPassword !== confirmPassword && !errors.confirmPassword && (
+                <p className="text-sm text-orange-600">Passwords do not match</p>
+              )}
+            </div>
+            <DialogFooter>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPasswordDialogOpen(false);
+                  resetPasswordForm();
+                }}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Changing...' : 'Change Password'}
+              </button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
