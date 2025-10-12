@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from '@/store/authStore';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -34,6 +35,7 @@ const SECTIONS = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const  { user} = useAuth();
 
   return (
     <aside className="w-72 min-w-[18rem] max-w-xs h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col">
@@ -82,11 +84,13 @@ export default function AdminSidebar() {
       <div className="px-4 py-4 border-t border-gray-100">
         <Link href="/admin/profile" className="flex items-center gap-3">
           <div className="relative">
-            <span className="overflow-hidden rounded-full bg-sky-600 w-10 h-10 flex items-center justify-center text-white font-semibold">AU</span>
+            <span className="overflow-hidden rounded-full bg-sky-600 w-10 h-10 flex items-center uppercase justify-center text-white font-semibold">
+                {user?.username ? user.username.split('-')[0][0] + user.username.split('-')[1][0] : 'A'}
+            </span>
           </div>
           <div className="flex-1">
-            <div className="text-sm font-medium text-gray-900">Admin User</div>
-            <div className="text-xs text-gray-500">Administrator</div>
+            <div className="text-sm font-medium text-gray-900">{user?.username}</div>
+            <div className="text-xs text-gray-500">{user?.role}</div>
           </div>
         </Link>
       </div>
