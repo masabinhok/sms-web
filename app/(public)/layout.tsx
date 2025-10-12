@@ -1,3 +1,4 @@
+import { Footer } from "@/components/sections/Footer"
 import { Navbar } from "@/components/sections/Navbar"
 import { ReactNode } from "react"
 
@@ -10,6 +11,7 @@ export default function PublicLayout({
     <section>
       <Navbar />
       {children}
+      <Footer />
     </section>
   )
 }
