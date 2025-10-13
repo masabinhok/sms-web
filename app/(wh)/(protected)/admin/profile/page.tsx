@@ -24,6 +24,7 @@ export default function AdminProfile() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const {addMessage} = useMessage();
+  const {logout}  = useAuth();
   const [editFormData, setEditFormData] = useState({
     name: '',
     email: '',
@@ -223,6 +224,12 @@ export default function AdminProfile() {
           className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
         >
           Change Password
+        </button>
+        <button 
+          onClick={() => logout()}
+          className="px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
+        >
+          Logout
         </button>
       </div>
 
