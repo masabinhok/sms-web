@@ -43,7 +43,7 @@ class ApiClient {
     let response = await fetch(`${this.baseUrl}${endpoint}`, config)
 
     // Handle 401 - token expired
-    if (response.status === 401 && endpoint !== '/auth/refresh') {
+    if (response.status === 401 && endpoint !== '/auth/refresh' && endpoint !== '/auth/logout' && endpoint !== '/auth/login') {
       // Try to refresh token
       const refreshed = await this.refreshToken()
       
@@ -97,15 +97,15 @@ class ApiClient {
           store.logout()
         }
       }).catch(() => {
-        // Store not available, fall back to redirect
+        // Store not available, fall back to redirect to homepage
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login'
+          window.location.href = '/'
         }
       })
     } catch {
-      // Fallback to direct redirect
+      // Fallback to direct redirect to homepage
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login'
+        window.location.href = '/'
       }
     }
   }
@@ -137,17 +137,8 @@ class ApiClient {
       })
 
       if (response.ok) {
-        // Parse response to get token info if available
-        try {
-          const data = await response.text()
-          const result = data ? JSON.parse(data) : {}
-          console.log('Token refreshed successfully:', result)
-          return true
-        } catch {
-          // Even if JSON parsing fails, if response is ok, consider it success
-          console.log('Token refreshed successfully')
-          return true
-        }
+        console.log('Token refreshed successfully')
+        return true
       } else {
         console.log('Token refresh failed with status:', response.status)
         return false
@@ -182,8 +173,17 @@ export const authApi = {
   login: (username: string, password: string, role: string) =>
     api.post<{message?: string}>('/auth/login', { username, password, role }),
 
-  logout: () =>
-    api.post<{message?: string}>('/auth/logout'),
+  logout: async () => {
+    // Use Next.js API route for logout to properly clear cookies
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (!response.ok) {
+      throw new Error('Logout failed')
+    }
+    return response.json()
+  },
 
   refresh: () =>
     api.post<{message?: string}>('/auth/refresh'),

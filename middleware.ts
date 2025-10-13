@@ -23,6 +23,16 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Check if this is a logout action (no tokens present)
+  // This prevents redirect loops after logout
+  const hasNoTokens = !req.cookies.get('access_token')?.value && !req.cookies.get('refresh_token')?.value;
+  if (hasNoTokens) {
+    console.log('No authentication tokens found, redirecting to login');
+    const loginUrl = new URL('/auth/login', req.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
   const accessToken = req.cookies.get('access_token')?.value;
   const refreshToken = req.cookies.get('refresh_token')?.value;
   

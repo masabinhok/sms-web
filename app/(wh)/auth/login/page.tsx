@@ -22,8 +22,13 @@ export default function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const from = searchParams.get('from') || `/${formData.role.toLowerCase()}`
-      router.push(from)
+      const from = searchParams.get('from')
+      if (from && from !== '/auth/login') {
+        router.push(from)
+      } else {
+        // Default redirect based on role
+        router.push(`/${formData.role.toLowerCase()}`)
+      }
     }
   }, [isAuthenticated, router, searchParams, formData.role])
 
@@ -42,7 +47,13 @@ export default function LoginPage() {
         formData.role
       )
 
-      // Redirect will be handled by the useEffect above
+      // After successful login, redirect based on 'from' param or role
+      const from = searchParams.get('from')
+      if (from && from !== '/auth/login') {
+        router.push(from)
+      } else {
+        router.push(`/${formData.role.toLowerCase()}`)
+      }
     } catch (err) {
       // Error is already handled by the store
       console.error('Login error:', err)

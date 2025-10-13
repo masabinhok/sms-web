@@ -70,27 +70,28 @@ export const useAuth = create<AuthState>()(
       },
 
       logout: async () => {
-        set({ loading: true, error: null });
+        console.log('Logging out - clearing state and cookies');
+        
+        // Clear state immediately
+        set({ 
+          user: null, 
+          loading: false, 
+          error: null, 
+          isAuthenticated: false 
+        });
+        
+        // Clear storage
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth-storage');
+        }
+        
+        // Wait for logout API to clear cookies
         try {
           await authApi.logout();
-          set({ 
-            user: null, 
-            loading: false, 
-            error: null, 
-            isAuthenticated: false 
-          });
+          console.log('Logout API successful - cookies cleared');
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Logout failed';
-          console.error('Logout failed:', error);
-          set({ 
-            loading: false, 
-            error: errorMessage 
-          });
-          // Even if logout fails on server, clear local state
-          set({ 
-            user: null, 
-            isAuthenticated: false 
-          });
+          console.error('Logout API call failed:', error);
+          // Continue even if API fails - state is already cleared
         }
       },
 
@@ -100,59 +101,6 @@ export const useAuth = create<AuthState>()(
 
       setLoading: (loading: boolean) => {
         set({ loading });
-      },
-
-      refreshTokenIfExists: async () => {
-        // Check if we have any authentication cookies
-        const hasAuthCookie = document.cookie.includes('refresh_token=') || 
-                             document.cookie.includes('refreshToken=') ||
-                             document.cookie.includes('connect.sid=') ||
-                             document.cookie.includes('session=') ||
-                             document.cookie.includes('access_token=');
-
-        if (!hasAuthCookie) {
-          console.log('No authentication cookies found');
-          return false;
-        }
-
-        set({ loading: true, error: null });
-        
-        try {
-          // Try to refresh the token using the API client method
-          const refreshSuccess = await authApi.checkAndRefreshToken();
-          
-          if (refreshSuccess) {
-            // If refresh successful, fetch user profile
-            const user = await authApi.getProfile();
-            set({ 
-              user, 
-              loading: false, 
-              error: null, 
-              isAuthenticated: true 
-            });
-            
-            console.log('Token refreshed and user profile fetched successfully');
-            return true;
-          } else {
-            // Refresh failed
-            set({ 
-              loading: false, 
-              error: null, // Don't show error for failed refresh
-              user: null, 
-              isAuthenticated: false 
-            });
-            return false;
-          }
-        } catch (error) {
-          console.error('Token refresh failed:', error);
-          set({ 
-            loading: false, 
-            error: null, // Don't show error for failed refresh on login page
-            user: null, 
-            isAuthenticated: false 
-          });
-          return false;
-        }
       }
     }),
     {

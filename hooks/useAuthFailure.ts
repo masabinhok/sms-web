@@ -18,12 +18,13 @@ export function useAuthFailureHandler() {
       
       try {
         await logout()
+        clearError()
       } catch (error) {
-        console.error('Logout failed:', error)
+        console.error('Auth failure logout error:', error)
+      } finally {
+        // Use hard redirect to ensure we leave protected route immediately
+        window.location.href = '/'
       }
-      
-      clearError()
-      router.replace('/auth/login')
     }
 
     // Listen for auth failure events from API client

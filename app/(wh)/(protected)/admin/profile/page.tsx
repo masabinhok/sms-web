@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/store/authStore'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { User, Mail, Shield, Calendar, Key } from 'lucide-react'
 import {
   Dialog,
@@ -21,6 +22,7 @@ import { useMessage } from '@/store/messageStore'
 
 export default function AdminProfile() {
   const { user, loading } = useAuth();
+  const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const {addMessage} = useMessage();
@@ -226,7 +228,18 @@ export default function AdminProfile() {
           Change Password
         </button>
         <button 
-          onClick={() => logout()}
+          onClick={async () => {
+            try {
+              // Wait for logout to complete (cookies cleared)
+              await logout();
+              console.log('Logout complete, redirecting...');
+            } catch (error) {
+              console.error('Logout error:', error);
+            } finally {
+              // Always redirect regardless
+              window.location.href = '/';
+            }
+          }}
           className="px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
         >
           Logout
