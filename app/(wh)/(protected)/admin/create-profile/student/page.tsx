@@ -30,7 +30,7 @@ export default function CreateStudentProfileForm() {
   const onSubmit = async (data: StudentProfileFormData) => {
     setLoading(true);
     try {
-      const response = await api.post<{message?: string}>('/student/create-profile', data);
+      const response = await api.post<{message?: string}>('/students/create-profile', data);
       addMessage(response.message || "Student profile created successfully!", 'success');
       reset();
     } catch (err) {
