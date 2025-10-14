@@ -264,7 +264,11 @@ export default function StudentsPage() {
                 </tr>
               ) : (
                 students.map((student) => (
-                  <tr key={student.id} className="hover:bg-gray-50">
+                  <tr 
+                    key={student.id} 
+                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => router.push(`/admin/students/${student.id}`)}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{student.fullName}</div>
                       <div className="text-sm text-gray-500">{formatDate(student.dob)}</div>
@@ -286,24 +290,17 @@ export default function StudentsPage() {
                       <div className="text-sm text-gray-500">{student.guardianContact}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => router.push(`/admin/students/${student.id}`)}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="View Details"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                      <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => router.push(`/admin/students/${student.id}/edit`)}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded transition-colors"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(student)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
                           title="Delete"
                           disabled={deleting === student.id}
                         >
