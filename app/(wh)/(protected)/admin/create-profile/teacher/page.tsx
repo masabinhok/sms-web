@@ -63,6 +63,64 @@ const CLASSES = [
   { value: 'TWELFTH', label: '12th' },
 ];
 
+// InputField component moved outside to prevent recreation on every render
+interface InputFieldProps {
+  label: string;
+  name: keyof TeacherProfileFormData;
+  type?: string;
+  placeholder?: string;
+  icon?: any;
+  required?: boolean;
+  maxLength?: number;
+  register: any;
+  errors: any;
+  dirtyFields: any;
+}
+
+const InputField = ({ 
+  label, 
+  name, 
+  type = 'text', 
+  placeholder, 
+  icon: Icon, 
+  required = false,
+  maxLength,
+  register,
+  errors,
+  dirtyFields
+}: InputFieldProps) => {
+  const hasError = errors[name]
+  const isValid = dirtyFields[name] && !errors[name]
+
+  return (
+    <div>
+      <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+        {Icon && <Icon className="w-4 h-4 text-gray-500" />}
+        {label} {required && <span className="text-red-500">*</span>}
+      </Label>
+      <div className="relative">
+        <Input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          {...register(name)}
+          className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
+        />
+        {isValid && (
+          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+        )}
+      </div>
+      {hasError && (
+        <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+          <AlertCircle className="w-4 h-4" />
+          <span>{hasError.message}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function CreateTeacherProfileForm() {
   const [loading, setLoading] = useState(false);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
@@ -121,55 +179,6 @@ export default function CreateTeacherProfileForm() {
   const filledFieldsCount = Object.keys(dirtyFields).length;
   const totalRequiredFields = 6; // fullName, email, phone, dob, gender, address
   const progress = Math.min((filledFieldsCount / totalRequiredFields) * 100, 100);
-
-  const InputField = ({ 
-    label, 
-    name, 
-    type = 'text', 
-    placeholder, 
-    icon: Icon, 
-    required = false,
-    maxLength
-  }: { 
-    label: string
-    name: keyof TeacherProfileFormData
-    type?: string
-    placeholder?: string
-    icon?: any
-    required?: boolean
-    maxLength?: number
-  }) => {
-    const hasError = errors[name]
-    const isValid = dirtyFields[name] && !errors[name]
-
-    return (
-      <div>
-        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-          {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-          {label} {required && <span className="text-red-500">*</span>}
-        </Label>
-        <div className="relative">
-          <Input
-            id={name}
-            type={type}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            {...register(name)}
-            className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
-          />
-          {isValid && (
-            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
-          )}
-        </div>
-        {hasError && (
-          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
-            <AlertCircle className="w-4 h-4" />
-            <span>{hasError.message}</span>
-          </div>
-        )}
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
@@ -238,6 +247,9 @@ export default function CreateTeacherProfileForm() {
                   placeholder="Enter teacher's full name"
                   required
                   maxLength={100}
+                  register={register}
+                  errors={errors}
+                  dirtyFields={dirtyFields}
                 />
               </div>
 
@@ -249,6 +261,9 @@ export default function CreateTeacherProfileForm() {
                 icon={Mail}
                 placeholder="teacher@school.com"
                 required
+                register={register}
+                errors={errors}
+                dirtyFields={dirtyFields}
               />
 
               {/* Phone */}
@@ -260,6 +275,9 @@ export default function CreateTeacherProfileForm() {
                 placeholder="10-15 digit phone number"
                 required
                 maxLength={15}
+                register={register}
+                errors={errors}
+                dirtyFields={dirtyFields}
               />
 
               {/* Date of Birth */}
@@ -269,6 +287,9 @@ export default function CreateTeacherProfileForm() {
                 type="date"
                 icon={Calendar}
                 required
+                register={register}
+                errors={errors}
+                dirtyFields={dirtyFields}
               />
 
               {/* Gender */}

@@ -23,6 +23,66 @@ import { api } from "@/lib/api-client";
 import { useMessage } from "@/store/messageStore";
 import { useRouter } from "next/navigation";
 
+// InputField component moved outside to prevent recreation on every render
+interface InputFieldProps {
+  label: string;
+  name: keyof AdminProfileFormData;
+  type?: string;
+  placeholder?: string;
+  icon?: any;
+  required?: boolean;
+  helpText?: string;
+  register: any;
+  errors: any;
+  dirtyFields: any;
+}
+
+const InputField = ({ 
+  label, 
+  name, 
+  type = 'text', 
+  placeholder, 
+  icon: Icon, 
+  required = false,
+  helpText,
+  register,
+  errors,
+  dirtyFields
+}: InputFieldProps) => {
+  const hasError = errors[name]
+  const isFieldValid = dirtyFields[name] && !errors[name]
+
+  return (
+    <div>
+      <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+        {Icon && <Icon className="w-4 h-4 text-gray-500" />}
+        {label} {required && <span className="text-red-500">*</span>}
+      </Label>
+      <div className="relative">
+        <Input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          {...register(name)}
+          className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isFieldValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
+        />
+        {isFieldValid && (
+          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+        )}
+      </div>
+      {hasError && (
+        <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+          <AlertCircle className="w-4 h-4" />
+          <span>{hasError.message}</span>
+        </div>
+      )}
+      {helpText && !hasError && (
+        <p className="mt-1.5 text-xs text-gray-500">{helpText}</p>
+      )}
+    </div>
+  )
+}
+
 export default function CreateAdminProfilePage() {
   const [loading, setLoading] = useState(false);
   const { addMessage } = useMessage();
@@ -59,57 +119,6 @@ export default function CreateAdminProfilePage() {
   const filledFieldsCount = Object.keys(dirtyFields).length;
   const totalRequiredFields = 2; // name, email
   const progress = Math.min((filledFieldsCount / totalRequiredFields) * 100, 100);
-
-  const InputField = ({ 
-    label, 
-    name, 
-    type = 'text', 
-    placeholder, 
-    icon: Icon, 
-    required = false,
-    helpText
-  }: { 
-    label: string
-    name: keyof AdminProfileFormData
-    type?: string
-    placeholder?: string
-    icon?: any
-    required?: boolean
-    helpText?: string
-  }) => {
-    const hasError = errors[name]
-    const isFieldValid = dirtyFields[name] && !errors[name]
-
-    return (
-      <div>
-        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-          {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-          {label} {required && <span className="text-red-500">*</span>}
-        </Label>
-        <div className="relative">
-          <Input
-            id={name}
-            type={type}
-            placeholder={placeholder}
-            {...register(name)}
-            className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isFieldValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
-          />
-          {isFieldValid && (
-            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
-          )}
-        </div>
-        {hasError && (
-          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
-            <AlertCircle className="w-4 h-4" />
-            <span>{hasError.message}</span>
-          </div>
-        )}
-        {helpText && !hasError && (
-          <p className="mt-1.5 text-xs text-gray-500">{helpText}</p>
-        )}
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
@@ -193,6 +202,9 @@ export default function CreateAdminProfilePage() {
                 placeholder="Enter administrator's full name"
                 required
                 helpText="The full name of the person who will have administrator access"
+                register={register}
+                errors={errors}
+                dirtyFields={dirtyFields}
               />
 
               {/* Email */}
@@ -204,6 +216,9 @@ export default function CreateAdminProfilePage() {
                 placeholder="admin@school.com"
                 required
                 helpText="Login credentials will be sent to this email address"
+                register={register}
+                errors={errors}
+                dirtyFields={dirtyFields}
               />
             </div>
           </div>
