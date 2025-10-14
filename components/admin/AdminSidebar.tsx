@@ -18,18 +18,11 @@ const SECTIONS = [
   ]),
   navSection('Student Management', [
     { label: 'All Students', href: '/admin/students' },
-    { label: 'Admissions', href: '/admin/students/admissions' },
-    { label: 'Promotions', href: '/admin/students/promotions' },
+    
   ]),
   navSection('Teacher Management', [
     { label: 'All Teachers', href: '/admin/teachers' },
-    { label: 'Assign Classes', href: '/admin/teachers/assign' },
-    { label: 'Teacher Payroll', href: '/admin/teachers/payroll' },
-  ]),
-  navSection('School', [
-    { label: 'Calendar & Events', href: '/admin/events' },
-    { label: 'Classes & Timetable', href: '/admin/classes' },
-    { label: 'Fees & Payments', href: '/admin/finance' },
+   
   ]),
 ];
 
