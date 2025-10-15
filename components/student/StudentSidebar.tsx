@@ -15,9 +15,7 @@ const SECTIONS = [
     { label: 'Courses', href: '/student/courses' },
     { label: 'Assignments', href: '/student/assignments' },
   ]),
-  navSection('Account', [
-    { label: 'Profile', href: '/student/profile' },
-  ]),
+  // 'Account' section removed — profile is already available in the fixed footer
 ];
 
 export default function StudentSidebar() {
