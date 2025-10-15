@@ -70,28 +70,46 @@ export const useAuth = create<AuthState>()(
       },
 
       logout: async () => {
-        console.log('Logging out - clearing state and cookies');
-        
-        // Clear state immediately
-        set({ 
-          user: null, 
-          loading: false, 
-          error: null, 
-          isAuthenticated: false 
-        });
-        
-        // Clear storage
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('auth-storage');
-        }
-        
-        // Wait for logout API to clear cookies
+        console.log('Logging out - initiating logout flow');
+
+        // First attempt to notify the server to clear auth cookies/session
         try {
           await authApi.logout();
           console.log('Logout API successful - cookies cleared');
         } catch (error) {
           console.error('Logout API call failed:', error);
-          // Continue even if API fails - state is already cleared
+          // Continue to clear local state even if API fails
+        }
+
+        // Clear state immediately
+        set({
+          user: null,
+          loading: false,
+          error: null,
+          isAuthenticated: false,
+        });
+
+        // Robustly clear persisted storage keys used by zustand/persist
+        if (typeof window !== 'undefined') {
+          try {
+            // Standard key used by this persist middleware
+            localStorage.removeItem('auth-storage');
+            // Some environments prefix with 'persist:'
+            localStorage.removeItem('persist:auth-storage');
+            // Remove any other keys that explicitly reference auth-storage
+            Object.keys(localStorage).forEach((k) => {
+              if (k.includes('auth-storage') || k === 'persist:auth-storage') {
+                try { localStorage.removeItem(k); } catch {}
+              }
+            });
+          } catch (err) {
+            console.warn('Failed to clear localStorage keys during logout', err);
+          }
+
+          // Notify other parts of the app (and other tabs) that logout occurred
+          try {
+            window.dispatchEvent(new CustomEvent('auth:logged-out'));
+          } catch {}
         }
       },
 
