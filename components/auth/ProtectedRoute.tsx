@@ -31,8 +31,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   // Check role-based access
   useEffect(() => {
     if (!loading && isAuthenticated && user && requiredRole) {
-      // ADMIN can access all routes
-      if (user.role === 'ADMIN') {
+      // ADMIN and SUPERADMIN can access all routes
+      if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
         return;
       }
       
@@ -58,8 +58,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return null; // Will redirect to login
   }
 
-  // ADMIN can access all routes
-  if (user.role === 'ADMIN') {
+  // ADMIN and SUPERADMIN can access all routes
+  if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
     return <>{children}</>;
   }
 

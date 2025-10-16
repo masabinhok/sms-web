@@ -66,7 +66,7 @@ export function middleware(req: NextRequest) {
       }
 
       // For non-admin users, enforce role restrictions
-      if (pathname.startsWith('/admin') && userRole !== 'ADMIN') {
+      if (pathname.startsWith('/admin') && userRole !== 'ADMIN' && userRole !== 'SUPERADMIN') {
         return NextResponse.redirect(new URL('/unauthorized', req.url));
       }
 

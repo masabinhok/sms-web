@@ -122,7 +122,7 @@ export default function LoginPage() {
               Role
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {(['STUDENT', 'TEACHER', 'ADMIN'] as UserRole[]).map((role) => (
+              {(['STUDENT', 'TEACHER', 'ADMIN', 'SUPERADMIN'] as UserRole[]).map((role) => (
                 <button
                   key={role}
                   type="button"

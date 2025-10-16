@@ -20,6 +20,7 @@ import {
   UserCog
 } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { useAuth } from '@/store/authStore'
 import { useMessage } from "@/store/messageStore";
 import { useRouter } from "next/navigation";
 
@@ -87,6 +88,7 @@ export default function CreateAdminProfilePage() {
   const [loading, setLoading] = useState(false);
   const { addMessage } = useMessage();
   const router = useRouter();
+  const { user } = useAuth();
   
   const {
     register,
@@ -122,6 +124,19 @@ export default function CreateAdminProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
+      {!user || user.role !== 'SUPERADMIN' ? (
+        <div className="mx-auto max-w-4xl p-8">
+          <div className="bg-white rounded-xl border border-red-200 p-8 text-center">
+            <h2 className="text-xl font-semibold text-red-700 mb-2">Unauthorized</h2>
+            <p className="text-sm text-gray-600">Only SUPERADMIN users can create administrator accounts.</p>
+            <div className="mt-6">
+              <Button variant="outline" onClick={() => router.push('/')}>
+                Go Home
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : (
       <div className="mx-auto max-w-4xl p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
@@ -240,7 +255,7 @@ export default function CreateAdminProfilePage() {
               {[
                 'Create, edit, and delete student profiles',
                 'Create, edit, and delete teacher profiles',
-                'Create additional administrator accounts',
+                'Create additional administrator accounts (SUPERADMIN only)',
                 'View and manage all system data',
                 'Access system settings and configurations',
                 'Generate reports and analytics',
@@ -320,6 +335,7 @@ export default function CreateAdminProfilePage() {
           </div>
         </form>
       </div>
-    </div>
+      )}
+      </div>
   );
 }
