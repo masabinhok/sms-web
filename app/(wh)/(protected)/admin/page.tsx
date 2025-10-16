@@ -43,7 +43,7 @@ export default function AdminDashboard() {
     {
       title: 'Create Student Profile',
       description: 'Add a new student to the system',
-      href: '/admin/create-profile/student',
+      href: '/admin/add-student',
       icon: GraduationCap,
       color: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
       iconColor: 'text-blue-600',
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
     {
       title: 'Create Teacher Profile',
       description: 'Register a new teacher',
-      href: '/admin/create-profile/teacher',
+      href: '/admin/add-teacher',
       icon: Users,
       color: 'bg-green-50 hover:bg-green-100 border-green-200',
       iconColor: 'text-green-600',
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
     {
       title: 'Create Admin Profile',
       description: 'Add a new administrator',
-      href: '/admin/create-profile/admin',
+      href: '/admin/add-admin',
       icon: UserPlus,
       color: 'bg-purple-50 hover:bg-purple-100 border-purple-200',
       iconColor: 'text-purple-600',

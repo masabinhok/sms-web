@@ -178,7 +178,7 @@ export default function TeachersPage() {
           <p className="text-gray-600 mt-1">Manage teacher profiles and information</p>
         </div>
         <Button
-          onClick={() => router.push('/admin/create-profile/teacher')}
+          onClick={() => router.push('/admin/add-teacher')}
           className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
         >
           <Plus className="w-4 h-4" />

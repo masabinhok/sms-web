@@ -11,19 +11,20 @@ const SECTIONS = [
     navSection('Admin', [
     { label: 'Dashboard', href: '/admin' }, 
   ]),
-  navSection('Create Profile', [
-    { label: 'Student', href: '/admin/create-profile/student' },
-    { label: 'Teacher', href: '/admin/create-profile/teacher' },
-    { label: 'Admin', href: '/admin/create-profile/admin' },
+  navSection('User Management', [
+    { label: 'Student Management', href: '/admin/students' },
+    { label: 'Teacher Management', href: '/admin/teachers' },
+    { label: 'Create Admin', href: '/admin/add-admin' },
   ]),
-  navSection('Student Management', [
-    { label: 'All Students', href: '/admin/students' },
-    
+  navSection('Class & Subject Management', [
+    { label: 'Create/Assign Classes', href: '/admin/classes' },
+    { label: 'Create/Assign Subjects', href: '/admin/subjects' },
   ]),
-  navSection('Teacher Management', [
-    { label: 'All Teachers', href: '/admin/teachers' },
-   
+  navSection('Monitoring & Reports', [
+    { label: 'View Reports', href: '/admin/reports' },
+    { label: 'Activity Logs', href: '/admin/logs' },
   ]),
+
 ];
 
 export default function AdminSidebar() {
