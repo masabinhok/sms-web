@@ -108,7 +108,7 @@ export default function CreateAdminProfilePage() {
       addMessage(response.message! || "Admin profile created successfully!", 'success');
       reset();
       // Optionally redirect
-      setTimeout(() => router.push('/admin'), 1500);
+      setTimeout(() => router.push('/superadmin'), 1500);
     } catch (err) {
       console.error(err);
       addMessage("Failed to create admin profile. Please try again.", 'error');
@@ -152,7 +152,7 @@ export default function CreateAdminProfilePage() {
             </div>
             <Button
               variant="outline"
-              onClick={() => router.push('/admin')}
+              onClick={() => router.push('/superadmin')}
               className="w-fit"
             >
               <X className="w-4 h-4 mr-2" />
