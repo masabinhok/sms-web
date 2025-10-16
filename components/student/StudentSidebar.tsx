@@ -11,9 +11,17 @@ const SECTIONS = [
   navSection('Student', [
     { label: 'Dashboard', href: '/student' },
   ]),
-  navSection('My Studies', [
-    { label: 'Courses', href: '/student/courses' },
+  navSection('Class Info', [
+    { label: 'Subjects', href: '/student/subjects' },
     { label: 'Assignments', href: '/student/assignments' },
+  ]),
+  navSection('Performance', [
+    { label: 'Grades', href: '/student/grades' },
+    { label: 'Attendance', href: '/student/attendance' },
+  ]),
+  navSection('Communication', [
+    { label: 'Messages', href: '/student/messages' },
+    { label: 'Announcements', href: '/student/announcements' },
   ]),
   // 'Account' section removed — profile is already available in the fixed footer
 ];
