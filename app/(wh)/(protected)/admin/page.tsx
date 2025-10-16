@@ -82,7 +82,7 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <ProtectedRoute requiredRole="ADMIN">
+    <ProtectedRoute allowedRoles={["ADMIN"]}>
       <div className="space-y-6 mx-auto max-w-6xl p-6">
         {/* Header */}
         <div>

@@ -62,7 +62,7 @@ export const studentSections = [
 
 export const superAdminSections = [
     navSection('Super Admin', [
-        { label: 'Dashboard', href: '/super-admin' },
-        { label: 'Manage Admins', href: '/super-admin/admins' },
+        { label: 'Dashboard', href: '/superadmin' },
+        { label: 'Manage Admins', href: '/superadmin/admins' },
     ])
   ];

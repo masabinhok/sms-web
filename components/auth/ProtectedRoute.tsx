@@ -7,10 +7,11 @@ import { UserRole } from "@/types/auth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: UserRole;
+  // Array of allowed roles for the route. If omitted, any authenticated user can access.
+  allowedRoles?: UserRole[];
 }
 
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { user, loading, fetchUser, isAuthenticated } = useAuth();
   const router = useRouter();
 
@@ -28,20 +29,14 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     }
   }, [loading, isAuthenticated, router]);
 
-  // Check role-based access
+  // Check role-based access: strictly allow only users whose role is in allowedRoles
   useEffect(() => {
-    if (!loading && isAuthenticated && user && requiredRole) {
-      // ADMIN and SUPERADMIN can access all routes
-      if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
-        return;
-      }
-      
-      // For non-admin users, enforce role restrictions
-      if (user.role !== requiredRole) {
+    if (!loading && isAuthenticated && user && allowedRoles && allowedRoles.length > 0) {
+      if (!allowedRoles.includes(user.role)) {
         router.push('/unauthorized');
       }
     }
-  }, [loading, isAuthenticated, user, requiredRole, router]);
+  }, [loading, isAuthenticated, user, allowedRoles, router]);
 
   if (loading) {
     return (
@@ -58,14 +53,11 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return null; // Will redirect to login
   }
 
-  // ADMIN and SUPERADMIN can access all routes
-  if (user.role === 'ADMIN' || user.role === 'SUPERADMIN') {
-    return <>{children}</>;
-  }
-
-  // For non-admin users, check role requirement
-  if (requiredRole && user.role !== requiredRole) {
-    return null; // Will redirect to unauthorized
+  // If allowedRoles specified, enforce it here as well for synchronous render
+  if (allowedRoles && allowedRoles.length > 0) {
+    if (!allowedRoles.includes(user.role)) {
+      return null; // redirect handled by effect above
+    }
   }
 
   return <>{children}</>;

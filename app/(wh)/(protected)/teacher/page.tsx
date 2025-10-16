@@ -5,7 +5,7 @@ import { BookOpen, Users, FileText, Settings } from 'lucide-react'
 
 export default function TeacherDashboard() {
   return (
-    <ProtectedRoute requiredRole="TEACHER">
+    <ProtectedRoute allowedRoles={["TEACHER"]}>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
