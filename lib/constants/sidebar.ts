@@ -7,7 +7,7 @@ export const adminSections = [
   navSection('User Management', [
     { label: 'Student Management', href: '/admin/students' },
     { label: 'Teacher Management', href: '/admin/teachers' },
-    { label: 'Create Admin', href: '/admin/add-admin' },
+    { label: 'Create Admin', href: '/superadmin/add-admin' },
   ]),
   navSection('Class & Subject Management', [
     { label: 'Create/Assign Classes', href: '/admin/classes' },

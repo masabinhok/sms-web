@@ -59,7 +59,7 @@ export default function AdminDashboard() {
     {
       title: 'Create Admin Profile',
       description: 'Add a new administrator',
-      href: '/admin/add-admin',
+      href: '/supersuperadmin/add-admin',
       icon: UserPlus,
       color: 'bg-purple-50 hover:bg-purple-100 border-purple-200',
       iconColor: 'text-purple-600',
