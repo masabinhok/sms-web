@@ -11,12 +11,22 @@ const SECTIONS = [
   navSection('Teacher', [
     { label: 'Dashboard', href: '/teacher' },
   ]),
-  navSection('Classes', [
+  navSection('Class Management', [
     { label: 'My Classes', href: '/teacher/classes' },
-    { label: 'Attendance', href: '/teacher/attendance' },
+    { label: 'My Subjects', href: '/teacher/subjects' },
   ]),
-  navSection('Students', [
-    { label: 'My Students', href: '/teacher/students' },
+  navSection('Attendance', [
+    { label: 'Daily Attendance', href: '/teacher/attendance' },
+    { label: 'Attendance History', href: '/teacher/attendance-history' },
+  ]),
+  navSection('Grades/Assignments', [
+    { label: 'Assignments', href: '/teacher/assignments' },
+    { label: 'Grades', href: '/teacher/grades' },
+    { label: 'Student Performance', href: '/teacher/student-performance' },
+  ]),
+  navSection('Communication', [
+    { label: 'Messages', href: '/teacher/messages' },
+    { label: 'Announcements', href: '/teacher/announcements' },
   ]),
 ];
 
