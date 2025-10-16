@@ -1,10 +1,10 @@
 import Sidebar from '@/components/sidebar/Sidebar';
 import { ReactNode } from 'react';
 
-export default function TeacherLayout({ children }: { children: ReactNode }) {
+export default function SuperAdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role="teacher" />
+      <Sidebar role="super-admin" />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
   );
