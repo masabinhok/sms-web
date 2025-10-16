@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { useMessage } from '@/store/messageStore'
-import { Trash2, Plus, Search } from 'lucide-react'
+import { Trash2, Plus, Search, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function SuperAdminAdminsPage() {
@@ -96,14 +96,37 @@ export default function SuperAdminAdminsPage() {
                 <tr><td colSpan={5} className="py-12 text-center text-gray-500">No admins found</td></tr>
               ) : (
                 admins.map((a) => (
-                  <tr key={a.id} className="hover:bg-gray-50">
+                  <tr
+                    key={a.id}
+                    className="hover:bg-gray-50 cursor-pointer focus:outline-none focus-visible:bg-gray-100"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => router.push(`/superadmin/admins/${a.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        router.push(`/superadmin/admins/${a.id}`)
+                      }
+                    }}
+                  >
                     <td className="px-6 py-4">{a.username}</td>
                     <td className="px-6 py-4">{a.fullName ?? '—'}</td>
                     <td className="px-6 py-4">{a.email ?? '—'}</td>
                     <td className="px-6 py-4">{a.createdAt ? new Date(a.createdAt).toLocaleString() : '—'}</td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setDeleteDialog({ open: true, admin: a })} className="text-red-600 hover:text-red-800 p-1 rounded">
+                      <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); router.push(`/superadmin/admins/${a.id}/edit`) }}
+                          className="text-green-600 hover:text-green-800 p-1 rounded"
+                          title="Edit"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setDeleteDialog({ open: true, admin: a }) }}
+                          className="text-red-600 hover:text-red-800 p-1 rounded"
+                          title="Delete"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
