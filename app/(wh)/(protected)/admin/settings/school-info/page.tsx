@@ -13,10 +13,10 @@ import {
   Instagram,
   Twitter,
   Youtube,
-  Linkedin,
   AlertCircle,
   CheckCircle2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Sparkles
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -32,45 +32,28 @@ interface FormData {
   name: string
   tagline: string
   motto: string
-  foundingYear: string
   
   // Contact Information
   address: string
   city: string
-  state: string
-  country: string
-  zipCode: string
   phone: string
-  alternatePhone: string
   email: string
-  admissionEmail: string
-  website: string
   
-  // Social Media
+  // Social Media (only those used in public website)
   facebook: string
   instagram: string
   twitter: string
   youtube: string
-  linkedin: string
   
   // About Information
   description: string
   mission: string
   vision: string
-  principalName: string
-  principalMessage: string
   
-  // Statistics
-  campusArea: string
-  classrooms: string
-  laboratories: string
-  libraries: string
-  
-  // Accreditation
-  affiliatedTo: string
-  recognizedBy: string
-  accreditedBy: string
-  schoolCode: string
+  // Hero Section
+  heroTitle: string
+  heroSubtitle: string
+  heroCTA: string
 }
 
 export default function SchoolInfoSettings() {
@@ -81,40 +64,24 @@ export default function SchoolInfoSettings() {
     name: SCHOOL_INFO.name,
     tagline: SCHOOL_INFO.tagline,
     motto: SCHOOL_INFO.motto,
-    foundingYear: SCHOOL_INFO.about.foundingYear,
     
     address: SCHOOL_INFO.contact.address,
     city: SCHOOL_INFO.contact.city,
-    state: SCHOOL_INFO.contact.state,
-    country: SCHOOL_INFO.contact.country,
-    zipCode: SCHOOL_INFO.contact.zipCode,
     phone: SCHOOL_INFO.contact.phone,
-    alternatePhone: SCHOOL_INFO.contact.alternatePhone,
     email: SCHOOL_INFO.contact.email,
-    admissionEmail: SCHOOL_INFO.contact.admissionEmail,
-    website: SCHOOL_INFO.contact.website,
     
     facebook: SCHOOL_INFO.social.facebook,
     instagram: SCHOOL_INFO.social.instagram,
     twitter: SCHOOL_INFO.social.twitter,
     youtube: SCHOOL_INFO.social.youtube,
-    linkedin: SCHOOL_INFO.social.linkedin,
     
     description: SCHOOL_INFO.about.description,
     mission: SCHOOL_INFO.about.mission,
     vision: SCHOOL_INFO.about.vision,
-    principalName: SCHOOL_INFO.about.principalName,
-    principalMessage: SCHOOL_INFO.about.principalMessage,
     
-    campusArea: SCHOOL_INFO.stats.campusArea,
-    classrooms: SCHOOL_INFO.stats.classrooms,
-    laboratories: SCHOOL_INFO.stats.laboratories,
-    libraries: SCHOOL_INFO.stats.libraries,
-    
-    affiliatedTo: SCHOOL_INFO.accreditation.affiliatedTo,
-    recognizedBy: SCHOOL_INFO.accreditation.recognizedBy,
-    accreditedBy: SCHOOL_INFO.accreditation.accreditedBy,
-    schoolCode: SCHOOL_INFO.accreditation.schoolCode,
+    heroTitle: SCHOOL_INFO.hero.title,
+    heroSubtitle: SCHOOL_INFO.hero.subtitle,
+    heroCTA: SCHOOL_INFO.hero.ctaPrimary,
   })
 
   const handleChange = (field: keyof FormData, value: string) => {
@@ -145,7 +112,8 @@ export default function SchoolInfoSettings() {
     icon: Icon,
     type = 'text',
     required = false,
-    maxLength
+    maxLength,
+    helpText
   }: { 
     label: string
     field: keyof FormData
@@ -154,6 +122,7 @@ export default function SchoolInfoSettings() {
     type?: string
     required?: boolean
     maxLength?: number
+    helpText?: string
   }) => (
     <div className="space-y-2">
       <Label htmlFor={field} className="text-gray-700 flex items-center gap-2">
@@ -171,6 +140,9 @@ export default function SchoolInfoSettings() {
         maxLength={maxLength}
         className="bg-white border-gray-300"
       />
+      {helpText && (
+        <p className="text-xs text-gray-500">{helpText}</p>
+      )}
     </div>
   )
 
@@ -230,7 +202,7 @@ export default function SchoolInfoSettings() {
               School Information
             </h1>
             <p className="text-gray-600 mt-2">
-              Configure basic school details that appear on your website and reports
+              Configure school details that appear on your public website
             </p>
           </div>
           {showSuccess && (
@@ -247,10 +219,10 @@ export default function SchoolInfoSettings() {
             <div className="flex gap-3">
               <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-blue-900 mb-1">Important Information</h3>
+                <h3 className="font-semibold text-blue-900 mb-1">About These Settings</h3>
                 <p className="text-sm text-blue-800">
-                  These settings control the information displayed on your public website, reports, and certificates.
-                  Make sure all information is accurate and up-to-date. Changes will be reflected immediately across the system.
+                  These settings control information displayed on your <strong>public website only</strong>.
+                  Only fields that are actively used in the website are shown here. Changes will be reflected immediately.
                 </p>
               </div>
             </div>
@@ -266,7 +238,7 @@ export default function SchoolInfoSettings() {
                 Basic Information
               </CardTitle>
               <CardDescription>
-                Essential school details and identity
+                School name and identity displayed throughout the website
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-5">
@@ -278,29 +250,63 @@ export default function SchoolInfoSettings() {
                     placeholder="e.g., Greenfield International School"
                     required
                     maxLength={100}
+                    helpText="Used in: Navbar, Footer, About section, Hero section"
                   />
                 </div>
                 <InputField
                   label="Tagline"
                   field="tagline"
                   placeholder="e.g., Excellence in Education"
+                  required
                   maxLength={100}
+                  helpText="Used in: Navbar, Hero section"
                 />
                 <InputField
-                  label="Founding Year"
-                  field="foundingYear"
-                  placeholder="e.g., 2000"
-                  maxLength={4}
+                  label="Motto"
+                  field="motto"
+                  placeholder="e.g., Empowering Minds, Shaping Futures"
+                  required
+                  maxLength={150}
+                  helpText="Used in: Footer"
                 />
-                <div className="md:col-span-2">
-                  <InputField
-                    label="Motto"
-                    field="motto"
-                    placeholder="e.g., Empowering Minds, Shaping Futures"
-                    maxLength={150}
-                  />
-                </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b">
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-yellow-600" />
+                Hero Section (Homepage Banner)
+              </CardTitle>
+              <CardDescription>
+                Main headline and call-to-action on the homepage
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-5">
+              <InputField
+                label="Hero Title"
+                field="heroTitle"
+                placeholder="e.g., Welcome to Our School"
+                required
+                maxLength={150}
+              />
+              <TextareaField
+                label="Hero Subtitle"
+                field="heroSubtitle"
+                placeholder="A brief description that appears under the title..."
+                rows={2}
+                required
+                maxLength={300}
+              />
+              <InputField
+                label="Primary Button Text"
+                field="heroCTA"
+                placeholder="e.g., Learn More"
+                required
+                maxLength={50}
+              />
             </CardContent>
           </Card>
 
@@ -312,7 +318,7 @@ export default function SchoolInfoSettings() {
                 Contact Information
               </CardTitle>
               <CardDescription>
-                Address and contact details for communication
+                Displayed in Navbar, Footer, and Contact page
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-5">
@@ -335,27 +341,7 @@ export default function SchoolInfoSettings() {
                   maxLength={50}
                 />
                 <InputField
-                  label="State/Province"
-                  field="state"
-                  placeholder="e.g., NY"
-                  required
-                  maxLength={50}
-                />
-                <InputField
-                  label="Country"
-                  field="country"
-                  placeholder="e.g., United States"
-                  required
-                  maxLength={50}
-                />
-                <InputField
-                  label="Zip/Postal Code"
-                  field="zipCode"
-                  placeholder="e.g., 10001"
-                  maxLength={10}
-                />
-                <InputField
-                  label="Primary Phone"
+                  label="Phone Number"
                   field="phone"
                   icon={Phone}
                   type="tel"
@@ -363,39 +349,17 @@ export default function SchoolInfoSettings() {
                   required
                   maxLength={20}
                 />
-                <InputField
-                  label="Alternate Phone"
-                  field="alternatePhone"
-                  icon={Phone}
-                  type="tel"
-                  placeholder="e.g., +1 (555) 987-6543"
-                  maxLength={20}
-                />
-                <InputField
-                  label="General Email"
-                  field="email"
-                  icon={Mail}
-                  type="email"
-                  placeholder="e.g., info@school.com"
-                  required
-                  maxLength={100}
-                />
-                <InputField
-                  label="Admissions Email"
-                  field="admissionEmail"
-                  icon={Mail}
-                  type="email"
-                  placeholder="e.g., admissions@school.com"
-                  maxLength={100}
-                />
-                <InputField
-                  label="Website URL"
-                  field="website"
-                  icon={Globe}
-                  type="url"
-                  placeholder="e.g., https://www.school.com"
-                  maxLength={100}
-                />
+                <div className="md:col-span-2">
+                  <InputField
+                    label="Email Address"
+                    field="email"
+                    icon={Mail}
+                    type="email"
+                    placeholder="e.g., info@school.com"
+                    required
+                    maxLength={100}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -408,7 +372,7 @@ export default function SchoolInfoSettings() {
                 Social Media Links
               </CardTitle>
               <CardDescription>
-                Connect your social media profiles
+                Social media icons and links in the Footer
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-5">
@@ -441,13 +405,6 @@ export default function SchoolInfoSettings() {
                   placeholder="https://youtube.com/@yourschool"
                   maxLength={200}
                 />
-                <InputField
-                  label="LinkedIn"
-                  field="linkedin"
-                  icon={Linkedin}
-                  placeholder="https://linkedin.com/school/yourschool"
-                  maxLength={200}
-                />
               </div>
             </CardContent>
           </Card>
@@ -457,10 +414,10 @@ export default function SchoolInfoSettings() {
             <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
               <CardTitle className="flex items-center gap-2">
                 <ImageIcon className="w-5 h-5 text-green-600" />
-                About & Description
+                About Section Content
               </CardTitle>
               <CardDescription>
-                Tell your school's story
+                Displayed on the About section of your website
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-5">
@@ -469,6 +426,7 @@ export default function SchoolInfoSettings() {
                 field="description"
                 placeholder="Write a compelling description of your school..."
                 rows={4}
+                required
                 maxLength={1000}
               />
               <TextareaField
@@ -476,6 +434,7 @@ export default function SchoolInfoSettings() {
                 field="mission"
                 placeholder="What is your school's mission?"
                 rows={3}
+                required
                 maxLength={500}
               />
               <TextareaField
@@ -483,105 +442,9 @@ export default function SchoolInfoSettings() {
                 field="vision"
                 placeholder="What is your school's vision?"
                 rows={3}
+                required
                 maxLength={500}
               />
-              <div className="grid md:grid-cols-2 gap-5">
-                <InputField
-                  label="Principal's Name"
-                  field="principalName"
-                  placeholder="e.g., Dr. Jane Smith"
-                  maxLength={100}
-                />
-              </div>
-              <TextareaField
-                label="Principal's Message"
-                field="principalMessage"
-                placeholder="A message from the principal..."
-                rows={4}
-                maxLength={1000}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Statistics & Infrastructure */}
-          <Card className="border-gray-200 shadow-sm">
-            <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 border-b">
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-orange-600" />
-                Infrastructure & Statistics
-              </CardTitle>
-              <CardDescription>
-                Campus facilities and infrastructure details
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
-                <InputField
-                  label="Campus Area"
-                  field="campusArea"
-                  placeholder="e.g., 5 acres"
-                  maxLength={50}
-                />
-                <InputField
-                  label="Number of Classrooms"
-                  field="classrooms"
-                  placeholder="e.g., 50"
-                  maxLength={10}
-                />
-                <InputField
-                  label="Number of Laboratories"
-                  field="laboratories"
-                  placeholder="e.g., 8"
-                  maxLength={10}
-                />
-                <InputField
-                  label="Number of Libraries"
-                  field="libraries"
-                  placeholder="e.g., 2"
-                  maxLength={10}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Accreditation */}
-          <Card className="border-gray-200 shadow-sm">
-            <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50 border-b">
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-indigo-600" />
-                Accreditation & Affiliation
-              </CardTitle>
-              <CardDescription>
-                Official recognition and certification details
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
-                <InputField
-                  label="Affiliated To"
-                  field="affiliatedTo"
-                  placeholder="e.g., CBSE, State Board"
-                  maxLength={100}
-                />
-                <InputField
-                  label="Recognized By"
-                  field="recognizedBy"
-                  placeholder="e.g., Ministry of Education"
-                  maxLength={100}
-                />
-                <InputField
-                  label="Accredited By"
-                  field="accreditedBy"
-                  placeholder="e.g., National Accreditation Body"
-                  maxLength={100}
-                />
-                <InputField
-                  label="School Code"
-                  field="schoolCode"
-                  placeholder="e.g., SCH123456"
-                  maxLength={50}
-                />
-              </div>
             </CardContent>
           </Card>
 
@@ -590,7 +453,7 @@ export default function SchoolInfoSettings() {
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600">
                 <AlertCircle className="w-4 h-4 inline mr-1" />
-                Make sure all information is accurate before saving
+                Changes will be visible immediately on the public website
               </p>
               <div className="flex gap-3">
                 <Link href="/admin/settings">
