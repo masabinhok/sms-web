@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { ChevronDown, Play, Award, Users, BookOpen, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 
 export function Hero() {
@@ -146,7 +146,10 @@ export function Hero() {
                     Watch Virtual Tour
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="max-w-4xl bg-white">
+                  <DialogHeader>
+                    <DialogTitle>Virtual Tour</DialogTitle>
+                  </DialogHeader>
                   <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
                     <p className="text-white">Virtual Tour Video Placeholder</p>
                   </div>

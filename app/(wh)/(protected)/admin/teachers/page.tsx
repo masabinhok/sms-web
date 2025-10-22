@@ -405,7 +405,7 @@ export default function TeachersPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, teacher: null })}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Delete Teacher</DialogTitle>
             <DialogDescription>

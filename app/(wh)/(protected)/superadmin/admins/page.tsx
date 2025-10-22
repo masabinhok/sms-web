@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { adminApi, Admin } from '@/lib/admin-api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { useMessage } from '@/store/messageStore'
 import { Trash2, Plus, Search, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -141,11 +141,14 @@ export default function SuperAdminAdminsPage() {
 
       {/* Delete confirmation */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, admin: null })}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle>Delete Admin</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this admin? This action cannot be undone.
+            </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex justify-end gap-2">
+          <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, admin: null })}>Cancel</Button>
             <Button variant="destructive" onClick={confirmDelete} disabled={!!deleting}>{deleting ? 'Deleting...' : 'Delete'}</Button>
           </DialogFooter>
