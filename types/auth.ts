@@ -9,6 +9,8 @@ export interface LoginResponse {
   message: string
   accessToken?: string
   refreshToken?: string
+  requiresPasswordChange?: boolean
+  passwordChangeCount?: number
 }
 
 export interface User {
@@ -21,6 +23,8 @@ export interface User {
   name?: string
   createdAt?: string
   updatedAt?: string
+  passwordChangeCount?: number
+  requiresPasswordChange?: boolean
 }
 
 export interface ApiUserResponse {

@@ -171,7 +171,7 @@ export const api = new ApiClient(API_BASE_URL)
 // Auth API methods with improved error handling
 export const authApi = {
   login: (username: string, password: string, role: string) =>
-    api.post<{message?: string}>('/auth/login', { username, password, role }),
+    api.post<{message?: string, requiresPasswordChange?: boolean, passwordChangeCount?: number}>('/auth/login', { username, password, role }),
 
   logout: async () => {
     // Use Next.js API route for logout to properly clear cookies

@@ -8,11 +8,13 @@ interface AuthState {
     loading: boolean;
     error: string | null;
     isAuthenticated: boolean;
+    requiresPasswordChange: boolean;
     login: (credentials: LoginCredentials, role: UserRole) => Promise<void>;
     fetchUser: () => Promise<void>; 
     logout: () => Promise<void>;
     clearError: () => void;
     setLoading: (loading: boolean) => void;
+    setRequiresPasswordChange: (requires: boolean) => void;
 }
 
 export const useAuth = create<AuthState>()(
@@ -22,18 +24,28 @@ export const useAuth = create<AuthState>()(
       loading: false, 
       error: null,
       isAuthenticated: false,
+      requiresPasswordChange: false,
       
       login: async (credentials: LoginCredentials, role: UserRole) => {
         set({ loading: true, error: null });
         try {
-          await authApi.login(credentials.username, credentials.password, role);
+          const loginResponse = await authApi.login(credentials.username, credentials.password, role);
           // After successful login, fetch user profile
           const user = await authApi.getProfile();
+          
+          // Check if password change is required
+          const requiresPasswordChange = loginResponse.requiresPasswordChange || user.passwordChangeCount === 0;
+          
           set({ 
-            user, 
+            user: {
+              ...user,
+              passwordChangeCount: loginResponse.passwordChangeCount ?? user.passwordChangeCount,
+              requiresPasswordChange
+            }, 
             loading: false, 
             error: null, 
-            isAuthenticated: true 
+            isAuthenticated: true,
+            requiresPasswordChange
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Login failed';
@@ -41,7 +53,8 @@ export const useAuth = create<AuthState>()(
             loading: false, 
             error: errorMessage, 
             user: null, 
-            isAuthenticated: false 
+            isAuthenticated: false,
+            requiresPasswordChange: false
           });
           throw error;
         }
@@ -51,11 +64,17 @@ export const useAuth = create<AuthState>()(
         set({ loading: true, error: null });
         try {
           const user = await authApi.getProfile();
+          const requiresPasswordChange = user.passwordChangeCount === 0;
+          
           set({ 
-            user, 
+            user: {
+              ...user,
+              requiresPasswordChange
+            }, 
             loading: false, 
             error: null, 
-            isAuthenticated: true 
+            isAuthenticated: true,
+            requiresPasswordChange
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to fetch user profile';
@@ -64,7 +83,8 @@ export const useAuth = create<AuthState>()(
             loading: false, 
             error: errorMessage, 
             user: null, 
-            isAuthenticated: false 
+            isAuthenticated: false,
+            requiresPasswordChange: false
           });
         }
       },
@@ -87,6 +107,7 @@ export const useAuth = create<AuthState>()(
           loading: false,
           error: null,
           isAuthenticated: false,
+          requiresPasswordChange: false,
         });
 
         // Robustly clear persisted storage keys used by zustand/persist
@@ -119,6 +140,10 @@ export const useAuth = create<AuthState>()(
 
       setLoading: (loading: boolean) => {
         set({ loading });
+      },
+
+      setRequiresPasswordChange: (requires: boolean) => {
+        set({ requiresPasswordChange: requires });
       }
     }),
     {
@@ -126,7 +151,8 @@ export const useAuth = create<AuthState>()(
       // Only persist user and isAuthenticated, not loading/error states
       partialize: (state) => ({ 
         user: state.user, 
-        isAuthenticated: state.isAuthenticated 
+        isAuthenticated: state.isAuthenticated,
+        requiresPasswordChange: state.requiresPasswordChange
       }),
     }
   )

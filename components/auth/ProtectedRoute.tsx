@@ -2,8 +2,9 @@
 
 import { useAuth } from "@/store/authStore";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { UserRole } from "@/types/auth";
+import { PasswordChangeWarning } from "./PasswordChangeWarning";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,8 +13,9 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { user, loading, fetchUser, isAuthenticated } = useAuth();
+  const { user, loading, fetchUser, isAuthenticated, requiresPasswordChange } = useAuth();
   const router = useRouter();
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
 
   // Try to fetch user on mount
   useEffect(() => {
@@ -21,6 +23,15 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
       fetchUser();
     }
   }, [fetchUser, isAuthenticated, loading]);
+
+  // Check for password change requirement
+  useEffect(() => {
+    if (!loading && isAuthenticated && user) {
+      if (requiresPasswordChange || user.passwordChangeCount === 0) {
+        setShowPasswordDialog(true);
+      }
+    }
+  }, [loading, isAuthenticated, user, requiresPasswordChange]);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -60,5 +71,14 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
     }
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <PasswordChangeWarning 
+        isOpen={showPasswordDialog} 
+        onClose={() => setShowPasswordDialog(false)}
+        isMandatory={requiresPasswordChange || user.passwordChangeCount === 0}
+      />
+      {children}
+    </>
+  );
 }
