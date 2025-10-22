@@ -1,6 +1,6 @@
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import Link from 'next/link'
-import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award } from 'lucide-react'
+import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb } from 'lucide-react'
 
 export default function AdminDashboard() {
   // Mock data - replace with real data from API
@@ -89,6 +89,39 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           <p className="mt-2 text-gray-600">Welcome back! Here's what's happening in your school today.</p>
         </div>
+
+        {/* Setup Guidelines Banner */}
+        <Link 
+          href="/admin/guidelines"
+          className="block group"
+        >
+          <div className="relative overflow-hidden rounded-xl border-2 border-yellow-300 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 p-6 shadow-sm transition-all hover:shadow-lg hover:border-yellow-400">
+            <div className="flex items-start gap-4">
+              <div className="rounded-full bg-yellow-400 p-3 group-hover:scale-110 transition-transform">
+                <Lightbulb className="h-6 w-6 text-yellow-900" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+                  New to the system? View Setup Guidelines
+                  <svg
+                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </h3>
+                <p className="text-sm text-gray-700">
+                  Follow our step-by-step guide to properly configure your school: Setup school info → Create classes & subjects → Add teachers → Enroll students
+                </p>
+              </div>
+            </div>
+            {/* Decorative element */}
+            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-yellow-200 opacity-20 blur-2xl" />
+            <div className="absolute -right-8 -bottom-8 h-32 w-32 rounded-full bg-orange-200 opacity-20 blur-2xl" />
+          </div>
+        </Link>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
