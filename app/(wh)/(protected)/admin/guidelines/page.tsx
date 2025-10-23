@@ -13,20 +13,33 @@ import {
   Info,
   AlertCircle,
   Lightbulb,
-  ArrowRight
+  ArrowRight,
+  RotateCcw,
+  ShieldAlert,
+  Lock,
+  Loader2
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useSetupStore, StepStatus } from '@/store/setupStore'
+import { checkStepSequence } from '@/lib/setup-validation'
 
 interface GuidelineStep {
   id: number
   title: string
   description: string
   icon: React.ElementType
-  status: 'completed' | 'in-progress' | 'pending'
   actionLabel: string
   actionLink: string
   details: string[]
@@ -36,15 +49,39 @@ interface GuidelineStep {
 export default function AdminGuidelines() {
   const router = useRouter()
   const [expandedStep, setExpandedStep] = useState<number | null>(1)
+  const [validating, setValidating] = useState(false)
+  const [warningDialog, setWarningDialog] = useState<{
+    open: boolean
+    title: string
+    message: string
+    details?: string[]
+    type: 'warning' | 'error' | 'info'
+  }>({
+    open: false,
+    title: '',
+    message: '',
+    type: 'warning',
+  })
 
-  // This would ideally come from a context or API to track actual progress
-  const [steps, setSteps] = useState<GuidelineStep[]>([
+  // Use Zustand store for step status
+  const { 
+    getStepStatus, 
+    markStepCompleted, 
+    markStepInProgress,
+    getCompletedStepsCount,
+    getProgressPercentage,
+    resetAllSteps,
+    canProceedToStep,
+    getCompletedStepIds
+  } = useSetupStore()
+
+  // Steps configuration (status comes from store)
+  const steps: GuidelineStep[] = [
     {
       id: 1,
       title: 'Setup School Information',
       description: 'Configure basic school details and settings',
       icon: School,
-      status: 'in-progress',
       actionLabel: 'Configure Settings',
       actionLink: '/admin/settings',
       details: [
@@ -63,7 +100,6 @@ export default function AdminGuidelines() {
       title: 'Create Classes',
       description: 'Set up all grade levels and class sections',
       icon: BookOpen,
-      status: 'pending',
       actionLabel: 'Manage Classes',
       actionLink: '/admin/classes',
       details: [
@@ -83,7 +119,6 @@ export default function AdminGuidelines() {
       title: 'Create Subjects',
       description: 'Define curriculum subjects for each grade level',
       icon: BookOpen,
-      status: 'pending',
       actionLabel: 'Manage Subjects',
       actionLink: '/admin/subjects',
       details: [
@@ -105,7 +140,6 @@ export default function AdminGuidelines() {
       title: 'Create Teacher Profiles',
       description: 'Add teaching staff and assign their roles',
       icon: Users,
-      status: 'pending',
       actionLabel: 'Add Teachers',
       actionLink: '/admin/add-teacher',
       details: [
@@ -127,7 +161,6 @@ export default function AdminGuidelines() {
       title: 'Create Student Profiles',
       description: 'Enroll students and assign them to classes',
       icon: GraduationCap,
-      status: 'pending',
       actionLabel: 'Add Students',
       actionLink: '/admin/add-student',
       details: [
@@ -151,7 +184,6 @@ export default function AdminGuidelines() {
       title: 'Review and Monitor',
       description: 'Regular maintenance and system monitoring',
       icon: Settings,
-      status: 'pending',
       actionLabel: 'View Reports',
       actionLink: '/admin/reports',
       details: [
@@ -167,18 +199,95 @@ export default function AdminGuidelines() {
         'Address any inconsistencies immediately',
         'Backup important data regularly'
       ]
-    }
-  ])
+    },
+  ]
 
   const handleStepClick = (stepId: number) => {
     setExpandedStep(expandedStep === stepId ? null : stepId)
   }
 
-  const handleAction = (link: string) => {
+  const handleAction = (stepId: number, link: string) => {
+    // Check sequence before allowing navigation
+    const completedSteps = getCompletedStepIds()
+    const sequenceCheck = checkStepSequence(stepId, completedSteps)
+    
+    if (!sequenceCheck.isValid) {
+      setWarningDialog({
+        open: true,
+        title: '⚠️ Step Sequence Warning',
+        message: sequenceCheck.message,
+        details: sequenceCheck.details,
+        type: 'warning',
+      })
+      return
+    }
+
     router.push(link)
   }
 
-  const getStatusIcon = (status: GuidelineStep['status']) => {
+  const handleMarkComplete = async (stepId: number) => {
+    // Check sequence first
+    const completedSteps = getCompletedStepIds()
+    const sequenceCheck = checkStepSequence(stepId, completedSteps)
+    
+    if (!sequenceCheck.isValid) {
+      setWarningDialog({
+        open: true,
+        title: '🔒 Cannot Complete Step',
+        message: sequenceCheck.message,
+        details: sequenceCheck.details,
+        type: 'error',
+      })
+      return
+    }
+
+    setValidating(true)
+    
+    try {
+      // Attempt to mark as completed (includes validation)
+      const result = await markStepCompleted(stepId)
+      
+      if (!result.isValid) {
+        setWarningDialog({
+          open: true,
+          title: '❌ Validation Failed',
+          message: result.message,
+          details: result.details,
+          type: 'error',
+        })
+      } else {
+        setWarningDialog({
+          open: true,
+          title: '✅ Step Completed',
+          message: result.message,
+          details: result.details,
+          type: 'info',
+        })
+      }
+    } catch (error) {
+      setWarningDialog({
+        open: true,
+        title: '❌ Error',
+        message: 'Failed to validate step completion',
+        details: [error instanceof Error ? error.message : 'Unknown error'],
+        type: 'error',
+      })
+    } finally {
+      setValidating(false)
+    }
+  }
+
+  const handleReset = () => {
+    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+      resetAllSteps()
+    }
+  }
+
+  const closeDialog = () => {
+    setWarningDialog({ ...warningDialog, open: false })
+  }
+
+  const getStatusIcon = (status: StepStatus) => {
     switch (status) {
       case 'completed':
         return <CheckCircle2 className="w-6 h-6 text-green-600" />
@@ -189,7 +298,7 @@ export default function AdminGuidelines() {
     }
   }
 
-  const getStatusBadge = (status: GuidelineStep['status']) => {
+  const getStatusBadge = (status: StepStatus) => {
     switch (status) {
       case 'completed':
         return <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Completed</Badge>
@@ -200,12 +309,61 @@ export default function AdminGuidelines() {
     }
   }
 
-  const completedSteps = steps.filter(s => s.status === 'completed').length
-  const progress = (completedSteps / steps.length) * 100
+  const completedSteps = getCompletedStepsCount()
+  const progress = getProgressPercentage()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <>
+      {/* Warning/Error Dialog */}
+      <Dialog open={warningDialog.open} onOpenChange={closeDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {warningDialog.type === 'warning' && (
+                <ShieldAlert className="w-5 h-5 text-yellow-600" />
+              )}
+              {warningDialog.type === 'error' && (
+                <AlertCircle className="w-5 h-5 text-red-600" />
+              )}
+              {warningDialog.type === 'info' && (
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+              )}
+              {warningDialog.title}
+            </DialogTitle>
+            <DialogDescription className="text-base">
+              {warningDialog.message}
+            </DialogDescription>
+          </DialogHeader>
+          {warningDialog.details && warningDialog.details.length > 0 && (
+            <div className={`rounded-lg p-4 ${
+              warningDialog.type === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
+              warningDialog.type === 'error' ? 'bg-red-50 border border-red-200' :
+              'bg-green-50 border border-green-200'
+            }`}>
+              <ul className="space-y-2">
+                {warningDialog.details.map((detail, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sm">
+                    <span className="text-gray-600">•</span>
+                    <span className={
+                      warningDialog.type === 'warning' ? 'text-yellow-800' :
+                      warningDialog.type === 'error' ? 'text-red-800' :
+                      'text-green-800'
+                    }>{detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={closeDialog} variant="outline">
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-6">
+        <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -213,14 +371,24 @@ export default function AdminGuidelines() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Lightbulb className="w-8 h-8 text-yellow-500" />
-              Admin Setup Guidelines
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Lightbulb className="w-8 h-8 text-yellow-500" />
+                Admin Setup Guidelines
+              </h1>
+              <p className="text-gray-600 text-lg mt-1">
+                Follow these steps to properly configure your school management system
+              </p>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={handleReset}
+              className="text-gray-600 hover:text-red-600 hover:border-red-300"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Reset Progress
+            </Button>
           </div>
-          <p className="text-gray-600 text-lg">
-            Follow these steps to properly configure your school management system
-          </p>
         </motion.div>
 
         {/* Progress Overview */}
@@ -233,7 +401,7 @@ export default function AdminGuidelines() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>Setup Progress</span>
-                <span className="text-2xl font-bold text-blue-600">{completedSteps}/{steps.length}</span>
+                <span className="text-2xl font-bold text-blue-600">{completedSteps}/6</span>
               </CardTitle>
               <CardDescription>
                 Complete all steps to ensure smooth operation of your school system
@@ -264,14 +432,29 @@ export default function AdminGuidelines() {
           <Card className="border-l-4 border-l-orange-500 bg-orange-50/50">
             <CardContent className="pt-6">
               <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                <ShieldAlert className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-orange-900 mb-1">Important: Follow the Sequential Order</h3>
-                  <p className="text-sm text-orange-800">
-                    Please follow these steps in order. Each step builds upon the previous one. 
-                    For example, you must create classes and subjects before creating teacher and student profiles, 
-                    as they need to be assigned to existing classes and subjects.
+                  <h3 className="font-semibold text-orange-900 mb-1 flex items-center gap-2">
+                    Important: Sequential Order & Validation Required
+                  </h3>
+                  <p className="text-sm text-orange-800 mb-2">
+                    <strong>Steps must be completed in order.</strong> Each step builds upon the previous one. 
+                    You cannot skip steps or mark them complete without actually fulfilling the requirements.
                   </p>
+                  <ul className="text-sm text-orange-800 space-y-1 ml-4">
+                    <li className="flex items-start gap-2">
+                      <Lock className="w-3 h-3 mt-1 flex-shrink-0" />
+                      <span>Steps are locked until previous steps are completed</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3 h-3 mt-1 flex-shrink-0" />
+                      <span>Steps can only be marked complete after validation checks pass</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <AlertCircle className="w-3 h-3 mt-1 flex-shrink-0" />
+                      <span>You'll receive warnings if you try to skip ahead</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </CardContent>
@@ -283,6 +466,8 @@ export default function AdminGuidelines() {
           {steps.map((step, index) => {
             const Icon = step.icon
             const isExpanded = expandedStep === step.id
+            const status = getStepStatus(step.id)
+            const isProceedable = canProceedToStep(step.id)
             
             return (
               <motion.div
@@ -292,9 +477,9 @@ export default function AdminGuidelines() {
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
                 <Card className={`transition-all duration-300 hover:shadow-lg ${
-                  step.status === 'in-progress' ? 'border-2 border-blue-400 shadow-md' : 
-                  step.status === 'completed' ? 'border-2 border-green-400' : ''
-                }`}>
+                  status === 'in-progress' ? 'border-2 border-blue-400 shadow-md' : 
+                  status === 'completed' ? 'border-2 border-green-400' : ''
+                } ${!isProceedable ? 'opacity-60' : ''}`}>
                   <CardHeader 
                     className="cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => handleStepClick(step.id)}
@@ -302,19 +487,19 @@ export default function AdminGuidelines() {
                     <div className="flex items-start gap-4">
                       {/* Step Number & Status */}
                       <div className="flex flex-col items-center gap-2">
-                        {getStatusIcon(step.status)}
+                        {getStatusIcon(status)}
                         <span className="text-xs font-bold text-gray-500">Step {step.id}</span>
                       </div>
 
                       {/* Icon */}
                       <div className={`p-3 rounded-xl ${
-                        step.status === 'completed' ? 'bg-green-100' :
-                        step.status === 'in-progress' ? 'bg-blue-100' :
+                        status === 'completed' ? 'bg-green-100' :
+                        status === 'in-progress' ? 'bg-blue-100' :
                         'bg-gray-100'
                       }`}>
                         <Icon className={`w-6 h-6 ${
-                          step.status === 'completed' ? 'text-green-600' :
-                          step.status === 'in-progress' ? 'text-blue-600' :
+                          status === 'completed' ? 'text-green-600' :
+                          status === 'in-progress' ? 'text-blue-600' :
                           'text-gray-600'
                         }`} />
                       </div>
@@ -324,7 +509,12 @@ export default function AdminGuidelines() {
                         <div className="flex items-center justify-between mb-1">
                           <CardTitle className="text-xl">{step.title}</CardTitle>
                           <div className="flex items-center gap-2">
-                            {getStatusBadge(step.status)}
+                            {!isProceedable && (
+                              <Badge variant="outline" className="text-orange-600 border-orange-300">
+                                Locked
+                              </Badge>
+                            )}
+                            {getStatusBadge(status)}
                             <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${
                               isExpanded ? 'rotate-90' : ''
                             }`} />
@@ -372,19 +562,60 @@ export default function AdminGuidelines() {
                         </div>
                       </div>
 
-                      {/* Action Button */}
-                      <div className="mt-6 flex justify-end">
-                        <Button
-                          onClick={() => handleAction(step.actionLink)}
-                          className={`${
-                            step.status === 'completed' ? 'bg-green-600 hover:bg-green-700' :
-                            step.status === 'in-progress' ? 'bg-blue-600 hover:bg-blue-700' :
-                            'bg-gray-600 hover:bg-gray-700'
-                          } text-white`}
-                        >
-                          {step.actionLabel}
-                          <ChevronRight className="w-4 h-4 ml-2" />
-                        </Button>
+                      {/* Action Buttons */}
+                      <div className="mt-6 flex justify-between items-center">
+                        {!isProceedable && (
+                          <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
+                            <Lock className="w-4 h-4 text-orange-600" />
+                            <p className="text-sm text-orange-600 font-medium">
+                              Complete previous steps first
+                            </p>
+                          </div>
+                        )}
+                        <div className="flex gap-3 ml-auto">
+                          {status === 'completed' && (
+                            <Button
+                              variant="outline"
+                              onClick={() => handleAction(step.id, step.actionLink)}
+                              className="border-green-300 text-green-700 hover:bg-green-50"
+                            >
+                              Review
+                            </Button>
+                          )}
+                          {status !== 'completed' && (
+                            <>
+                              <Button
+                                onClick={() => handleAction(step.id, step.actionLink)}
+                                disabled={!isProceedable || validating}
+                                className={`${
+                                  status === 'in-progress' ? 'bg-blue-600 hover:bg-blue-700' :
+                                  'bg-gray-600 hover:bg-gray-700'
+                                } text-white disabled:opacity-50 disabled:cursor-not-allowed`}
+                              >
+                                {step.actionLabel}
+                                <ChevronRight className="w-4 h-4 ml-2" />
+                              </Button>
+                              <Button
+                                onClick={() => handleMarkComplete(step.id)}
+                                disabled={!isProceedable || validating}
+                                variant="outline"
+                                className="border-green-300 text-green-700 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {validating ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Validating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                                    Mark Complete
+                                  </>
+                                )}
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </CardContent>
                   )}
@@ -424,5 +655,6 @@ export default function AdminGuidelines() {
         </motion.div>
       </div>
     </div>
+    </>
   )
 }

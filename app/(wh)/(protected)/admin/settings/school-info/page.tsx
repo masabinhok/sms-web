@@ -26,40 +26,13 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { SCHOOL_INFO } from '@/lib/constants/school-info'
+import { SchoolInfo } from '@/types/types'
 
-interface FormData {
-  // Basic Information
-  name: string
-  tagline: string
-  motto: string
-  
-  // Contact Information
-  address: string
-  city: string
-  phone: string
-  email: string
-  
-  // Social Media (only those used in public website)
-  facebook: string
-  instagram: string
-  twitter: string
-  youtube: string
-  
-  // About Information
-  description: string
-  mission: string
-  vision: string
-  
-  // Hero Section
-  heroTitle: string
-  heroSubtitle: string
-  heroCTA: string
-}
 
 export default function SchoolInfoSettings() {
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<SchoolInfo>({
     // Load existing data from SCHOOL_INFO
     name: SCHOOL_INFO.name,
     tagline: SCHOOL_INFO.tagline,
@@ -84,7 +57,7 @@ export default function SchoolInfoSettings() {
     heroCTA: SCHOOL_INFO.hero.ctaPrimary,
   })
 
-  const handleChange = (field: keyof FormData, value: string) => {
+  const handleChange = (field: keyof SchoolInfo, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -116,7 +89,7 @@ export default function SchoolInfoSettings() {
     helpText
   }: { 
     label: string
-    field: keyof FormData
+    field: keyof SchoolInfo
     placeholder?: string
     icon?: React.ElementType
     type?: string
@@ -155,7 +128,7 @@ export default function SchoolInfoSettings() {
     maxLength
   }: { 
     label: string
-    field: keyof FormData
+    field: keyof SchoolInfo
     placeholder?: string
     rows?: number
     required?: boolean
