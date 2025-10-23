@@ -27,11 +27,107 @@ import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { SCHOOL_INFO } from '@/lib/constants/school-info'
 import { SchoolInfo } from '@/types/types'
+import { api } from '@/lib/api-client'
+import { useMessage } from '@/store/messageStore'
 
+// Move InputField component outside to prevent recreation on every render
+interface InputFieldProps {
+  label: string
+  field: keyof SchoolInfo
+  placeholder?: string
+  icon?: React.ElementType
+  type?: string
+  required?: boolean
+  maxLength?: number
+  helpText?: string
+  value: string
+  onChange: (field: keyof SchoolInfo, value: string) => void
+}
+
+const InputField = ({ 
+  label, 
+  field, 
+  placeholder, 
+  icon: Icon,
+  type = 'text',
+  required = false,
+  maxLength,
+  helpText,
+  value,
+  onChange
+}: InputFieldProps) => (
+  <div className="space-y-2">
+    <Label htmlFor={field} className="text-gray-700 flex items-center gap-2">
+      {Icon && <Icon className="w-4 h-4 text-gray-500" />}
+      {label}
+      {required && <span className="text-red-500">*</span>}
+    </Label>
+    <Input
+      id={field}
+      type={type}
+      value={value}
+      onChange={(e) => onChange(field, e.target.value)}
+      placeholder={placeholder}
+      required={required}
+      maxLength={maxLength}
+      className="bg-white border-gray-300"
+    />
+    {helpText && (
+      <p className="text-xs text-gray-500">{helpText}</p>
+    )}
+  </div>
+)
+
+// Move TextareaField component outside to prevent recreation on every render
+interface TextareaFieldProps {
+  label: string
+  field: keyof SchoolInfo
+  placeholder?: string
+  rows?: number
+  required?: boolean
+  maxLength?: number
+  value: string
+  onChange: (field: keyof SchoolInfo, value: string) => void
+}
+
+const TextareaField = ({ 
+  label, 
+  field, 
+  placeholder,
+  rows = 3,
+  required = false,
+  maxLength,
+  value,
+  onChange
+}: TextareaFieldProps) => (
+  <div className="space-y-2">
+    <Label htmlFor={field} className="text-gray-700">
+      {label}
+      {required && <span className="text-red-500">*</span>}
+    </Label>
+    <Textarea
+      id={field}
+      value={value}
+      onChange={(e) => onChange(field, e.target.value)}
+      placeholder={placeholder}
+      rows={rows}
+      required={required}
+      maxLength={maxLength}
+      className="bg-white border-gray-300 resize-none"
+    />
+    {maxLength && (
+      <p className="text-xs text-gray-500 text-right">
+        {value.length}/{maxLength}
+      </p>
+    )}
+  </div>
+)
 
 export default function SchoolInfoSettings() {
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const {addMessage} = useMessage();
+
   const [formData, setFormData] = useState<SchoolInfo>({
     // Load existing data from SCHOOL_INFO
     name: SCHOOL_INFO.name,
@@ -65,97 +161,19 @@ export default function SchoolInfoSettings() {
     e.preventDefault()
     setIsSaving(true)
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Here you would save to your backend/database
-    console.log('Saving school info:', formData)
-    
-    setIsSaving(false)
+    try{
+       const response = await api.post<{
+      message: string
+    }>('/academics/create-school', formData)
+    addMessage(response.message)
+     setIsSaving(false)
     setShowSuccess(true)
-    
-    // Hide success message after 3 seconds
-    setTimeout(() => setShowSuccess(false), 3000)
+    }catch(error){
+
+      console.log('Failed to create school')
+      addMessage('Failed to create school.')
+    }
   }
-
-  const InputField = ({ 
-    label, 
-    field, 
-    placeholder, 
-    icon: Icon,
-    type = 'text',
-    required = false,
-    maxLength,
-    helpText
-  }: { 
-    label: string
-    field: keyof SchoolInfo
-    placeholder?: string
-    icon?: React.ElementType
-    type?: string
-    required?: boolean
-    maxLength?: number
-    helpText?: string
-  }) => (
-    <div className="space-y-2">
-      <Label htmlFor={field} className="text-gray-700 flex items-center gap-2">
-        {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-        {label}
-        {required && <span className="text-red-500">*</span>}
-      </Label>
-      <Input
-        id={field}
-        type={type}
-        value={formData[field]}
-        onChange={(e) => handleChange(field, e.target.value)}
-        placeholder={placeholder}
-        required={required}
-        maxLength={maxLength}
-        className="bg-white border-gray-300"
-      />
-      {helpText && (
-        <p className="text-xs text-gray-500">{helpText}</p>
-      )}
-    </div>
-  )
-
-  const TextareaField = ({ 
-    label, 
-    field, 
-    placeholder,
-    rows = 3,
-    required = false,
-    maxLength
-  }: { 
-    label: string
-    field: keyof SchoolInfo
-    placeholder?: string
-    rows?: number
-    required?: boolean
-    maxLength?: number
-  }) => (
-    <div className="space-y-2">
-      <Label htmlFor={field} className="text-gray-700">
-        {label}
-        {required && <span className="text-red-500">*</span>}
-      </Label>
-      <Textarea
-        id={field}
-        value={formData[field]}
-        onChange={(e) => handleChange(field, e.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        required={required}
-        maxLength={maxLength}
-        className="bg-white border-gray-300 resize-none"
-      />
-      {maxLength && (
-        <p className="text-xs text-gray-500 text-right">
-          {formData[field].length}/{maxLength}
-        </p>
-      )}
-    </div>
-  )
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-6">
@@ -224,6 +242,8 @@ export default function SchoolInfoSettings() {
                     required
                     maxLength={100}
                     helpText="Used in: Navbar, Footer, About section, Hero section"
+                    value={formData.name}
+                    onChange={handleChange}
                   />
                 </div>
                 <InputField
@@ -233,6 +253,8 @@ export default function SchoolInfoSettings() {
                   required
                   maxLength={100}
                   helpText="Used in: Navbar, Hero section"
+                  value={formData.tagline}
+                  onChange={handleChange}
                 />
                 <InputField
                   label="Motto"
@@ -241,6 +263,8 @@ export default function SchoolInfoSettings() {
                   required
                   maxLength={150}
                   helpText="Used in: Footer"
+                  value={formData.motto}
+                  onChange={handleChange}
                 />
               </div>
             </CardContent>
@@ -264,6 +288,8 @@ export default function SchoolInfoSettings() {
                 placeholder="e.g., Welcome to Our School"
                 required
                 maxLength={150}
+                value={formData.heroTitle}
+                onChange={handleChange}
               />
               <TextareaField
                 label="Hero Subtitle"
@@ -272,6 +298,8 @@ export default function SchoolInfoSettings() {
                 rows={2}
                 required
                 maxLength={300}
+                value={formData.heroSubtitle}
+                onChange={handleChange}
               />
               <InputField
                 label="Primary Button Text"
@@ -279,6 +307,8 @@ export default function SchoolInfoSettings() {
                 placeholder="e.g., Learn More"
                 required
                 maxLength={50}
+                value={formData.heroCTA}
+                onChange={handleChange}
               />
             </CardContent>
           </Card>
@@ -304,6 +334,8 @@ export default function SchoolInfoSettings() {
                     placeholder="e.g., 123 Education Street"
                     required
                     maxLength={200}
+                    value={formData.address}
+                    onChange={handleChange}
                   />
                 </div>
                 <InputField
@@ -312,6 +344,8 @@ export default function SchoolInfoSettings() {
                   placeholder="e.g., New York"
                   required
                   maxLength={50}
+                  value={formData.city}
+                  onChange={handleChange}
                 />
                 <InputField
                   label="Phone Number"
@@ -321,6 +355,8 @@ export default function SchoolInfoSettings() {
                   placeholder="e.g., +1 (555) 123-4567"
                   required
                   maxLength={20}
+                  value={formData.phone}
+                  onChange={handleChange}
                 />
                 <div className="md:col-span-2">
                   <InputField
@@ -331,6 +367,8 @@ export default function SchoolInfoSettings() {
                     placeholder="e.g., info@school.com"
                     required
                     maxLength={100}
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -356,6 +394,8 @@ export default function SchoolInfoSettings() {
                   icon={Facebook}
                   placeholder="https://facebook.com/yourschool"
                   maxLength={200}
+                  value={formData.facebook}
+                  onChange={handleChange}
                 />
                 <InputField
                   label="Instagram"
@@ -363,6 +403,8 @@ export default function SchoolInfoSettings() {
                   icon={Instagram}
                   placeholder="https://instagram.com/yourschool"
                   maxLength={200}
+                  value={formData.instagram}
+                  onChange={handleChange}
                 />
                 <InputField
                   label="Twitter"
@@ -370,6 +412,8 @@ export default function SchoolInfoSettings() {
                   icon={Twitter}
                   placeholder="https://twitter.com/yourschool"
                   maxLength={200}
+                  value={formData.twitter}
+                  onChange={handleChange}
                 />
                 <InputField
                   label="YouTube"
@@ -377,6 +421,8 @@ export default function SchoolInfoSettings() {
                   icon={Youtube}
                   placeholder="https://youtube.com/@yourschool"
                   maxLength={200}
+                  value={formData.youtube}
+                  onChange={handleChange}
                 />
               </div>
             </CardContent>
@@ -401,6 +447,8 @@ export default function SchoolInfoSettings() {
                 rows={4}
                 required
                 maxLength={1000}
+                value={formData.description}
+                onChange={handleChange}
               />
               <TextareaField
                 label="Mission Statement"
@@ -409,6 +457,8 @@ export default function SchoolInfoSettings() {
                 rows={3}
                 required
                 maxLength={500}
+                value={formData.mission}
+                onChange={handleChange}
               />
               <TextareaField
                 label="Vision Statement"
@@ -417,6 +467,8 @@ export default function SchoolInfoSettings() {
                 rows={3}
                 required
                 maxLength={500}
+                value={formData.vision}
+                onChange={handleChange}
               />
             </CardContent>
           </Card>
