@@ -126,6 +126,8 @@ const TextareaField = ({
 export default function SchoolInfoSettings() {
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [schoolId, setSchoolId] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const {addMessage} = useMessage();
 
   const [formData, setFormData] = useState<SchoolInfo>({
@@ -153,19 +155,67 @@ export default function SchoolInfoSettings() {
     heroCTA: SCHOOL_INFO.hero.ctaPrimary,
   })
 
+  // Fetch school info on mount
+  React.useEffect(() => {
+    const fetchSchoolInfo = async () => {
+      try {
+        const response = await api.get<{
+          message: string
+          school: any
+        }>('/academics/school')
+        
+        if (response.school) {
+          setSchoolId(response.school.id)
+          // Update form data with actual school data
+          setFormData({
+            name: response.school.name,
+            tagline: response.school.tagline,
+            motto: response.school.motto,
+            address: response.school.address,
+            city: response.school.city,
+            phone: response.school.phone,
+            email: response.school.email,
+            facebook: response.school.facebook,
+            instagram: response.school.instagram,
+            twitter: response.school.twitter,
+            youtube: response.school.youtube,
+            description: response.school.description,
+            mission: response.school.mission,
+            vision: response.school.vision,
+            heroTitle: response.school.heroTitle,
+            heroSubtitle: response.school.heroSubtitle,
+            heroCTA: response.school.heroCTA,
+          })
+        }
+      } catch (error) {
+        console.error('Failed to fetch school info:', error)
+        addMessage('Failed to load school information.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSchoolInfo()
+  }, [])
+
   const handleChange = (field: keyof SchoolInfo, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!schoolId) {
+      addMessage('School ID not found. Please refresh the page.')
+      return
+    }
+    
     setIsSaving(true)
     
     try{
-      // Add the school ID to the form data (assuming there's only one school)
-      // You may need to adjust this based on how you store the school ID
+      // Add the school ID to the form data
       const updateData = {
-        id: 'default-school-id', // Replace with actual school ID retrieval
+        id: schoolId,
         ...formData
       };
 
@@ -176,6 +226,9 @@ export default function SchoolInfoSettings() {
       addMessage(response.message)
       setIsSaving(false)
       setShowSuccess(true)
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => setShowSuccess(false), 3000)
     }catch(error){
       console.log('Failed to update school')
       addMessage('Failed to update school.')
@@ -212,22 +265,39 @@ export default function SchoolInfoSettings() {
           )}
         </div>
 
-        {/* Info Banner */}
-        <Card className="border-l-4 border-l-blue-500 bg-blue-50/50">
-          <CardContent className="pt-6">
-            <div className="flex gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-1">About These Settings</h3>
-                <p className="text-sm text-blue-800">
-                  These settings control information displayed on your <strong>public website only</strong>.
-                  Only fields that are actively used in the website are shown here. Changes will be saved to your school profile and reflected immediately.
-                </p>
+        {/* Loading State */}
+        {isLoading && (
+          <Card className="border-gray-200 shadow-sm">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                  <p className="mt-4 text-gray-600">Loading school information...</p>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
+        {/* Info Banner */}
+        {!isLoading && (
+          <Card className="border-l-4 border-l-blue-500 bg-blue-50/50">
+            <CardContent className="pt-6">
+              <div className="flex gap-3">
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-1">About These Settings</h3>
+                  <p className="text-sm text-blue-800">
+                    These settings control information displayed on your <strong>public website only</strong>.
+                    Only fields that are actively used in the website are shown here. Changes will be saved to your school profile and reflected immediately.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {!isLoading && (
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <Card className="border-gray-200 shadow-sm">
@@ -506,6 +576,7 @@ export default function SchoolInfoSettings() {
             </div>
           </div>
         </form>
+        )}
       </div>
     </div>
   )
