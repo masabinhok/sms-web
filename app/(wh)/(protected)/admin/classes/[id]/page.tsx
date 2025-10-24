@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { motion } from 'framer-motion'
 import {
   getClassById,
   getAllSubjects,
@@ -39,7 +40,8 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { ArrowLeft, Plus, BookOpen, X } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { ArrowLeft, Plus, BookOpen, X, Users, Calendar, GraduationCap, CheckCircle2, XCircle, Award, FileText } from 'lucide-react'
 
 export default function ClassDetailPage() {
   const router = useRouter()
@@ -149,260 +151,456 @@ export default function ClassDetailPage() {
   )
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>
+    return (
+      <div className="min-h-screen bg-slate-50 p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <Skeleton className="h-20 w-full" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+          </div>
+          <Skeleton className="h-96 w-full" />
+        </div>
+      </div>
+    )
   }
 
   if (!classData) {
-    return <div className="p-8 text-center">Class not found</div>
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center"
+        >
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <XCircle className="h-8 w-8 text-red-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Class not found</h2>
+          <p className="text-slate-600 mb-6">The class you're looking for doesn't exist or has been deleted.</p>
+          <Button onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
+          </Button>
+        </motion.div>
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">{classData.name}</h1>
-            <p className="text-gray-600">
-              Grade {classData.grade} • {classData.academicYear}
-            </p>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto p-8 space-y-8">
+        {/* Premium Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-xl shadow-sm border border-slate-200 p-8"
+        >
+          <div className="flex items-start justify-between mb-6">
+            <Button variant="ghost" onClick={() => router.back()} className="hover:bg-slate-100">
+              <ArrowLeft className="h-4 w-4 mr-2" /> Back to Classes
+            </Button>
+            <Badge 
+              variant={classData.isActive ? 'default' : 'secondary'}
+              className={classData.isActive ? 'bg-green-100 text-green-800 border-green-200' : ''}
+            >
+              {classData.isActive ? (
+                <><CheckCircle2 className="h-3 w-3 mr-1" /> Active</>
+              ) : (
+                <><XCircle className="h-3 w-3 mr-1" /> Inactive</>
+              )}
+            </Badge>
           </div>
-        </div>
-        <Badge variant={classData.isActive ? 'default' : 'secondary'}>
-          {classData.isActive ? 'Active' : 'Inactive'}
-        </Badge>
-      </div>
 
-      {/* Class Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Class Information</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <p className="text-sm text-gray-600">Section</p>
-            <p className="font-medium">{classData.section || 'N/A'}</p>
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
+              <GraduationCap className="h-8 w-8 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
+                {classData.name}
+              </h1>
+              <p className="text-lg text-slate-600 mt-1">
+                Grade {classData.grade} • Section {classData.section || 'N/A'}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Capacity</p>
-            <p className="font-medium">{classData.capacity} students</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Academic Year</p>
-            <p className="font-medium">{classData.academicYear}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Slug</p>
-            <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-              {classData.slug}
-            </code>
-          </div>
+
           {classData.description && (
-            <div className="col-span-full">
-              <p className="text-sm text-gray-600">Description</p>
-              <p className="font-medium">{classData.description}</p>
+            <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="flex items-start gap-2">
+                <FileText className="h-4 w-4 text-slate-500 mt-1" />
+                <p className="text-slate-700">{classData.description}</p>
+              </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </motion.div>
 
-      {/* Assigned Subjects */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Assigned Subjects</CardTitle>
-            <CardDescription>
-              {classSubjects.length} subject(s) assigned to this class
-            </CardDescription>
-          </div>
-          <Button onClick={openAssignDialog}>
-            <Plus className="mr-2 h-4 w-4" /> Assign Subjects
-          </Button>
-        </CardHeader>
-        <CardContent className="p-0">
-          {classSubjects.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No subjects assigned yet
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Capacity</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">{classData.capacity}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-6 w-6 text-blue-600" />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Maximum students</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Academic Year</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">{classData.academicYear}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Calendar className="h-6 w-6 text-purple-600" />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Current session</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Grade Level</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">{classData.grade}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Award className="h-6 w-6 text-green-600" />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Class grade</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600">Subjects</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">{classSubjects.length}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <BookOpen className="h-6 w-6 text-orange-600" />
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Assigned subjects</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+
+        {/* Assigned Subjects */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
+              <div>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <BookOpen className="h-6 w-6 text-blue-600" />
+                  Assigned Subjects
+                </CardTitle>
+                <CardDescription className="mt-1">
+                  {classSubjects.length} subject(s) assigned to this class
+                </CardDescription>
+              </div>
+              <Button onClick={openAssignDialog} className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="mr-2 h-4 w-4" /> Assign Subjects
+              </Button>
+            </CardHeader>
+            <CardContent className="p-0">
+              {classSubjects.length === 0 ? (
+                <div className="p-16 text-center">
+                  <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <BookOpen className="h-10 w-10 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">No subjects assigned yet</h3>
+                  <p className="text-slate-600 mb-6">Get started by assigning subjects to this class</p>
+                  <Button onClick={openAssignDialog} variant="outline">
+                    <Plus className="mr-2 h-4 w-4" /> Assign Your First Subject
+                  </Button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-slate-50 hover:bg-slate-50">
+                        <TableHead className="font-semibold text-slate-700">Subject</TableHead>
+                        <TableHead className="font-semibold text-slate-700">Code</TableHead>
+                        <TableHead className="font-semibold text-slate-700">Category</TableHead>
+                        <TableHead className="font-semibold text-slate-700">Type</TableHead>
+                        <TableHead className="font-semibold text-slate-700">Weekly Periods</TableHead>
+                        <TableHead className="font-semibold text-slate-700">Full Marks</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {classSubjects.map((cs, index) => {
+                        const subject = allSubjects.find((s) => s.id === cs.subjectId)
+                        if (!subject) return null
+
+                        return (
+                          <motion.tr
+                            key={cs.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="hover:bg-slate-50 transition-colors border-b border-slate-200"
+                          >
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                  <BookOpen className="h-4 w-4 text-blue-600" />
+                                </div>
+                                <div>
+                                  <div className="font-semibold text-slate-900">{subject.name}</div>
+                                  {cs.isCompulsory && (
+                                    <Badge variant="default" className="text-xs mt-1 bg-green-100 text-green-800 border-green-200">
+                                      Compulsory
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <code className="bg-slate-100 px-2 py-1 rounded text-xs font-mono text-slate-700">
+                                {subject.code}
+                              </code>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="border-slate-300">
+                                {subject.category}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                {subject.hasTheory && (
+                                  <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                                    Theory
+                                  </Badge>
+                                )}
+                                {subject.hasPractical && (
+                                  <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
+                                    Practical
+                                  </Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4 text-slate-400" />
+                                <span className="font-medium">{cs.weeklyPeriods}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Award className="h-4 w-4 text-slate-400" />
+                                <span className="font-medium">{subject.fullMarks}</span>
+                              </div>
+                            </TableCell>
+                          </motion.tr>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Assign Subjects Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Plus className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <DialogTitle className="text-2xl">Assign Subjects to {classData.name}</DialogTitle>
+                <DialogDescription className="text-base mt-1">
+                  Select subjects and configure their settings for this class
+                </DialogDescription>
+              </div>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Weekly Periods</TableHead>
-                  <TableHead>Full Marks</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {classSubjects.map((cs) => {
-                  const subject = allSubjects.find((s) => s.id === cs.subjectId)
-                  if (!subject) return null
-
-                  return (
-                    <TableRow key={cs.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="h-4 w-4 text-gray-400" />
-                          {subject.name}
-                          {cs.isCompulsory && (
-                            <Badge variant="default" className="text-xs">
-                              Compulsory
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                          {subject.code}
-                        </code>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{subject.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          {subject.hasTheory && (
-                            <Badge variant="secondary" className="text-xs">
-                              T
-                            </Badge>
-                          )}
-                          {subject.hasPractical && (
-                            <Badge variant="secondary" className="text-xs">
-                              P
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>{cs.weeklyPeriods}</TableCell>
-                      <TableCell>{subject.fullMarks}</TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Assign Subjects Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Assign Subjects to {classData.name}</DialogTitle>
-            <DialogDescription>
-              Select subjects and configure their settings for this class
-            </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             {selectedSubjects.map((selected, index) => (
-              <Card key={index}>
-                <CardContent className="pt-6">
-                  <div className="flex items-end gap-4">
-                    <div className="flex-1">
-                      <Label>Subject</Label>
-                      <Select
-                        value={selected.subjectId}
-                        onValueChange={(value) =>
-                          updateSubjectSelection(index, 'subjectId', value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableSubjects.map((subject) => (
-                            <SelectItem key={subject.id} value={subject.id}>
-                              {subject.name} ({subject.code})
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <Card className="border-slate-200 shadow-sm">
+                  <CardContent className="pt-6">
+                    <div className="flex items-end gap-4">
+                      <div className="flex-1">
+                        <Label className="text-slate-700 font-medium">Subject</Label>
+                        <Select
+                          value={selected.subjectId}
+                          onValueChange={(value) =>
+                            updateSubjectSelection(index, 'subjectId', value)
+                          }
+                        >
+                          <SelectTrigger className="mt-1.5 bg-white border-slate-300">
+                            <SelectValue placeholder="Select a subject" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {availableSubjects.map((subject) => (
+                              <SelectItem key={subject.id} value={subject.id}>
+                                <div className="flex items-center gap-2">
+                                  <BookOpen className="h-4 w-4 text-slate-400" />
+                                  {subject.name} ({subject.code})
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="w-40">
+                        <Label className="text-slate-700 font-medium">Type</Label>
+                        <Select
+                          value={selected.isCompulsory ? 'true' : 'false'}
+                          onValueChange={(value) =>
+                            updateSubjectSelection(
+                              index,
+                              'isCompulsory',
+                              value === 'true'
+                            )
+                          }
+                        >
+                          <SelectTrigger className="mt-1.5 bg-white border-slate-300">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            <SelectItem value="true">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                Compulsory
+                              </div>
                             </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                            <SelectItem value="false">
+                              <div className="flex items-center gap-2">
+                                <XCircle className="h-4 w-4 text-slate-400" />
+                                Elective
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div className="w-32">
-                      <Label>Type</Label>
-                      <Select
-                        value={selected.isCompulsory ? 'true' : 'false'}
-                        onValueChange={(value) =>
-                          updateSubjectSelection(
-                            index,
-                            'isCompulsory',
-                            value === 'true'
-                          )
-                        }
+                      <div className="w-36">
+                        <Label className="text-slate-700 font-medium">Weekly Periods</Label>
+                        <Input
+                          type="number"
+                          value={selected.weeklyPeriods}
+                          onChange={(e) =>
+                            updateSubjectSelection(
+                              index,
+                              'weeklyPeriods',
+                              parseInt(e.target.value)
+                            )
+                          }
+                          min={1}
+                          className="mt-1.5 bg-white border-slate-300"
+                        />
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeSubjectFromSelection(index)}
+                        className="hover:bg-red-50 hover:text-red-600"
                       >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="true">Compulsory</SelectItem>
-                          <SelectItem value="false">Elective</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <X className="h-4 w-4" />
+                      </Button>
                     </div>
-
-                    <div className="w-32">
-                      <Label>Weekly Periods</Label>
-                      <Input
-                        type="number"
-                        value={selected.weeklyPeriods}
-                        onChange={(e) =>
-                          updateSubjectSelection(
-                            index,
-                            'weeklyPeriods',
-                            parseInt(e.target.value)
-                          )
-                        }
-                        min={1}
-                      />
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeSubjectFromSelection(index)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
 
             {availableSubjects.length > 0 && (
               <Button
                 variant="outline"
                 onClick={addSubjectToSelection}
-                className="w-full"
+                className="w-full border-dashed border-2 border-slate-300 hover:border-blue-400 hover:bg-blue-50 text-slate-700"
               >
                 <Plus className="mr-2 h-4 w-4" /> Add Another Subject
               </Button>
             )}
 
             {selectedSubjects.length === 0 && (
-              <div className="text-center text-gray-500 py-8">
-                Click the button below to start adding subjects
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-slate-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">No subjects selected</h3>
+                <p className="text-slate-600 mb-6">Click the button below to start adding subjects</p>
+                <Button onClick={addSubjectToSelection} variant="outline">
+                  <Plus className="mr-2 h-4 w-4" /> Add Your First Subject
+                </Button>
               </div>
             )}
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+          <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-6">
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="hover:bg-white">
               Cancel
             </Button>
-            <Button onClick={handleAssignSubjects} disabled={selectedSubjects.length === 0}>
+            <Button 
+              onClick={handleAssignSubjects} 
+              disabled={selectedSubjects.length === 0} 
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <CheckCircle2 className="mr-2 h-4 w-4" />
               Assign {selectedSubjects.length} Subject(s)
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   )
 }

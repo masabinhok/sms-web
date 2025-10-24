@@ -1,0 +1,510 @@
+'use client'
+
+import { useState, useEffect, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  getAllClasses,
+  createClass,
+  updateClass,
+  deleteClass,
+  type Class,
+  type CreateClassDto,
+  type UpdateClassDto,
+} from '@/lib/academics-api'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { 
+  Plus, 
+  Pencil, 
+  Trash2, 
+  Eye, 
+  Filter, 
+  Search,
+  GraduationCap,
+  Users,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  MoreVertical,
+  Download,
+  Upload,
+  RefreshCw
+} from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100
+    }
+  }
+}
+
+export default function ClassManagementPage() {
+  const router = useRouter()
+  const [classes, setClasses] = useState<Class[]>([])
+  const [loading, setLoading] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedClass, setSelectedClass] = useState<Class | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterYear, setFilterYear] = useState<string>('all')
+  const [filterActive, setFilterActive] = useState<string>('all')
+  const [filterGrade, setFilterGrade] = useState<string>('all')
+  const [formData, setFormData] = useState<CreateClassDto>({
+    name: '',
+    grade: 1,
+    section: '',
+    capacity: 30,
+    academicYear: new Date().getFullYear().toString(),
+    description: '',
+    isActive: true,
+  })
+
+  useEffect(() => {
+    fetchClasses()
+  }, [])
+
+  async function fetchClasses() {
+    try {
+      setLoading(true)
+      const data = await getAllClasses()
+      console.log('Fetched classes data:', data)
+      setClasses(Array.isArray(data) ? data : [])
+    } catch (error) {
+      console.error('Failed to fetch classes:', error)
+      setClasses([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function openCreateDialog() {
+    setSelectedClass(null)
+    setFormData({
+      name: '',
+      grade: 1,
+      section: '',
+      capacity: 30,
+      academicYear: new Date().getFullYear().toString(),
+      description: '',
+      isActive: true,
+    })
+    setIsDialogOpen(true)
+  }
+
+  function openEditDialog(classItem: Class) {
+    setSelectedClass(classItem)
+    setFormData({
+      name: classItem.name,
+      grade: classItem.grade,
+      section: classItem.section || '',
+      capacity: classItem.capacity,
+      academicYear: classItem.academicYear,
+      description: classItem.description || '',
+      isActive: classItem.isActive,
+    })
+    setIsDialogOpen(true)
+  }
+
+  function openDeleteDialog(classItem: Class) {
+    setSelectedClass(classItem)
+    setIsDeleteDialogOpen(true)
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    try {
+      if (selectedClass) {
+        await updateClass({ id: selectedClass.id, ...formData })
+      } else {
+        await createClass(formData)
+      }
+      setIsDialogOpen(false)
+      fetchClasses()
+    } catch (error: any) {
+      alert(error.message || 'Failed to save class')
+    }
+  }
+
+  async function handleDelete() {
+    if (!selectedClass) return
+
+    try {
+      await deleteClass(selectedClass.id)
+      setIsDeleteDialogOpen(false)
+      fetchClasses()
+    } catch (error: any) {
+      alert(error.message || 'Failed to delete class')
+    }
+  }
+
+  // Advanced filtering with search
+  const filteredClasses = useMemo(() => {
+    return classes.filter((c) => {
+      // Search filter
+      if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !c.section?.toLowerCase().includes(searchQuery.toLowerCase())) {
+        return false
+      }
+      
+      // Year filter
+      if (filterYear !== 'all' && c.academicYear !== filterYear) return false
+      
+      // Status filter
+      if (filterActive === 'active' && !c.isActive) return false
+      if (filterActive === 'inactive' && c.isActive) return false
+      
+      // Grade filter
+      if (filterGrade !== 'all' && c.grade.toString() !== filterGrade) return false
+      
+      return true
+    })
+  }, [classes, searchQuery, filterYear, filterActive, filterGrade])
+
+  const uniqueYears = Array.from(new Set(classes.map((c) => c.academicYear))).sort()
+  const uniqueGrades = Array.from(new Set(classes.map((c) => c.grade))).sort((a, b) => a - b)
+
+  // Statistics
+  const stats = useMemo(() => ({
+    total: classes.length,
+    active: classes.filter(c => c.isActive).length,
+    inactive: classes.filter(c => !c.isActive).length,
+    totalCapacity: classes.reduce((sum, c) => sum + c.capacity, 0)
+  }), [classes])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 space-y-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">Class Management</h1>
+          <p className="text-gray-600">Manage classes, sections, and academic years</p>
+        </div>
+        <Button onClick={openCreateDialog}>
+          <Plus className="mr-2 h-4 w-4" /> Create Class
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filters
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex gap-4">
+          <div className="flex-1">
+            <Label>Academic Year</Label>
+            <Select value={filterYear} onValueChange={setFilterYear}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Years</SelectItem>
+                {uniqueYears.map((year) => (
+                  <SelectItem key={year} value={year}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex-1">
+            <Label>Status</Label>
+            <Select value={filterActive} onValueChange={setFilterActive}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="active">Active Only</SelectItem>
+                <SelectItem value="inactive">Inactive Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Classes Table */}
+      <Card>
+        <CardContent className="p-0">
+          {loading ? (
+            <div className="p-8 text-center text-gray-500">Loading classes...</div>
+          ) : filteredClasses.length === 0 ? (
+            <div className="p-8 text-center text-gray-500">No classes found</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Grade</TableHead>
+                  <TableHead>Section</TableHead>
+                  <TableHead>Capacity</TableHead>
+                  <TableHead>Academic Year</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredClasses.map((classItem) => (
+                  <TableRow key={classItem.id}>
+                    <TableCell className="font-medium">{classItem.name}</TableCell>
+                    <TableCell>{classItem.grade}</TableCell>
+                    <TableCell>{classItem.section || 'N/A'}</TableCell>
+                    <TableCell>{classItem.capacity}</TableCell>
+                    <TableCell>{classItem.academicYear}</TableCell>
+                    <TableCell>
+                      <Badge variant={classItem.isActive ? 'default' : 'secondary'}>
+                        {classItem.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          router.push(`/admin/classes/${classItem.id}`)
+                        }
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openEditDialog(classItem)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openDeleteDialog(classItem)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Create/Edit Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedClass ? 'Edit Class' : 'Create New Class'}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedClass
+                ? 'Update class information'
+                : 'Add a new class to the system'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="name">Class Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="e.g., Grade 5 - Section A"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="grade">Grade *</Label>
+                <Select
+                  value={formData.grade.toString()}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, grade: parseInt(value) })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((grade) => (
+                      <SelectItem key={grade} value={grade.toString()}>
+                        Grade {grade}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="section">Section</Label>
+                <Input
+                  id="section"
+                  value={formData.section}
+                  onChange={(e) =>
+                    setFormData({ ...formData, section: e.target.value })
+                  }
+                  placeholder="e.g., A, B, C"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="capacity">Capacity *</Label>
+                <Input
+                  id="capacity"
+                  type="number"
+                  value={formData.capacity}
+                  onChange={(e) =>
+                    setFormData({ ...formData, capacity: parseInt(e.target.value) })
+                  }
+                  min={1}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="academicYear">Academic Year *</Label>
+                <Input
+                  id="academicYear"
+                  value={formData.academicYear}
+                  onChange={(e) =>
+                    setFormData({ ...formData, academicYear: e.target.value })
+                  }
+                  placeholder="e.g., 2024"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="isActive">Status *</Label>
+                <Select
+                  value={formData.isActive ? 'true' : 'false'}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, isActive: value === 'true' })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Active</SelectItem>
+                    <SelectItem value="false">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                placeholder="Optional class description"
+                rows={3}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">
+                {selectedClass ? 'Update Class' : 'Create Class'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot;{selectedClass?.name}&quot;? This
+              action cannot be undone and will remove all associated data.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete Class
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
