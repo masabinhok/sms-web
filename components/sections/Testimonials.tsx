@@ -7,17 +7,19 @@ import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { SCHOOL_CONFIG } from '@/lib/constants'
+import { useSchool } from '@/components/SchoolProvider'
+import { TESTIMONIALS } from '@/lib/constants/testimonials'
 
 export function Testimonials() {
+  const { school } = useSchool();
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % SCHOOL_CONFIG.TESTIMONIALS.length)
+    setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS.length)
   }
 
   const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + SCHOOL_CONFIG.TESTIMONIALS.length) % SCHOOL_CONFIG.TESTIMONIALS.length)
+    setCurrentIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)
   }
 
   return (
@@ -45,7 +47,7 @@ export function Testimonials() {
             What Our Community Says
           </h2>
           <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
-            Hear from parents, students, and alumni about their experiences at {SCHOOL_CONFIG.SCHOOL_NAME}.
+            Hear from parents, students, and alumni about their experiences at {school?.name || 'our school'}.
           </p>
         </motion.div>
 
@@ -74,7 +76,7 @@ export function Testimonials() {
                 </motion.div>
                 
                 <blockquote className="text-xl lg:text-2xl text-gray-800 mb-10 leading-relaxed font-medium">
-                  &quot;{SCHOOL_CONFIG.TESTIMONIALS[currentIndex].content}&quot;
+                  &quot;{TESTIMONIALS[currentIndex].content}&quot;
                 </blockquote>
                 
                 <div className="flex items-center justify-center space-x-5">
@@ -83,18 +85,18 @@ export function Testimonials() {
                     whileHover={{ scale: 1.1 }}
                   >
                     <Image
-                      src={SCHOOL_CONFIG.TESTIMONIALS[currentIndex].image}
-                      alt={SCHOOL_CONFIG.TESTIMONIALS[currentIndex].name}
+                      src={TESTIMONIALS[currentIndex].image}
+                      alt={TESTIMONIALS[currentIndex].name}
                       fill
                       className="object-cover"
                     />
                   </motion.div>
                   <div className="text-left">
                     <div className="font-bold text-lg text-gray-900">
-                      {SCHOOL_CONFIG.TESTIMONIALS[currentIndex].name}
+                      {TESTIMONIALS[currentIndex].name}
                     </div>
                     <div className="text-gray-600">
-                      {SCHOOL_CONFIG.TESTIMONIALS[currentIndex].role}
+                      {TESTIMONIALS[currentIndex].role}
                     </div>
                     {/* Star rating */}
                     <div className="flex mt-2">
@@ -121,7 +123,7 @@ export function Testimonials() {
 
             {/* Dots */}
             <div className="flex space-x-3">
-              {SCHOOL_CONFIG.TESTIMONIALS.map((_, index) => (
+              {TESTIMONIALS.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
@@ -148,7 +150,7 @@ export function Testimonials() {
 
         {/* All Testimonials Grid (Hidden on mobile) */}
         <div className="hidden lg:grid grid-cols-3 gap-8 mt-20">
-          {SCHOOL_CONFIG.TESTIMONIALS.map((testimonial, index) => (
+          {TESTIMONIALS.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
               initial={{ opacity: 0, y: 30 }}

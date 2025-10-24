@@ -6,9 +6,11 @@ import { ChevronDown, Play, Award, Users, BookOpen, Sparkles } from 'lucide-reac
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { SCHOOL_CONFIG } from '@/lib/constants'
+import { useSchool } from '@/components/SchoolProvider'
 
 export function Hero() {
+  const { school } = useSchool();
+  
   const heroStats = [
     { icon: Users, label: "Students", value: "1,500+" },
     { icon: BookOpen, label: "Programs", value: "25+" },
@@ -104,9 +106,9 @@ export function Hero() {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
             >
-              <span className="block">{SCHOOL_CONFIG.HERO.TITLE}</span>
+              <span className="block">{school?.heroTitle || 'Welcome to Our School'}</span>
               <span className="block text-gradient-secondary text-4xl md:text-5xl lg:text-6xl mt-2">
-                {SCHOOL_CONFIG.TAGLINE}
+                {school?.tagline || ''}
               </span>
             </motion.h1>
 
@@ -117,7 +119,7 @@ export function Hero() {
               transition={{ delay: 0.5 }}
               className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed max-w-2xl"
             >
-              {SCHOOL_CONFIG.HERO.SUBTITLE}
+              {school?.heroSubtitle || 'Nurturing excellence in education'}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -132,7 +134,7 @@ export function Hero() {
                 className="premium-button gradient-secondary text-blue-900 font-bold px-8 py-4 text-lg hover:shadow-2xl hover:shadow-yellow-500/25 transform hover:scale-105 transition-all duration-300"
               >
                 <BookOpen className="h-5 w-5 mr-2" />
-                {SCHOOL_CONFIG.HERO.CTA_PRIMARY}
+                {school?.heroCTA || 'Learn More'}
               </Button>
               
               <Dialog>

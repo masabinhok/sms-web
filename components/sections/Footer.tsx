@@ -4,9 +4,14 @@ import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, ArrowRight } from 'lucide-react'
-import { SCHOOL_CONFIG, CURRENT_YEAR } from '@/lib/constants'
+import { useSchool } from '@/components/SchoolProvider'
+import { SIMPLE_NAVIGATION } from '@/lib/constants/navigation'
+
+const CURRENT_YEAR = new Date().getFullYear()
 
 export function Footer() {
+  const { school } = useSchool();
+  
   return (
     <footer className="bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950 text-white relative overflow-hidden">
       {/* Decorative background elements */}
@@ -26,16 +31,16 @@ export function Footer() {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-              {SCHOOL_CONFIG.SCHOOL_NAME}
+              {school?.name || 'Our School'}
             </h3>
             <p className="text-blue-200 mb-6 max-w-md leading-relaxed">
-              {SCHOOL_CONFIG.MOTTO} - Committed to providing excellent education and nurturing young minds for a brighter future.
+              {school?.motto || 'Excellence in Education'} - Committed to providing excellent education and nurturing young minds for a brighter future.
             </p>
             <div className="space-y-3 text-blue-200">
               {[
-                { icon: MapPin, text: `${SCHOOL_CONFIG.CONTACT.ADDRESS}, ${SCHOOL_CONFIG.CONTACT.CITY}` },
-                { icon: Phone, text: SCHOOL_CONFIG.CONTACT.PHONE },
-                { icon: Mail, text: SCHOOL_CONFIG.CONTACT.EMAIL }
+                { icon: MapPin, text: `${school?.address || ''}, ${school?.city || ''}` },
+                { icon: Phone, text: school?.phone || '' },
+                { icon: Mail, text: school?.email || '' }
               ].map((item, index) => (
                 <motion.div 
                   key={index}
@@ -58,7 +63,7 @@ export function Footer() {
           >
             <h4 className="text-lg font-bold mb-6 text-white">Quick Links</h4>
             <ul className="space-y-3">
-              {SCHOOL_CONFIG.NAVIGATION.map((item) => (
+              {SIMPLE_NAVIGATION.map((item) => (
                 <li key={item.href}>
                   <Link 
                     href={item.href}
@@ -111,7 +116,7 @@ export function Footer() {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              © {CURRENT_YEAR} {SCHOOL_CONFIG.SCHOOL_NAME}. All rights reserved.
+              © {CURRENT_YEAR} {school?.name || 'Our School'}. All rights reserved.
             </motion.div>
             
             <motion.div 
@@ -122,10 +127,10 @@ export function Footer() {
               viewport={{ once: true }}
             >
               {[
-                { icon: Facebook, href: SCHOOL_CONFIG.SOCIAL.FACEBOOK, label: 'Facebook', color: 'hover:bg-blue-600' },
-                { icon: Instagram, href: SCHOOL_CONFIG.SOCIAL.INSTAGRAM, label: 'Instagram', color: 'hover:bg-pink-600' },
-                { icon: Twitter, href: SCHOOL_CONFIG.SOCIAL.TWITTER, label: 'Twitter', color: 'hover:bg-sky-500' },
-                { icon: Youtube, href: SCHOOL_CONFIG.SOCIAL.YOUTUBE, label: 'YouTube', color: 'hover:bg-red-600' }
+                { icon: Facebook, href: school?.facebook || '#', label: 'Facebook', color: 'hover:bg-blue-600' },
+                { icon: Instagram, href: school?.instagram || '#', label: 'Instagram', color: 'hover:bg-pink-600' },
+                { icon: Twitter, href: school?.twitter || '#', label: 'Twitter', color: 'hover:bg-sky-500' },
+                { icon: Youtube, href: school?.youtube || '#', label: 'YouTube', color: 'hover:bg-red-600' }
               ].map((social, index) => (
                 <motion.a
                   key={social.label}

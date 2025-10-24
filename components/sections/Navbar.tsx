@@ -13,7 +13,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Badge } from "@/components/ui/badge";
-import { SCHOOL_INFO } from "@/lib/constants/school-info";
+import { useSchool } from "@/components/SchoolProvider";
 import { NAVIGATION_MENU } from "@/lib/constants/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -103,6 +103,7 @@ const MobileUserAuthButton = dynamic(() => Promise.resolve(({ onClose }: { onClo
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { school } = useSchool();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -141,15 +142,15 @@ export function Navbar() {
             }`}>
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3" />
-                <span>{SCHOOL_INFO.contact.phone}</span>
+                <span>{school?.phone || 'Loading...'}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3" />
-                <span>{SCHOOL_INFO.contact.email}</span>
+                <span>{school?.email || 'Loading...'}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-3 w-3" />
-                <span>{SCHOOL_INFO.contact.address}</span>
+                <span>{school?.address || 'Loading...'}</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -184,7 +185,7 @@ export function Navbar() {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full blur-lg opacity-20 animate-pulse" />
                 <img
                   src="/school-logo.svg"
-                  alt={SCHOOL_INFO.name}
+                  alt={school?.name || 'School Logo'}
                   className="h-12 w-12 relative z-10"
                 />
               </div>
@@ -192,12 +193,12 @@ export function Navbar() {
                 <h1 className={`font-bold text-xl transition-colors duration-300 ${
                   isScrolled ? 'text-gray-900' : 'text-white'
                 }`}>
-                  {SCHOOL_INFO.name}
+                  {school?.name || 'Loading...'}
                 </h1>
                 <p className={`text-sm transition-colors duration-300 ${
                   isScrolled ? 'text-gray-600' : 'text-white/80'
                 }`}>
-                  {SCHOOL_INFO.tagline}
+                  {school?.tagline || ''}
                 </p>
               </div>
             </Link>

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { SCHOOL_CONFIG } from '@/lib/constants'
+import { useSchool } from '@/components/SchoolProvider'
 import { 
   Target, 
   Eye, 
@@ -20,6 +20,8 @@ import {
 } from 'lucide-react'
 
 export function About() {
+  const { school } = useSchool();
+  
   const features = [
     {
       icon: Users,
@@ -66,10 +68,10 @@ export function About() {
         >
           <Badge className="bg-blue-100 text-blue-800 mb-4 px-4 py-2">
             <Star className="h-4 w-4 mr-2" />
-            About {SCHOOL_CONFIG.SCHOOL_NAME}
+            About {school?.name || 'Our School'}
           </Badge>
           <h2 className="text-4xl lg:text-5xl font-bold heading-premium mb-6">
-            {SCHOOL_CONFIG.ABOUT.TITLE}
+            About {school?.name || 'Our School'}
           </h2>
           <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
             Discover our journey of educational excellence and commitment to nurturing future leaders.
@@ -135,7 +137,7 @@ export function About() {
             {/* Description */}
             <div className="space-y-6">
               <p className="text-lg text-premium leading-relaxed">
-                {SCHOOL_CONFIG.ABOUT.DESCRIPTION}
+                {school?.description || 'We are committed to providing quality education that prepares students for a bright future.'}
               </p>
               
               <p className="text-lg text-premium leading-relaxed">
@@ -201,7 +203,7 @@ export function About() {
                   <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
                 </div>
                 <p className="text-premium leading-relaxed">
-                  {SCHOOL_CONFIG.ABOUT.MISSION}
+                  {school?.mission || 'To provide quality education that empowers students to reach their full potential.'}
                 </p>
               </CardContent>
             </Card>
@@ -223,7 +225,7 @@ export function About() {
                   <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
                 </div>
                 <p className="text-premium leading-relaxed">
-                  {SCHOOL_CONFIG.ABOUT.VISION}
+                  {school?.vision || 'To be a leading educational institution that shapes future leaders.'}
                 </p>
               </CardContent>
             </Card>

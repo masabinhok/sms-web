@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { SCHOOL_CONFIG } from '@/lib/constants'
+import { useSchool } from '@/components/SchoolProvider'
 
 export function Contact() {
+  const { school } = useSchool();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,7 +59,7 @@ export function Contact() {
             Get in Touch
           </h2>
           <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
-            Have questions about admissions, programs, or campus life? We&apos;re here to help you learn more about {SCHOOL_CONFIG.SCHOOL_NAME}.
+            Have questions about admissions, programs, or campus life? We&apos;re here to help you learn more about {school?.name || 'our school'}.
           </p>
         </motion.div>
 
@@ -71,9 +73,9 @@ export function Contact() {
             className="space-y-6"
           >
             {[
-              { icon: MapPin, title: 'Visit Us', content: `${SCHOOL_CONFIG.CONTACT.ADDRESS}\n${SCHOOL_CONFIG.CONTACT.CITY}`, gradient: 'from-blue-600 to-blue-700' },
-              { icon: Phone, title: 'Call Us', content: SCHOOL_CONFIG.CONTACT.PHONE, gradient: 'from-green-600 to-green-700' },
-              { icon: Mail, title: 'Email Us', content: SCHOOL_CONFIG.CONTACT.EMAIL, gradient: 'from-purple-600 to-purple-700' },
+              { icon: MapPin, title: 'Visit Us', content: `${school?.address || ''}\n${school?.city || ''}`, gradient: 'from-blue-600 to-blue-700' },
+              { icon: Phone, title: 'Call Us', content: school?.phone || '', gradient: 'from-green-600 to-green-700' },
+              { icon: Mail, title: 'Email Us', content: school?.email || '', gradient: 'from-purple-600 to-purple-700' },
               { icon: Clock, title: 'Office Hours', content: 'Monday - Friday: 8:00 AM - 5:00 PM\nSaturday: 9:00 AM - 2:00 PM\nSunday: Closed', gradient: 'from-orange-600 to-orange-700' }
             ].map((item, index) => (
               <motion.div
