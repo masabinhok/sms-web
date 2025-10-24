@@ -162,16 +162,24 @@ export default function SchoolInfoSettings() {
     setIsSaving(true)
     
     try{
-       const response = await api.post<{
-      message: string
-    }>('/academics/create-school', formData)
-    addMessage(response.message)
-     setIsSaving(false)
-    setShowSuccess(true)
-    }catch(error){
+      // Add the school ID to the form data (assuming there's only one school)
+      // You may need to adjust this based on how you store the school ID
+      const updateData = {
+        id: 'default-school-id', // Replace with actual school ID retrieval
+        ...formData
+      };
 
-      console.log('Failed to create school')
-      addMessage('Failed to create school.')
+      const response = await api.patch<{
+        message: string
+      }>('/academics/update-school', updateData)
+      
+      addMessage(response.message)
+      setIsSaving(false)
+      setShowSuccess(true)
+    }catch(error){
+      console.log('Failed to update school')
+      addMessage('Failed to update school.')
+      setIsSaving(false)
     }
   }
 
@@ -213,7 +221,7 @@ export default function SchoolInfoSettings() {
                 <h3 className="font-semibold text-blue-900 mb-1">About These Settings</h3>
                 <p className="text-sm text-blue-800">
                   These settings control information displayed on your <strong>public website only</strong>.
-                  Only fields that are actively used in the website are shown here. Changes will be reflected immediately.
+                  Only fields that are actively used in the website are shown here. Changes will be saved to your school profile and reflected immediately.
                 </p>
               </div>
             </div>
