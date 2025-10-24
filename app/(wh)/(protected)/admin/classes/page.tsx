@@ -40,17 +40,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Pencil, Trash2, Eye, Filter, Search, GraduationCap, Users, Calendar, CheckCircle2, XCircle, MoreVertical, Download, Upload, RefreshCw } from 'lucide-react'
+import { Plus, Pencil, Trash2, Filter, Search, GraduationCap, Users, Calendar, CheckCircle2, XCircle, Download, Upload, RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 
 export default function ClassManagementPage() {
   const router = useRouter()
@@ -430,7 +422,7 @@ export default function ClassManagementPage() {
                       <TableHead className="font-semibold">Capacity</TableHead>
                       <TableHead className="font-semibold">Academic Year</TableHead>
                       <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="text-right font-semibold">Actions</TableHead>
+                      <TableHead className="text-right font-semibold w-[120px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -497,37 +489,23 @@ export default function ClassManagementPage() {
                             </motion.div>
                           </TableCell>
                           <TableCell className="text-right">
-                            <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="hover:bg-slate-100">
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-48 bg-white p-1">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    onClick={() => router.push(`/admin/classes/${classItem.id}`)}
-                                    className="gap-2"
-                                  >
-                                    <Eye className="h-4 w-4" /> View Details
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem
-                                    onClick={() => openEditDialog(classItem)}
-                                    className="gap-2"
-                                  >
-                                    <Pencil className="h-4 w-4" /> Edit Class
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem
-                                    onClick={() => openDeleteDialog(classItem)}
-                                    className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                                  >
-                                    <Trash2 className="h-4 w-4" /> Delete Class
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                            <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openEditDialog(classItem)}
+                                className="hover:bg-blue-100 hover:text-blue-700"
+                              >
+                                <Pencil className="h-4 w-4 mr-1" /> Edit
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openDeleteDialog(classItem)}
+                                className="hover:bg-red-50 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" /> Delete
+                              </Button>
                             </div>
                           </TableCell>
                         </motion.tr>
@@ -543,26 +521,33 @@ export default function ClassManagementPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              {selectedClass ? (
-                <><Pencil className="h-6 w-6 text-blue-600" /> Edit Class</>
-              ) : (
-                <><Plus className="h-6 w-6 text-blue-600" /> Create New Class</>
-              )}
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              {selectedClass
-                ? 'Update class information below'
-                : 'Add a new class to your school management system'}
-            </DialogDescription>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader className="space-y-3 pb-6 border-b border-slate-200">
+            <div className="flex items-center gap-3">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedClass ? 'bg-blue-100' : 'bg-green-100'}`}>
+                {selectedClass ? (
+                  <Pencil className="h-6 w-6 text-blue-600" />
+                ) : (
+                  <Plus className="h-6 w-6 text-green-600" />
+                )}
+              </div>
+              <div>
+                <DialogTitle className="text-2xl font-bold">
+                  {selectedClass ? 'Edit Class' : 'Create New Class'}
+                </DialogTitle>
+                <DialogDescription className="text-base mt-1">
+                  {selectedClass
+                    ? 'Update class information below'
+                    : 'Add a new class to your school management system'}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="grid grid-cols-2 gap-6">
               <div className="col-span-2">
-                <Label htmlFor="name" className="text-base font-medium">
+                <Label htmlFor="name" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
                   Class Name <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -573,12 +558,12 @@ export default function ClassManagementPage() {
                   }
                   placeholder="e.g., Grade 5 - Section A"
                   required
-                  className="mt-2"
+                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="grade" className="text-base font-medium">
+                <Label htmlFor="grade" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
                   Grade <span className="text-red-500">*</span>
                 </Label>
                 <Select
@@ -587,10 +572,10 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, grade: parseInt(value) })
                   }
                 >
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 border-slate-300 bg-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((grade) => (
                       <SelectItem key={grade} value={grade.toString()}>
                         Grade {grade}
@@ -601,7 +586,7 @@ export default function ClassManagementPage() {
               </div>
 
               <div>
-                <Label htmlFor="section" className="text-base font-medium">Section</Label>
+                <Label htmlFor="section" className="text-sm font-semibold text-slate-700">Section</Label>
                 <Input
                   id="section"
                   value={formData.section}
@@ -609,12 +594,12 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, section: e.target.value })
                   }
                   placeholder="e.g., A, B, C"
-                  className="mt-2"
+                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="capacity" className="text-base font-medium">
+                <Label htmlFor="capacity" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
                   Capacity <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -626,12 +611,12 @@ export default function ClassManagementPage() {
                   }
                   min={1}
                   required
-                  className="mt-2"
+                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="academicYear" className="text-base font-medium">
+                <Label htmlFor="academicYear" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
                   Academic Year <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -640,14 +625,14 @@ export default function ClassManagementPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, academicYear: e.target.value })
                   }
-                  placeholder="e.g., 2024"
+                  placeholder="e.g., 2024-2025"
                   required
-                  className="mt-2"
+                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="isActive" className="text-base font-medium">
+                <Label htmlFor="isActive" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
                   Status <span className="text-red-500">*</span>
                 </Label>
                 <Select
@@ -656,19 +641,27 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, isActive: value === 'true' })
                   }
                 >
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 border-slate-300 bg-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">✅ Active</SelectItem>
-                    <SelectItem value="false">❌ Inactive</SelectItem>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="true">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-green-600" /> Active
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="false">
+                      <div className="flex items-center gap-2">
+                        <XCircle className="h-4 w-4 text-slate-400" /> Inactive
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="description" className="text-base font-medium">Description</Label>
+              <Label htmlFor="description" className="text-sm font-semibold text-slate-700">Description</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -677,21 +670,22 @@ export default function ClassManagementPage() {
                 }
                 placeholder="Optional class description..."
                 rows={3}
-                className="mt-2"
+                className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
 
-            <DialogFooter className="gap-2">
+            <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-slate-200">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
+                className="hover:bg-white"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="gap-2">
+              <Button type="submit" className="gap-2 bg-blue-600 hover:bg-blue-700">
                 {selectedClass ? (
-                  <><Pencil className="h-4 w-4" /> Update Class</>
+                  <><CheckCircle2 className="h-4 w-4" /> Update Class</>
                 ) : (
                   <><Plus className="h-4 w-4" /> Create Class</>
                 )}

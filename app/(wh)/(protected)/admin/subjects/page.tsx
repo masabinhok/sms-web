@@ -39,17 +39,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Pencil, Trash2, Filter, BookOpen, Search, CheckCircle2, XCircle, MoreVertical, Download, Upload, RefreshCw, Award, GraduationCap, FileText } from 'lucide-react'
+import { Plus, Pencil, Trash2, Filter, BookOpen, Search, CheckCircle2, XCircle, Download, Upload, RefreshCw, Award, GraduationCap, FileText } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 
 const SUBJECT_CATEGORIES = ['Core', 'Elective', 'Extra-curricular', 'Other']
 
@@ -424,7 +416,7 @@ export default function SubjectManagementPage() {
                       <TableHead className="font-semibold">Full Marks</TableHead>
                       <TableHead className="font-semibold">Type</TableHead>
                       <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="text-right font-semibold">Actions</TableHead>
+                      <TableHead className="text-right font-semibold w-[120px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -436,7 +428,7 @@ export default function SubjectManagementPage() {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 20 }}
                           transition={{ delay: index * 0.05 }}
-                          className="group hover:bg-purple-50 transition-colors border-b cursor-default"
+                          className="group hover:bg-purple-50 transition-colors border-b"
                         >
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-3">
@@ -505,30 +497,24 @@ export default function SubjectManagementPage() {
                             </motion.div>
                           </TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="hover:bg-slate-100">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48 bg-white p-1">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => openEditDialog(subject)}
-                                  className="gap-2"
-                                >
-                                  <Pencil className="h-4 w-4" /> Edit Subject
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => openDeleteDialog(subject)}
-                                  className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                                >
-                                  <Trash2 className="h-4 w-4" /> Delete Subject
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openEditDialog(subject)}
+                                className="hover:bg-purple-100 hover:text-purple-700"
+                              >
+                                <Pencil className="h-4 w-4 mr-1" /> Edit
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openDeleteDialog(subject)}
+                                className="hover:bg-red-50 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" /> Delete
+                              </Button>
+                            </div>
                           </TableCell>
                         </motion.tr>
                       ))}
@@ -543,93 +529,120 @@ export default function SubjectManagementPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              {selectedSubject ? (
-                <><Pencil className="h-6 w-6 text-purple-600" /> Edit Subject</>
-              ) : (
-                <><Plus className="h-6 w-6 text-purple-600" /> Create New Subject</>
-              )}
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              {selectedSubject
-                ? 'Update subject information below'
-                : 'Add a new subject to your school management system'}
-            </DialogDescription>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader className="space-y-3 pb-6 border-b border-slate-200">
+            <div className="flex items-center gap-3">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedSubject ? 'bg-purple-100' : 'bg-green-100'}`}>
+                {selectedSubject ? (
+                  <Pencil className="h-6 w-6 text-purple-600" />
+                ) : (
+                  <Plus className="h-6 w-6 text-green-600" />
+                )}
+              </div>
+              <div>
+                <DialogTitle className="text-2xl font-bold">
+                  {selectedSubject ? 'Edit Subject' : 'Create New Subject'}
+                </DialogTitle>
+                <DialogDescription className="text-base mt-1">
+                  {selectedSubject
+                    ? 'Update subject information below'
+                    : 'Add a new subject to your school management system'}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
             {/* Basic Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">Subject Name *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  placeholder="e.g., Mathematics"
-                  required
-                />
-              </div>
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-purple-600" /> Basic Information
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Subject Name <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    placeholder="e.g., Mathematics"
+                    required
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
 
-              <div>
-                <Label htmlFor="code">Subject Code *</Label>
-                <Input
-                  id="code"
-                  value={formData.code}
-                  onChange={(e) =>
-                    setFormData({ ...formData, code: e.target.value.toUpperCase() })
-                  }
-                  placeholder="e.g., MATH101"
-                  required
-                />
-              </div>
+                <div>
+                  <Label htmlFor="code" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Subject Code <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="code"
+                    value={formData.code}
+                    onChange={(e) =>
+                      setFormData({ ...formData, code: e.target.value.toUpperCase() })
+                    }
+                    placeholder="e.g., MATH101"
+                    required
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500 font-mono"
+                  />
+                </div>
 
-              <div>
-                <Label htmlFor="category">Category *</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUBJECT_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                <div>
+                  <Label htmlFor="category" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Category <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, category: value })
+                    }
+                  >
+                    <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {SUBJECT_CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div>
-                <Label htmlFor="creditHours">Credit Hours *</Label>
-                <Input
-                  id="creditHours"
-                  type="number"
-                  value={formData.creditHours}
-                  onChange={(e) =>
-                    setFormData({ ...formData, creditHours: parseInt(e.target.value) })
-                  }
-                  min={1}
-                  required
-                />
+                <div>
+                  <Label htmlFor="creditHours" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Credit Hours <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="creditHours"
+                    type="number"
+                    value={formData.creditHours}
+                    onChange={(e) =>
+                      setFormData({ ...formData, creditHours: parseInt(e.target.value) })
+                    }
+                    min={1}
+                    required
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
               </div>
             </div>
 
             {/* Marks Configuration */}
-            <div className="border-t pt-4">
-              <h3 className="font-medium mb-3">Marks Configuration</h3>
+            <div className="space-y-4 pt-4 border-t border-slate-200">
+              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <Award className="h-4 w-4 text-purple-600" /> Marks Configuration
+              </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="fullMarks">Full Marks *</Label>
+                  <Label htmlFor="fullMarks" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Full Marks <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="fullMarks"
                     type="number"
@@ -639,11 +652,14 @@ export default function SubjectManagementPage() {
                     }
                     min={1}
                     required
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="passMarks">Pass Marks *</Label>
+                  <Label htmlFor="passMarks" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Pass Marks <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="passMarks"
                     type="number"
@@ -653,10 +669,11 @@ export default function SubjectManagementPage() {
                     }
                     min={1}
                     required
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
                   <input
                     type="checkbox"
                     id="hasTheory"
@@ -664,12 +681,12 @@ export default function SubjectManagementPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, hasTheory: e.target.checked })
                     }
-                    className="h-4 w-4"
+                    className="h-4 w-4 text-purple-600"
                   />
-                  <Label htmlFor="hasTheory">Has Theory Component</Label>
+                  <Label htmlFor="hasTheory" className="text-sm font-medium cursor-pointer">Has Theory Component</Label>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
                   <input
                     type="checkbox"
                     id="hasPractical"
@@ -677,14 +694,14 @@ export default function SubjectManagementPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, hasPractical: e.target.checked })
                     }
-                    className="h-4 w-4"
+                    className="h-4 w-4 text-purple-600"
                   />
-                  <Label htmlFor="hasPractical">Has Practical Component</Label>
+                  <Label htmlFor="hasPractical" className="text-sm font-medium cursor-pointer">Has Practical Component</Label>
                 </div>
 
                 {formData.hasTheory && (
                   <div>
-                    <Label htmlFor="theoryMarks">Theory Marks</Label>
+                    <Label htmlFor="theoryMarks" className="text-sm font-semibold text-slate-700">Theory Marks</Label>
                     <Input
                       id="theoryMarks"
                       type="number"
@@ -696,13 +713,14 @@ export default function SubjectManagementPage() {
                         })
                       }
                       min={0}
+                      className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
                 )}
 
                 {formData.hasPractical && (
                   <div>
-                    <Label htmlFor="practicalMarks">Practical Marks</Label>
+                    <Label htmlFor="practicalMarks" className="text-sm font-semibold text-slate-700">Practical Marks</Label>
                     <Input
                       id="practicalMarks"
                       type="number"
@@ -714,53 +732,77 @@ export default function SubjectManagementPage() {
                         })
                       }
                       min={0}
+                      className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                     />
                   </div>
                 )}
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                placeholder="Optional subject description"
-                rows={3}
-              />
+            <div className="space-y-4 pt-4 border-t border-slate-200">
+              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-purple-600" /> Additional Information
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    placeholder="Optional subject description"
+                    rows={3}
+                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="isActive" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                    Status <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.isActive ? 'true' : 'false'}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, isActive: value === 'true' })
+                    }
+                  >
+                    <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="true">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-green-600" /> Active
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="false">
+                        <div className="flex items-center gap-2">
+                          <XCircle className="h-4 w-4 text-slate-400" /> Inactive
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="isActive">Status *</Label>
-              <Select
-                value={formData.isActive ? 'true' : 'false'}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, isActive: value === 'true' })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Active</SelectItem>
-                  <SelectItem value="false">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <DialogFooter>
+            <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-slate-200">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
+                className="hover:bg-white"
               >
                 Cancel
               </Button>
-              <Button type="submit">
-                {selectedSubject ? 'Update Subject' : 'Create Subject'}
+              <Button type="submit" className="gap-2 bg-purple-600 hover:bg-purple-700">
+                {selectedSubject ? (
+                  <><CheckCircle2 className="h-4 w-4" /> Update Subject</>
+                ) : (
+                  <><Plus className="h-4 w-4" /> Create Subject</>
+                )}
               </Button>
             </DialogFooter>
           </form>
