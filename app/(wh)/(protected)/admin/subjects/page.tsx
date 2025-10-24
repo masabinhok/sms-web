@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMessage } from '@/store/messageStore'
 import {
   getAllSubjects,
   createSubject,
@@ -46,6 +47,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 const SUBJECT_CATEGORIES = ['Core', 'Elective', 'Extra-curricular', 'Other']
 
 export default function SubjectManagementPage() {
+  const { addMessage } = useMessage()
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [loading, setLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -136,13 +138,15 @@ export default function SubjectManagementPage() {
     try {
       if (selectedSubject) {
         await updateSubject({ id: selectedSubject.id, ...formData })
+        addMessage('Subject updated successfully', 'success')
       } else {
         await createSubject(formData)
+        addMessage('Subject created successfully', 'success')
       }
       setIsDialogOpen(false)
       fetchSubjects()
     } catch (error: any) {
-      alert(error.message || 'Failed to save subject')
+      addMessage(error.message || 'Failed to save subject', 'error')
     }
   }
 
@@ -151,10 +155,11 @@ export default function SubjectManagementPage() {
 
     try {
       await deleteSubject(selectedSubject.id)
+      addMessage('Subject deleted successfully', 'success')
       setIsDeleteDialogOpen(false)
       fetchSubjects()
     } catch (error: any) {
-      alert(error.message || 'Failed to delete subject')
+      addMessage(error.message || 'Failed to delete subject', 'error')
     }
   }
 

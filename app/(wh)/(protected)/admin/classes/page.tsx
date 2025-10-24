@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useMessage } from '@/store/messageStore'
 import {
   getAllClasses,
   createClass,
@@ -46,6 +47,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function ClassManagementPage() {
   const router = useRouter()
+  const { addMessage } = useMessage()
   const [classes, setClasses] = useState<Class[]>([])
   const [loading, setLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -122,13 +124,15 @@ export default function ClassManagementPage() {
     try {
       if (selectedClass) {
         await updateClass({ id: selectedClass.id, ...formData })
+        addMessage(`Successfully updated ${formData.name}!`, 'success')
       } else {
         await createClass(formData)
+        addMessage(`Successfully created ${formData.name}!`, 'success')
       }
       setIsDialogOpen(false)
       fetchClasses()
     } catch (error: any) {
-      alert(error.message || 'Failed to save class')
+      addMessage(error.message || 'Failed to save class', 'error')
     }
   }
 
@@ -139,8 +143,9 @@ export default function ClassManagementPage() {
       await deleteClass(selectedClass.id)
       setIsDeleteDialogOpen(false)
       fetchClasses()
+      addMessage(`Successfully deleted ${selectedClass.name}!`, 'success')
     } catch (error: any) {
-      alert(error.message || 'Failed to delete class')
+      addMessage(error.message || 'Failed to delete class', 'error')
     }
   }
 

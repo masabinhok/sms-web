@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useMessage } from '@/store/messageStore'
 import {
   getClassById,
   getAllSubjects,
@@ -48,6 +49,7 @@ export default function ClassDetailPage() {
   const router = useRouter()
   const params = useParams()
   const classId = params.id as string
+  const { addMessage } = useMessage()
 
   const [classData, setClassData] = useState<Class | null>(null)
   const [allSubjects, setAllSubjects] = useState<Subject[]>([])
@@ -90,7 +92,7 @@ export default function ClassDetailPage() {
     const availableSubjects = allSubjects.filter((s) => !assignedIds.has(s.id))
 
     if (availableSubjects.length === 0) {
-      alert('All subjects have been assigned to this class')
+      addMessage('All subjects have been assigned to this class', 'warning')
       return
     }
 
@@ -122,7 +124,7 @@ export default function ClassDetailPage() {
         },
       ])
     } else {
-      alert('No more subjects available to add')
+      addMessage('No more subjects available to add', 'warning')
     }
   }
 
@@ -142,14 +144,14 @@ export default function ClassDetailPage() {
 
   async function handleAssignSubjects() {
     if (selectedSubjects.length === 0) {
-      alert('Please select at least one subject')
+      addMessage('Please select at least one subject', 'warning')
       return
     }
 
     // Validate all subjects have been selected
     const hasEmptySelection = selectedSubjects.some(s => !s.subjectId)
     if (hasEmptySelection) {
-      alert('Please select a subject for all rows')
+      addMessage('Please select a subject for all rows', 'warning')
       return
     }
 
@@ -157,7 +159,7 @@ export default function ClassDetailPage() {
     const subjectIds = selectedSubjects.map(s => s.subjectId)
     const uniqueIds = new Set(subjectIds)
     if (subjectIds.length !== uniqueIds.size) {
-      alert('You have selected the same subject multiple times. Please select different subjects.')
+      addMessage('You have selected the same subject multiple times. Please select different subjects.', 'error')
       return
     }
 
@@ -174,10 +176,10 @@ export default function ClassDetailPage() {
       // Refresh the data
       await fetchData()
       
-      alert(`Successfully assigned ${selectedSubjects.length} subject(s) to ${classData?.name}!`)
+      addMessage(`Successfully assigned ${selectedSubjects.length} subject(s) to ${classData?.name}!`, 'success')
     } catch (error: any) {
       console.error('Assignment error:', error)
-      alert(error.message || 'Failed to assign subjects. Please try again.')
+      addMessage(error.message || 'Failed to assign subjects. Please try again.', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -204,10 +206,10 @@ export default function ClassDetailPage() {
     try {
       await removeSubjectFromClass(classId, subjectId)
       await fetchData()
-      alert(`Successfully removed "${subjectName}" from ${classData?.name}!`)
+      addMessage(`Successfully removed "${subjectName}" from ${classData?.name}!`, 'success')
     } catch (error: any) {
       console.error('Remove subject error:', error)
-      alert(error.message || 'Failed to remove subject. Please try again.')
+      addMessage(error.message || 'Failed to remove subject. Please try again.', 'error')
     }
   }
 
