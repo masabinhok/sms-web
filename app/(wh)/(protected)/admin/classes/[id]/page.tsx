@@ -8,6 +8,7 @@ import {
   getAllSubjects,
   assignSubjectsToClass,
   getClassSubjects,
+  removeSubjectFromClass,
   type Class,
   type Subject,
   type ClassSubject,
@@ -41,7 +42,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, Plus, BookOpen, X, Users, Calendar, GraduationCap, CheckCircle2, XCircle, Award, FileText } from 'lucide-react'
+import { ArrowLeft, Plus, BookOpen, X, Users, Calendar, GraduationCap, CheckCircle2, XCircle, Award, FileText, Trash2 } from 'lucide-react'
 
 export default function ClassDetailPage() {
   const router = useRouter()
@@ -53,6 +54,7 @@ export default function ClassDetailPage() {
   const [classSubjects, setClassSubjects] = useState<ClassSubject[]>([])
   const [loading, setLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [selectedSubjects, setSelectedSubjects] = useState<
     { subjectId: string; isCompulsory: boolean; weeklyPeriods: number }[]
   >([])
@@ -92,7 +94,14 @@ export default function ClassDetailPage() {
       return
     }
 
-    setSelectedSubjects([])
+    // Start with one empty selection
+    setSelectedSubjects([
+      {
+        subjectId: availableSubjects[0].id,
+        isCompulsory: true,
+        weeklyPeriods: 5,
+      },
+    ])
     setIsDialogOpen(true)
   }
 
@@ -112,6 +121,8 @@ export default function ClassDetailPage() {
           weeklyPeriods: 5,
         },
       ])
+    } else {
+      alert('No more subjects available to add')
     }
   }
 
@@ -135,20 +146,70 @@ export default function ClassDetailPage() {
       return
     }
 
+    // Validate all subjects have been selected
+    const hasEmptySelection = selectedSubjects.some(s => !s.subjectId)
+    if (hasEmptySelection) {
+      alert('Please select a subject for all rows')
+      return
+    }
+
+    // Check for duplicate selections
+    const subjectIds = selectedSubjects.map(s => s.subjectId)
+    const uniqueIds = new Set(subjectIds)
+    if (subjectIds.length !== uniqueIds.size) {
+      alert('You have selected the same subject multiple times. Please select different subjects.')
+      return
+    }
+
     try {
-      await assignSubjectsToClass(classId, { subjects: selectedSubjects })
+      setSubmitting(true)
+      console.log('Assigning subjects:', { subjects: selectedSubjects })
+      
+      const result = await assignSubjectsToClass(classId, { subjects: selectedSubjects })
+      console.log('Assignment result:', result)
+      
       setIsDialogOpen(false)
-      fetchData()
+      setSelectedSubjects([])
+      
+      // Refresh the data
+      await fetchData()
+      
+      alert(`Successfully assigned ${selectedSubjects.length} subject(s) to ${classData?.name}!`)
     } catch (error: any) {
-      alert(error.message || 'Failed to assign subjects')
+      console.error('Assignment error:', error)
+      alert(error.message || 'Failed to assign subjects. Please try again.')
+    } finally {
+      setSubmitting(false)
     }
   }
 
-  const assignedIds = new Set(classSubjects.map((cs) => cs.subjectId))
-  const selectedIds = new Set(selectedSubjects.map((s) => s.subjectId))
-  const availableSubjects = allSubjects.filter(
-    (s) => !assignedIds.has(s.id) && !selectedIds.has(s.id)
-  )
+  // Calculate available subjects dynamically
+  const getAvailableSubjectsForIndex = (currentIndex: number) => {
+    const assignedIds = new Set(classSubjects.map((cs) => cs.subjectId))
+    const selectedIds = new Set(
+      selectedSubjects
+        .map((s, i) => i !== currentIndex ? s.subjectId : null)
+        .filter(Boolean)
+    )
+    return allSubjects.filter(
+      (s) => !assignedIds.has(s.id) && !selectedIds.has(s.id)
+    )
+  }
+
+  async function handleRemoveSubject(subjectId: string, subjectName: string) {
+    if (!confirm(`Are you sure you want to remove "${subjectName}" from this class?`)) {
+      return
+    }
+
+    try {
+      await removeSubjectFromClass(classId, subjectId)
+      await fetchData()
+      alert(`Successfully removed "${subjectName}" from ${classData?.name}!`)
+    } catch (error: any) {
+      console.error('Remove subject error:', error)
+      alert(error.message || 'Failed to remove subject. Please try again.')
+    }
+  }
 
   if (loading) {
     return (
@@ -369,6 +430,7 @@ export default function ClassDetailPage() {
                         <TableHead className="font-semibold text-slate-700">Type</TableHead>
                         <TableHead className="font-semibold text-slate-700">Weekly Periods</TableHead>
                         <TableHead className="font-semibold text-slate-700">Full Marks</TableHead>
+                        <TableHead className="font-semibold text-slate-700 text-right">Action</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -435,6 +497,16 @@ export default function ClassDetailPage() {
                                 <span className="font-medium">{subject.fullMarks}</span>
                               </div>
                             </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemoveSubject(subject.id, subject.name)}
+                                className="hover:bg-red-50 hover:text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" /> Remove
+                              </Button>
+                            </TableCell>
                           </motion.tr>
                         )
                       })}
@@ -464,39 +536,42 @@ export default function ClassDetailPage() {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            {selectedSubjects.map((selected, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-              >
-                <Card className="border-slate-200 shadow-sm">
-                  <CardContent className="pt-6">
-                    <div className="flex items-end gap-4">
-                      <div className="flex-1">
-                        <Label className="text-slate-700 font-medium">Subject</Label>
-                        <Select
-                          value={selected.subjectId}
-                          onValueChange={(value) =>
-                            updateSubjectSelection(index, 'subjectId', value)
-                          }
-                        >
-                          <SelectTrigger className="mt-1.5 bg-white border-slate-300">
-                            <SelectValue placeholder="Select a subject" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-white">
-                            {availableSubjects.map((subject) => (
-                              <SelectItem key={subject.id} value={subject.id}>
-                                <div className="flex items-center gap-2">
-                                  <BookOpen className="h-4 w-4 text-slate-400" />
-                                  {subject.name} ({subject.code})
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+            {selectedSubjects.map((selected, index) => {
+              const availableForThisRow = getAvailableSubjectsForIndex(index)
+              
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <Card className="border-slate-200 shadow-sm">
+                    <CardContent className="pt-6">
+                      <div className="flex items-end gap-4">
+                        <div className="flex-1">
+                          <Label className="text-slate-700 font-medium">Subject</Label>
+                          <Select
+                            value={selected.subjectId}
+                            onValueChange={(value) =>
+                              updateSubjectSelection(index, 'subjectId', value)
+                            }
+                          >
+                            <SelectTrigger className="mt-1.5 bg-white border-slate-300">
+                              <SelectValue placeholder="Select a subject" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white max-h-[200px]">
+                              {availableForThisRow.map((subject) => (
+                                <SelectItem key={subject.id} value={subject.id}>
+                                  <div className="flex items-center gap-2">
+                                    <BookOpen className="h-4 w-4 text-slate-400" />
+                                    {subject.name} ({subject.code})
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
 
                       <div className="w-40">
                         <Label className="text-slate-700 font-medium">Type</Label>
@@ -559,17 +634,26 @@ export default function ClassDetailPage() {
                   </CardContent>
                 </Card>
               </motion.div>
-            ))}
+            )
+            })}
 
-            {availableSubjects.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={addSubjectToSelection}
-                className="w-full border-dashed border-2 border-slate-300 hover:border-blue-400 hover:bg-blue-50 text-slate-700"
-              >
-                <Plus className="mr-2 h-4 w-4" /> Add Another Subject
-              </Button>
-            )}
+            {(() => {
+              const assignedIds = new Set(classSubjects.map((cs) => cs.subjectId))
+              const selectedIds = new Set(selectedSubjects.map((s) => s.subjectId))
+              const remainingSubjects = allSubjects.filter(
+                (s) => !assignedIds.has(s.id) && !selectedIds.has(s.id)
+              )
+              
+              return remainingSubjects.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={addSubjectToSelection}
+                  className="w-full border-dashed border-2 border-slate-300 hover:border-blue-400 hover:bg-blue-50 text-slate-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" /> Add Another Subject ({remainingSubjects.length} available)
+                </Button>
+              )
+            })()}
 
             {selectedSubjects.length === 0 && (
               <div className="text-center py-12">
@@ -586,16 +670,33 @@ export default function ClassDetailPage() {
           </div>
 
           <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-6">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="hover:bg-white">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsDialogOpen(false)
+                setSelectedSubjects([])
+              }} 
+              className="hover:bg-white"
+              disabled={submitting}
+            >
               Cancel
             </Button>
             <Button 
               onClick={handleAssignSubjects} 
-              disabled={selectedSubjects.length === 0} 
+              disabled={selectedSubjects.length === 0 || submitting} 
               className="bg-blue-600 hover:bg-blue-700"
             >
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              Assign {selectedSubjects.length} Subject(s)
+              {submitting ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  Assigning...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Assign {selectedSubjects.length} Subject(s)
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

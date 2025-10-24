@@ -355,3 +355,22 @@ export async function getClassSubjects(classId: string) {
   const data = await response.json()
   return Array.isArray(data) ? data : []
 }
+
+export async function removeSubjectFromClass(classId: string, subjectId: string) {
+  const response = await fetch(
+    `${API_BASE_URL}/academics/classes/${classId}/subjects/${subjectId}`,
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    }
+  )
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Failed to remove subject from class')
+  }
+
+  return response.json()
+}
+
