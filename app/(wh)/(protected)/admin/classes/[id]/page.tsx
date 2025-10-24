@@ -176,7 +176,8 @@ export default function ClassDetailPage() {
       // Refresh the data
       await fetchData()
       
-      addMessage(`Successfully assigned ${selectedSubjects.length} subject(s) to ${classData?.name}!`, 'success')
+      const className = classData?.name || 'class'
+      addMessage(`Successfully assigned ${selectedSubjects.length} subject(s) to ${className}!`, 'success')
     } catch (error: any) {
       console.error('Assignment error:', error)
       addMessage(error.message || 'Failed to assign subjects. Please try again.', 'error')
