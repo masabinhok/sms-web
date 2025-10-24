@@ -130,21 +130,41 @@ export async function getAllClasses(academicYear?: string, isActive?: boolean) {
   if (academicYear) params.append('academicYear', academicYear)
   if (isActive !== undefined) params.append('isActive', String(isActive))
 
-  const response = await fetch(
-    `${API_BASE_URL}/academics/classes?${params.toString()}`,
-    {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-    }
-  )
+  const url = `${API_BASE_URL}/academics/classes?${params.toString()}`
+  console.log('Fetching classes from:', url)
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  console.log('Classes response status:', response.status)
 
   if (!response.ok) {
+    const errorText = await response.text()
+    console.error('Classes fetch error:', errorText)
     throw new Error('Failed to fetch classes')
   }
 
   const data = await response.json()
-  return Array.isArray(data) ? data : []
+  console.log('Classes raw response:', data)
+  console.log('Is array?', Array.isArray(data))
+  console.log('Data type:', typeof data)
+  console.log('Data keys:', data ? Object.keys(data) : 'null')
+  
+  // Handle different response formats
+  if (Array.isArray(data)) {
+    return data
+  } else if (data && typeof data === 'object') {
+    // Check if data is wrapped in common property names
+    if (Array.isArray(data.data)) return data.data
+    if (Array.isArray(data.classes)) return data.classes
+    if (Array.isArray(data.results)) return data.results
+    if (Array.isArray(data.items)) return data.items
+  }
+  
+  return []
 }
 
 export async function getClassById(id: string) {
@@ -215,21 +235,41 @@ export async function getAllSubjects(category?: string, isActive?: boolean) {
   if (category) params.append('category', category)
   if (isActive !== undefined) params.append('isActive', String(isActive))
 
-  const response = await fetch(
-    `${API_BASE_URL}/academics/subjects?${params.toString()}`,
-    {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-    }
-  )
+  const url = `${API_BASE_URL}/academics/subjects?${params.toString()}`
+  console.log('Fetching subjects from:', url)
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  })
+
+  console.log('Subjects response status:', response.status)
 
   if (!response.ok) {
+    const errorText = await response.text()
+    console.error('Subjects fetch error:', errorText)
     throw new Error('Failed to fetch subjects')
   }
 
   const data = await response.json()
-  return Array.isArray(data) ? data : []
+  console.log('Subjects raw response:', data)
+  console.log('Is array?', Array.isArray(data))
+  console.log('Data type:', typeof data)
+  console.log('Data keys:', data ? Object.keys(data) : 'null')
+  
+  // Handle different response formats
+  if (Array.isArray(data)) {
+    return data
+  } else if (data && typeof data === 'object') {
+    // Check if data is wrapped in common property names
+    if (Array.isArray(data.data)) return data.data
+    if (Array.isArray(data.subjects)) return data.subjects
+    if (Array.isArray(data.results)) return data.results
+    if (Array.isArray(data.items)) return data.items
+  }
+  
+  return []
 }
 
 export async function getSubjectById(id: string) {

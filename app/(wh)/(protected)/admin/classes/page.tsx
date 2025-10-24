@@ -69,6 +69,7 @@ export default function ClassManagementPage() {
     try {
       setLoading(true)
       const data = await getAllClasses()
+      console.log('Fetched classes data:', data)
       setClasses(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch classes:', error)

@@ -74,6 +74,7 @@ export default function SubjectManagementPage() {
     try {
       setLoading(true)
       const data = await getAllSubjects()
+      console.log('Fetched subjects data:', data)
       setSubjects(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch subjects:', error)
