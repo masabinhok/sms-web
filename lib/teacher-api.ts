@@ -8,8 +8,8 @@ export interface Teacher {
   gender?: string;
   phone: string;
   address: string;
-  subjects?: string[];
-  classes?: string[];
+  subjectIds?: string[];
+  classIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -41,8 +41,8 @@ export interface CreateTeacherData {
   gender?: string;
   phone: string;
   address: string;
-  subjects?: string[];
-  classes?: string[];
+  subjectIds?: string[];
+  classIds?: string[];
 }
 
 export interface UpdateTeacherData extends Partial<CreateTeacherData> {}

@@ -2,13 +2,13 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { teacherProfileSchema, TeacherProfileFormData, Subject, Class } from "@/lib/validation/teacher-profile-schema";
+import { teacherProfileSchema, TeacherProfileFormData } from "@/lib/validation/teacher-profile-schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Users, 
   User, 
@@ -23,45 +23,15 @@ import {
   CheckCircle,
   X,
   Sparkles,
-  School
+  School,
+  Loader2
 } from "lucide-react";
 import { api } from "@/lib/api-client";
 import { useMessage } from "@/store/messageStore";
 import { useRouter } from "next/navigation";
+import { getAllClasses, getAllSubjects, Class, Subject } from "@/lib/academics-api";
 
 type GenderOption = "Male" | "Female" | "Other";
-
-const SUBJECTS = [
-  { value: 'MATH', label: 'Mathematics' },
-  { value: 'SCIENCE', label: 'Science' },
-  { value: 'ENGLISH', label: 'English' },
-  { value: 'COMPUTER_SCIENCE', label: 'Computer Science' },
-  { value: 'PHYSICS', label: 'Physics' },
-  { value: 'CHEMISTRY', label: 'Chemistry' },
-  { value: 'BIOLOGY', label: 'Biology' },
-  { value: 'MUSIC', label: 'Music' },
-  { value: 'DANCE', label: 'Dance' },
-  { value: 'ART', label: 'Art' },
-  { value: 'SOCIAL_STUDIES', label: 'Social Studies' },
-];
-
-const CLASSES = [
-  { value: 'NURSERY', label: 'Nursery' },
-  { value: 'LKG', label: 'LKG' },
-  { value: 'UKG', label: 'UKG' },
-  { value: 'FIRST', label: '1st' },
-  { value: 'SECOND', label: '2nd' },
-  { value: 'THIRD', label: '3rd' },
-  { value: 'FOURTH', label: '4th' },
-  { value: 'FIFTH', label: '5th' },
-  { value: 'SIXTH', label: '6th' },
-  { value: 'SEVENTH', label: '7th' },
-  { value: 'EIGHTH', label: '8th' },
-  { value: 'NINTH', label: '9th' },
-  { value: 'TENTH', label: '10th' },
-  { value: 'ELEVENTH', label: '11th' },
-  { value: 'TWELFTH', label: '12th' },
-];
 
 // InputField component moved outside to prevent recreation on every render
 interface InputFieldProps {
@@ -123,8 +93,12 @@ const InputField = ({
 
 export default function CreateTeacherProfileForm() {
   const [loading, setLoading] = useState(false);
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
+  const [selectedSubjectIds, setSelectedSubjectIds] = useState<string[]>([]);
+  const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loadingSubjects, setLoadingSubjects] = useState(true);
+  const [loadingClasses, setLoadingClasses] = useState(true);
 
   const { addMessage } = useMessage();
   const router = useRouter();
@@ -141,14 +115,40 @@ export default function CreateTeacherProfileForm() {
     mode: "onChange"
   });
 
+  // Fetch subjects and classes on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoadingSubjects(true);
+        setLoadingClasses(true);
+        
+        const [subjectsData, classesData] = await Promise.all([
+          getAllSubjects(undefined, true), // Get only active subjects
+          getAllClasses(undefined, true)   // Get only active classes
+        ]);
+        
+        setSubjects(subjectsData);
+        setClasses(classesData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        addMessage("Failed to load classes and subjects. Please refresh the page.", 'error');
+      } finally {
+        setLoadingSubjects(false);
+        setLoadingClasses(false);
+      }
+    };
+
+    fetchData();
+  }, [addMessage]);
+
   const onSubmit = async (data: TeacherProfileFormData) => {
     setLoading(true);
     try {
       const response = await api.post<{message?: string}>('/teacher/create-profile', data);
       addMessage(response.message || "Teacher profile created successfully!", 'success');
       reset();
-      setSelectedSubjects([]);
-      setSelectedClasses([]);
+      setSelectedSubjectIds([]);
+      setSelectedClassIds([]);
       // Optionally redirect
       setTimeout(() => router.push('/admin/teachers'), 1500);
     } catch (err) {
@@ -159,20 +159,20 @@ export default function CreateTeacherProfileForm() {
     }
   };
 
-  const toggleSubject = (subject: string) => {
-    const updated = selectedSubjects.includes(subject)
-      ? selectedSubjects.filter(s => s !== subject)
-      : [...selectedSubjects, subject];
-    setSelectedSubjects(updated);
-    setValue("subjects", updated as any, { shouldDirty: true, shouldValidate: true });
+  const toggleSubject = (subjectId: string) => {
+    const updated = selectedSubjectIds.includes(subjectId)
+      ? selectedSubjectIds.filter(id => id !== subjectId)
+      : [...selectedSubjectIds, subjectId];
+    setSelectedSubjectIds(updated);
+    setValue("subjectIds", updated, { shouldDirty: true, shouldValidate: true });
   };
 
-  const toggleClass = (classValue: string) => {
-    const updated = selectedClasses.includes(classValue)
-      ? selectedClasses.filter(c => c !== classValue)
-      : [...selectedClasses, classValue];
-    setSelectedClasses(updated);
-    setValue("classes", updated as any, { shouldDirty: true, shouldValidate: true });
+  const toggleClass = (classId: string) => {
+    const updated = selectedClassIds.includes(classId)
+      ? selectedClassIds.filter(id => id !== classId)
+      : [...selectedClassIds, classId];
+    setSelectedClassIds(updated);
+    setValue("classIds", updated, { shouldDirty: true, shouldValidate: true });
   };
 
   const watchedFields = watch();
@@ -354,27 +354,40 @@ export default function CreateTeacherProfileForm() {
             
             <div className="space-y-4">
               <p className="text-sm text-gray-600">Select the subjects this teacher can teach (optional but recommended)</p>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                {SUBJECTS.map((subject) => (
-                  <button
-                    key={subject.value}
-                    type="button"
-                    onClick={() => toggleSubject(subject.value)}
-                    className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
-                      selectedSubjects.includes(subject.value)
-                        ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 text-green-700 shadow-md'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50/50'
-                    }`}
-                  >
-                    {subject.label}
-                  </button>
-                ))}
-              </div>
-              {selectedSubjects.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 rounded-lg p-3">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Selected: {selectedSubjects.length} subject{selectedSubjects.length !== 1 ? 's' : ''}</span>
+              {loadingSubjects ? (
+                <div className="flex items-center justify-center p-8 border rounded-lg">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400 mr-2" />
+                  <span className="text-sm text-gray-500">Loading subjects...</span>
                 </div>
+              ) : subjects.length === 0 ? (
+                <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg">
+                  <p className="text-sm text-amber-800">No subjects available. Please create subjects first.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                    {subjects.map((subject) => (
+                      <button
+                        key={subject.id}
+                        type="button"
+                        onClick={() => toggleSubject(subject.id)}
+                        className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
+                          selectedSubjectIds.includes(subject.id)
+                            ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 text-green-700 shadow-md'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50/50'
+                        }`}
+                      >
+                        {subject.name}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedSubjectIds.length > 0 && (
+                    <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 rounded-lg p-3">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Selected: {selectedSubjectIds.length} subject{selectedSubjectIds.length !== 1 ? 's' : ''}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -390,27 +403,40 @@ export default function CreateTeacherProfileForm() {
             
             <div className="space-y-4">
               <p className="text-sm text-gray-600">Select the classes this teacher can teach (optional but recommended)</p>
-              <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-6">
-                {CLASSES.map((classItem) => (
-                  <button
-                    key={classItem.value}
-                    type="button"
-                    onClick={() => toggleClass(classItem.value)}
-                    className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
-                      selectedClasses.includes(classItem.value)
-                        ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 text-purple-700 shadow-md'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50/50'
-                    }`}
-                  >
-                    {classItem.label}
-                  </button>
-                ))}
-              </div>
-              {selectedClasses.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-purple-600 bg-purple-50 rounded-lg p-3">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Selected: {selectedClasses.length} class{selectedClasses.length !== 1 ? 'es' : ''}</span>
+              {loadingClasses ? (
+                <div className="flex items-center justify-center p-8 border rounded-lg">
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400 mr-2" />
+                  <span className="text-sm text-gray-500">Loading classes...</span>
                 </div>
+              ) : classes.length === 0 ? (
+                <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg">
+                  <p className="text-sm text-amber-800">No classes available. Please create classes first.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                    {classes.map((classItem) => (
+                      <button
+                        key={classItem.id}
+                        type="button"
+                        onClick={() => toggleClass(classItem.id)}
+                        className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
+                          selectedClassIds.includes(classItem.id)
+                            ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 text-purple-700 shadow-md'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50/50'
+                        }`}
+                      >
+                        {classItem.name} {classItem.section ? `(${classItem.section})` : ''}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedClassIds.length > 0 && (
+                    <div className="flex items-center gap-2 text-sm text-purple-600 bg-purple-50 rounded-lg p-3">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Selected: {selectedClassIds.length} class{selectedClassIds.length !== 1 ? 'es' : ''}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -438,8 +464,8 @@ export default function CreateTeacherProfileForm() {
                   variant="outline"
                   onClick={() => {
                     reset();
-                    setSelectedSubjects([]);
-                    setSelectedClasses([]);
+                    setSelectedSubjectIds([]);
+                    setSelectedClassIds([]);
                   }}
                   disabled={loading}
                   className="min-w-[120px]"

@@ -1,40 +1,5 @@
 import { z } from "zod";
 
-export const Subject = {
-  MATH: 'MATH',
-  SCIENCE: 'SCIENCE',
-  ENGLISH: 'ENGLISH',
-  COMPUTER_SCIENCE: 'COMPUTER_SCIENCE',
-  PHYSICS: 'PHYSICS',
-  CHEMISTRY: 'CHEMISTRY',
-  BIOLOGY: 'BIOLOGY',
-  MUSIC: 'MUSIC',
-  DANCE: 'DANCE',
-  ART: 'ART',
-  SOCIAL_STUDIES: 'SOCIAL_STUDIES',
-} as const;
-
-export const Class = {
-  NURSERY: 'NURSERY',
-  LKG: 'LKG',
-  UKG: 'UKG',
-  FIRST: 'FIRST',
-  SECOND: 'SECOND',
-  THIRD: 'THIRD',
-  FOURTH: 'FOURTH',
-  FIFTH: 'FIFTH',
-  SIXTH: 'SIXTH',
-  SEVENTH: 'SEVENTH',
-  EIGHTH: 'EIGHTH',
-  NINTH: 'NINTH',
-  TENTH: 'TENTH',
-  ELEVENTH: 'ELEVENTH',
-  TWELFTH: 'TWELFTH',
-} as const;
-
-export type SubjectType = typeof Subject[keyof typeof Subject];
-export type ClassType = typeof Class[keyof typeof Class];
-
 export const teacherProfileSchema = z.object({
   fullName: z
     .string()
@@ -71,40 +36,12 @@ export const teacherProfileSchema = z.object({
       "Date of birth must be a valid ISO-8601 date"
     ),
 
-  subjects: z
-    .array(z.enum([
-      'MATH',
-      'SCIENCE',
-      'ENGLISH',
-      'COMPUTER_SCIENCE',
-      'PHYSICS',
-      'CHEMISTRY',
-      'BIOLOGY',
-      'MUSIC',
-      'DANCE',
-      'ART',
-      'SOCIAL_STUDIES',
-    ]))
+  subjectIds: z
+    .array(z.string().uuid("Each subject must be a valid UUID"))
     .optional(),
 
-  classes: z
-    .array(z.enum([
-      'NURSERY',
-      'LKG',
-      'UKG',
-      'FIRST',
-      'SECOND',
-      'THIRD',
-      'FOURTH',
-      'FIFTH',
-      'SIXTH',
-      'SEVENTH',
-      'EIGHTH',
-      'NINTH',
-      'TENTH',
-      'ELEVENTH',
-      'TWELFTH',
-    ]))
+  classIds: z
+    .array(z.string().uuid("Each class must be a valid UUID"))
     .optional(),
 });
 

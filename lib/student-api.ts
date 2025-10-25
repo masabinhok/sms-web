@@ -6,9 +6,8 @@ export interface Student {
   dob: string;
   email: string;
   gender?: string;
-  class: string;
-  section: string;
-  rollNumber: string;
+  classId: string;
+  rollNumber: number;
   guardianName: string;
   guardianContact: string;
   address?: string;
@@ -20,8 +19,7 @@ export interface StudentQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  className?: string;
-  section?: string;
+  className?: string; // This can now be classId
   sortBy?: string;
   order?: 'asc' | 'desc';
 }
@@ -41,9 +39,7 @@ export interface CreateStudentData {
   dob: string;
   email: string;
   gender?: string;
-  class: string;
-  section: string;
-  rollNumber: string;
+  classId: string;
   guardianName: string;
   guardianContact: string;
   address?: string;
@@ -83,8 +79,7 @@ export const studentApi = {
   getStats: () =>
     api.get<{
       total: number;
-      byClass: Array<{ class: string; _count: number }>;
-      bySection: Array<{ section: string; _count: number }>;
+      byClass: Array<{ classId: string; _count: number }>;
       byGender: Array<{ gender: string; _count: number }>;
     }>('/students/stats/overview'),
 };

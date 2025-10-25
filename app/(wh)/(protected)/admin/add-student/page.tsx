@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   GraduationCap, 
   User, 
@@ -16,19 +16,19 @@ import {
   Calendar, 
   MapPin, 
   Phone, 
-  Hash, 
   Users,
   UserCircle,
-  BookOpen,
   School,
   AlertCircle,
   CheckCircle,
   X,
-  Sparkles
+  Sparkles,
+  Loader2
 } from "lucide-react";
 import { api } from "@/lib/api-client";
 import { useMessage } from "@/store/messageStore";
 import { useRouter } from "next/navigation";
+import { getAllClasses, Class } from "@/lib/academics-api";
 
 type GenderOption = "Male" | "Female" | "Other";
 
@@ -92,8 +92,11 @@ const InputField = ({
 
 export default function CreateStudentProfileForm() {
   const [loading, setLoading] = useState(false);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [loadingClasses, setLoadingClasses] = useState(true);
   const { addMessage } = useMessage();
   const router = useRouter();
+  
   const {
     register,
     handleSubmit,
@@ -105,6 +108,24 @@ export default function CreateStudentProfileForm() {
     resolver: zodResolver(studentProfileSchema),
     mode: "onChange"
   });
+
+  // Fetch classes on mount
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        setLoadingClasses(true);
+        const data = await getAllClasses(undefined, true); // Get only active classes
+        setClasses(data);
+      } catch (error) {
+        console.error("Failed to fetch classes:", error);
+        addMessage("Failed to load classes. Please refresh the page.", 'error');
+      } finally {
+        setLoadingClasses(false);
+      }
+    };
+
+    fetchClasses();
+  }, [addMessage]);
 
   const onSubmit = async (data: StudentProfileFormData) => {
     setLoading(true);
@@ -124,7 +145,7 @@ export default function CreateStudentProfileForm() {
 
   const watchedFields = watch();
   const filledFieldsCount = Object.keys(dirtyFields).length;
-  const totalRequiredFields = 9; // fullName, dob, email, class, section, rollNumber, guardianName, guardianContact (address is optional)
+  const totalRequiredFields = 7; // fullName, dob, email, classId, guardianName, guardianContact (address and gender are optional)
   const progress = Math.min((filledFieldsCount / totalRequiredFields) * 100, 100);
 
   return (
@@ -287,43 +308,46 @@ export default function CreateStudentProfileForm() {
               </h2>
             </div>
             
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              {/* Class */}
-              <InputField
-                label="Class"
-                name="class"
-                icon={School}
-                placeholder="e.g., 10th Grade"
-                required
-                register={register}
-                errors={errors}
-                dirtyFields={dirtyFields}
-              />
-
-              {/* Section */}
-              <InputField
-                label="Section"
-                name="section"
-                icon={BookOpen}
-                placeholder="e.g., A"
-                required
-                maxLength={5}
-                register={register}
-                errors={errors}
-                dirtyFields={dirtyFields}
-              />
-
-              {/* Roll Number */}
-              <InputField
-                label="Roll Number"
-                name="rollNumber"
-                icon={Hash}
-                placeholder="e.g., 15"
-                required
-                register={register}
-                errors={errors}
-                dirtyFields={dirtyFields}
-              />
+            <div className="grid grid-cols-1 gap-5">
+              {/* Class Selection */}
+              <div>
+                <Label htmlFor="classId" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <School className="h-4 w-4 text-gray-500" />
+                  Class <span className="text-red-500">*</span>
+                </Label>
+                {loadingClasses ? (
+                  <div className="flex items-center justify-center p-4 border rounded-lg">
+                    <Loader2 className="w-5 h-5 animate-spin text-gray-400 mr-2" />
+                    <span className="text-sm text-gray-500">Loading classes...</span>
+                  </div>
+                ) : classes.length === 0 ? (
+                  <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg">
+                    <p className="text-sm text-amber-800">No classes available. Please create a class first.</p>
+                  </div>
+                ) : (
+                  <Select onValueChange={(val) => setValue("classId", val, { shouldDirty: true, shouldValidate: true })}>
+                    <SelectTrigger className={errors.classId ? "border-red-300 focus:border-red-500 focus:ring-red-500" : ""}>
+                      <SelectValue placeholder="Select a class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {classes.map((classItem) => (
+                        <SelectItem key={classItem.id} value={classItem.id}>
+                          {classItem.name} {classItem.section ? `(Section ${classItem.section})` : ''} - {classItem.academicYear}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+                {errors.classId && (
+                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>{errors.classId.message}</span>
+                  </div>
+                )}
+                <p className="mt-1.5 text-xs text-gray-500">
+                  Roll number will be automatically assigned
+                </p>
+              </div>
             </div>
           </div>
 

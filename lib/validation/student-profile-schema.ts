@@ -24,20 +24,9 @@ export const studentProfileSchema = z.object({
     .enum(["Male", "Female", "Other"])
     .optional(),
 
-  class: z
+  classId: z
     .string()
-    .trim()
-    .min(1, "Class is required"),
-
-  section: z
-    .string()
-    .trim()
-    .min(1, "Section must be at least 1 character")
-    .max(5, "Section must be at most 5 characters"),
-
-  rollNumber: z
-    .string()
-    .regex(/^[0-9]+$/, "Roll number must contain only numbers"),
+    .uuid("Please select a valid class"),
 
   guardianName: z
     .string()
