@@ -15,7 +15,6 @@ export const adminSections = [
     { label: 'Create/Assign Subjects', href: '/admin/subjects' },
   ]),
   navSection('Monitoring & Reports', [
-    { label: 'View Reports', href: '/admin/reports' },
     { label: 'Activity Logs', href: '/admin/logs' },
   ]),
 ];
