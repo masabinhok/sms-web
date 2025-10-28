@@ -304,8 +304,8 @@ export default function TeachersPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1 max-w-xs">
-                        {teacher.subjects && teacher.subjects.length > 0 ? (
-                          teacher.subjects.slice(0, 2).map((subj, idx) => (
+                        {teacher.subjectIds && teacher.subjectIds.length > 0 ? (
+                          teacher.subjectIds.slice(0, 2).map((subj, idx) => (
                             <Badge 
                               key={idx} 
                               className="bg-blue-100 text-blue-700 border-blue-200 text-xs"
@@ -316,17 +316,17 @@ export default function TeachersPage() {
                         ) : (
                           <span className="text-sm text-gray-400">None</span>
                         )}
-                        {teacher.subjects && teacher.subjects.length > 2 && (
+                        {teacher.subjectIds && teacher.subjectIds.length > 2 && (
                           <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
-                            +{teacher.subjects.length - 2}
+                            +{teacher.subjectIds.length - 2}
                           </Badge>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1 max-w-xs">
-                        {teacher.classes && teacher.classes.length > 0 ? (
-                          teacher.classes.slice(0, 2).map((cls, idx) => (
+                        {teacher.classIds && teacher.classIds.length > 0 ? (
+                          teacher.classIds.slice(0, 2).map((cls, idx) => (
                             <Badge 
                               key={idx} 
                               className="bg-purple-100 text-purple-700 border-purple-200 text-xs"
@@ -337,9 +337,9 @@ export default function TeachersPage() {
                         ) : (
                           <span className="text-sm text-gray-400">None</span>
                         )}
-                        {teacher.classes && teacher.classes.length > 2 && (
+                        {teacher.classIds && teacher.classIds.length > 2 && (
                           <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
-                            +{teacher.classes.length - 2}
+                            +{teacher.classIds.length - 2}
                           </Badge>
                         )}
                       </div>

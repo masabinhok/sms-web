@@ -293,8 +293,8 @@ export default function TeacherDetailPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Subjects</p>
                   <div className="flex flex-wrap gap-2">
-                    {teacher.subjects && teacher.subjects.length > 0 ? (
-                      teacher.subjects.map((subject, idx) => (
+                    {teacher.subjectIds && teacher.subjectIds.length > 0 ? (
+                      teacher.subjectIds.map((subject, idx) => (
                         <Badge 
                           key={idx}
                           className="bg-blue-100 text-blue-700 border-blue-200"
@@ -317,8 +317,8 @@ export default function TeacherDetailPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Classes</p>
                   <div className="flex flex-wrap gap-2">
-                    {teacher.classes && teacher.classes.length > 0 ? (
-                      teacher.classes.map((cls, idx) => (
+                    {teacher.classIds && teacher.classIds.length > 0 ? (
+                      teacher.classIds.map((cls, idx) => (
                         <Badge 
                           key={idx}
                           className="bg-purple-100 text-purple-700 border-purple-200"

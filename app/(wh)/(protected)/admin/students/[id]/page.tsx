@@ -185,16 +185,10 @@ export default function StudentDetailPage() {
                   <School className="w-5 h-5" />
                   <div>
                     <p className="text-xs text-white/70">Class</p>
-                    <p className="font-semibold">{student.class}</p>
+                    <p className="font-semibold">{student.classId}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" />
-                  <div>
-                    <p className="text-xs text-white/70">Section</p>
-                    <p className="font-semibold">{student.section}</p>
-                  </div>
-                </div>
+  
                 <div className="flex items-center gap-2">
                   <Hash className="w-5 h-5" />
                   <div>

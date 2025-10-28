@@ -66,9 +66,7 @@ export default function EditStudentPage() {
         dob: student.dob.split('T')[0], // Convert to YYYY-MM-DD format
         email: student.email,
         gender: student.gender,
-        class: student.class,
-        section: student.section,
-        rollNumber: student.rollNumber,
+        classId: student.classId,
         guardianName: student.guardianName,
         guardianContact: student.guardianContact,
         address: student.address,
@@ -359,26 +357,12 @@ export default function EditStudentPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <InputField
                   label="Class"
-                  name="class"
+                  name="classId"
                   icon={School}
                   placeholder="e.g., 10th Grade"
                   required
                 />
-                <InputField
-                  label="Section"
-                  name="section"
-                  icon={BookOpen}
-                  placeholder="e.g., A"
-                  required
-                  maxLength={5}
-                />
-                <InputField
-                  label="Roll Number"
-                  name="rollNumber"
-                  icon={Hash}
-                  placeholder="e.g., 15"
-                  required
-                />
+
               </div>
             </div>
           </div>

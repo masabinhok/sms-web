@@ -65,7 +65,6 @@ export default function StudentsPage() {
         limit,
         search: search || undefined,
         className: className || undefined,
-        section: section || undefined,
         sortBy,
         order,
       }
@@ -274,10 +273,7 @@ export default function StudentsPage() {
                       <div className="text-sm text-gray-500">{formatDate(student.dob)}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {student.class}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {student.section}
+                      {student.classId}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {student.rollNumber}

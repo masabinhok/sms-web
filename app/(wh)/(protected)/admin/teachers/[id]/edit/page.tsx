@@ -97,8 +97,8 @@ export default function EditTeacherPage() {
         phone: teacher.phone,
         address: teacher.address,
       })
-      setSelectedSubjects(teacher.subjects || [])
-      setSelectedClasses(teacher.classes || [])
+      setSelectedSubjects(teacher.subjectIds || [])
+      setSelectedClasses(teacher.classIds || [])
     } catch (error) {
       console.error('Failed to fetch teacher:', error)
       addMessage('Failed to load teacher details', 'error')
