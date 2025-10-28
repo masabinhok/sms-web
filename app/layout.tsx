@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -5,8 +6,6 @@ import { SCHOOL_CONFIG } from "@/lib/constants";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
 import MessageList from "@/components/MessageList";
-
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -44,7 +43,7 @@ export default function RootLayout({
         <AuthProvider>
           <AuthFailureHandler />
           <MessageList />
-          {children}
+          <Suspense fallback={<div />}>{children}</Suspense>
         </AuthProvider>
       </body>
     </html>
