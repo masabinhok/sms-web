@@ -119,7 +119,7 @@ export function PasswordChangeWarning({
   return (
     <Dialog open={isOpen} onOpenChange={isMandatory ? undefined : handleClose}>
       <DialogContent 
-        className="sm:max-w-[500px]"
+        className="sm:max-w-[500px] bg-white text-gray-900 border-gray-200 shadow-xl"
         onInteractOutside={(e) => {
           if (isMandatory) {
             e.preventDefault();
@@ -127,11 +127,11 @@ export function PasswordChangeWarning({
         }}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
             <AlertCircle className="h-5 w-5 text-yellow-600" />
             Password Change Required
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-600">
             {isMandatory ? (
               <>
                 <span className="text-red-600 font-semibold">
@@ -151,21 +151,21 @@ export function PasswordChangeWarning({
             <div className="text-green-600 text-lg font-semibold mb-2">
               Password Changed Successfully!
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-500">
               You will be logged out and redirected to the login page...
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="oldPassword">Current Password</Label>
+              <Label htmlFor="oldPassword" className="text-gray-700">Current Password</Label>
               <div className="relative">
                 <Input
                   id="oldPassword"
@@ -173,7 +173,7 @@ export function PasswordChangeWarning({
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   disabled={isSubmitting}
-                  className="pr-10"
+                  className="pr-10 bg-white border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   autoComplete="current-password"
                 />
                 <button
@@ -188,7 +188,7 @@ export function PasswordChangeWarning({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword" className="text-gray-700">New Password</Label>
               <div className="relative">
                 <Input
                   id="newPassword"
@@ -196,7 +196,7 @@ export function PasswordChangeWarning({
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   disabled={isSubmitting}
-                  className="pr-10"
+                  className="pr-10 bg-white border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   autoComplete="new-password"
                 />
                 <button
@@ -208,13 +208,13 @@ export function PasswordChangeWarning({
                   {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-gray-500">
                 Must be 8+ characters with uppercase, lowercase, number, and special character
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword" className="text-gray-700">Confirm New Password</Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -222,7 +222,7 @@ export function PasswordChangeWarning({
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={isSubmitting}
-                  className="pr-10"
+                  className="pr-10 bg-white border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   autoComplete="new-password"
                 />
                 <button
@@ -243,6 +243,7 @@ export function PasswordChangeWarning({
                   variant="outline"
                   onClick={handleClose}
                   disabled={isSubmitting}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   Remind Me Later
                 </Button>
@@ -253,11 +254,12 @@ export function PasswordChangeWarning({
                   variant="outline"
                   onClick={handleLogout}
                   disabled={isSubmitting}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
                 >
                   Logout
                 </Button>
               )}
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 text-white">
                 {isSubmitting ? 'Changing Password...' : 'Change Password'}
               </Button>
             </DialogFooter>
