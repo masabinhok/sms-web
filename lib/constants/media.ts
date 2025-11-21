@@ -12,7 +12,7 @@ export const PATTERN_IMAGE = "https://images.unsplash.com/photo-1550684848-fac1c
 export const GALLERY_IMAGES = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1592280771883-1c9486f894e3?auto=format&fit=crop&w=800&q=80",
+    src: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80",
     alt: "Modern school campus building",
     category: "campus",
     title: "Main Campus Building"

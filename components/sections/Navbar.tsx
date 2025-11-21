@@ -117,11 +117,39 @@ export function Navbar() {
     
     // Initial animation
     const ctx = gsap.context(() => {
-      gsap.from(navRef.current, { y: -100, duration: 1, ease: "power3.out" });
-      gsap.from(".nav-top-bar", { opacity: 0, duration: 0.5, delay: 0.5 });
-      gsap.from(".nav-logo", { x: -20, opacity: 0, duration: 0.5, delay: 0.6 });
-      gsap.from(".nav-menu-item", { y: -10, opacity: 0, stagger: 0.05, duration: 0.5, delay: 0.7 });
-      gsap.from(".nav-cta", { x: 20, opacity: 0, duration: 0.5, delay: 0.8 });
+      const tl = gsap.timeline();
+
+      tl.from(navRef.current, { 
+        y: -100, 
+        duration: 1, 
+        ease: "power3.out",
+        clearProps: "transform" 
+      })
+      .from(".nav-top-bar", { 
+        opacity: 0, 
+        y: -20,
+        duration: 0.5, 
+        clearProps: "all" 
+      }, "-=0.5")
+      .from(".nav-logo", { 
+        x: -20, 
+        opacity: 0, 
+        duration: 0.5, 
+        clearProps: "all" 
+      }, "-=0.4")
+      .from(".nav-menu-item", { 
+        y: -10, 
+        opacity: 0, 
+        stagger: 0.05, 
+        duration: 0.5, 
+        clearProps: "all" 
+      }, "-=0.3")
+      .from(".nav-cta", { 
+        x: 20, 
+        opacity: 0, 
+        duration: 0.5, 
+        clearProps: "all" 
+      }, "-=0.4");
     }, navRef);
 
     return () => {
@@ -151,7 +179,7 @@ export function Navbar() {
     >
       {/* Top Bar - Contact Info */}
       <div
-        className={`nav-top-bar hidden lg:block transition-all duration-300 ${
+        className={`nav-top-bar hidden md:block transition-all duration-300 ${
           isScrolled 
             ? "py-1 bg-black/20 border-b border-white/5" 
             : "py-2 bg-gradient-to-r from-black/40 to-transparent border-b border-white/5"
@@ -159,16 +187,16 @@ export function Navbar() {
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between text-xs font-medium">
-            <div className="flex items-center space-x-6 text-fg-premium-muted">
-              <div className="flex items-center space-x-2 hover:text-white transition-colors">
+            <div className="flex items-center space-x-6 text-white">
+              <div className="flex items-center space-x-2 hover:text-accent-primary transition-colors">
                 <Phone className="h-3 w-3" />
                 <span>{school?.phone || 'Loading...'}</span>
               </div>
-              <div className="flex items-center space-x-2 hover:text-white transition-colors">
+              <div className="flex items-center space-x-2 hover:text-accent-primary transition-colors">
                 <Mail className="h-3 w-3" />
                 <span>{school?.email || 'Loading...'}</span>
               </div>
-              <div className="flex items-center space-x-2 hover:text-white transition-colors">
+              <div className="flex items-center space-x-2 hover:text-accent-primary transition-colors">
                 <MapPin className="h-3 w-3" />
                 <span>{school?.address || 'Loading...'}</span>
               </div>
@@ -176,7 +204,7 @@ export function Navbar() {
             <div className="flex items-center space-x-4">
               <Badge 
                 variant="secondary" 
-                className="bg-accent-primary/10 text-accent-primary border-accent-primary/20 hover:bg-accent-primary/20 transition-colors"
+                className="bg-accent-primary/20 text-accent-primary border-accent-primary/30 hover:bg-accent-primary/30 transition-colors"
               >
                 <Sparkles className="h-3 w-3 mr-1" />
                 Admissions Open 2025

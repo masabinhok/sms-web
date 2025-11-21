@@ -270,7 +270,7 @@ export function About() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg" 
-                  className="bg-white text-accent-primary hover:bg-gray-100 font-semibold shadow-xl transition-all duration-300"
+                  className="bg-white text-blue-900 hover:bg-gray-100 font-semibold shadow-xl transition-all duration-300"
                 >
                   Schedule a Visit
                 </Button>

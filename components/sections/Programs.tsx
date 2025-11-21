@@ -71,36 +71,36 @@ export function Programs() {
                 key={program.id}
                 className="program-card opacity-0"
               >
-                <Card className="h-full bg-bg-premium-secondary border-white/5 hover:border-accent-primary/30 shadow-lg hover:shadow-2xl hover:shadow-accent-primary/10 transition-all duration-500 group relative overflow-hidden">
+                <Card className="h-full bg-white/5 backdrop-blur-md border-white/10 hover:border-accent-primary/50 shadow-lg hover:shadow-2xl hover:shadow-accent-primary/20 transition-all duration-500 group relative overflow-hidden">
                   {/* Gradient Overlay on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/0 via-accent-primary/0 to-purple-600/0 group-hover:from-accent-primary/5 group-hover:via-accent-primary/5 group-hover:to-purple-600/5 transition-all duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/10 via-transparent to-purple-600/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   
                   <CardHeader className="text-center relative z-10 pb-4">
                     <div 
-                      className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg group-hover:shadow-accent-primary/20 group-hover:bg-accent-primary/10"
+                      className="w-20 h-20 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-inner border border-white/10 group-hover:border-accent-primary/30"
                     >
-                      <IconComponent className="w-10 h-10 text-fg-premium-muted group-hover:text-accent-primary transition-colors" />
+                      <IconComponent className="w-10 h-10 text-white/70 group-hover:text-accent-primary transition-colors duration-300" />
                     </div>
-                    <CardTitle className="text-xl font-bold text-fg-premium mb-3 group-hover:text-accent-primary transition-colors">
+                    <CardTitle className="text-xl font-bold text-white mb-3 group-hover:text-accent-primary transition-colors">
                       {program.title}
                     </CardTitle>
-                    <Badge variant="secondary" className="mx-auto bg-white/5 text-fg-premium-muted border-white/10 font-semibold px-3 py-1 group-hover:bg-accent-primary/10 group-hover:text-accent-primary transition-colors">
+                    <Badge variant="secondary" className="mx-auto bg-white/10 text-white/80 border-white/10 font-semibold px-3 py-1 group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
                       {program.grades}
                     </Badge>
                   </CardHeader>
                   
                   <CardContent className="text-center space-y-6 relative z-10">
-                    <CardDescription className="text-fg-premium-muted leading-relaxed min-h-[3rem]">
+                    <CardDescription className="text-white/60 leading-relaxed min-h-[3rem]">
                       {program.description}
                     </CardDescription>
                     
-                    <div className="space-y-3 py-4">
+                    <div className="space-y-3 py-4 border-t border-white/5">
                       {program.features.map((feature: string, idx: number) => (
                         <div 
                           key={idx} 
-                          className="flex items-center text-sm text-fg-premium-muted"
+                          className="flex items-center text-sm text-white/70 group-hover:text-white transition-colors"
                         >
-                          <div className="w-1.5 h-1.5 bg-accent-primary rounded-full mr-3 flex-shrink-0 opacity-70" />
+                          <div className="w-1.5 h-1.5 bg-accent-primary rounded-full mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(var(--accent-primary),0.8)]" />
                           <span className="text-left">{feature}</span>
                         </div>
                       ))}
@@ -108,7 +108,7 @@ export function Programs() {
 
                     <Button 
                       variant="outline" 
-                      className="w-full border-white/10 text-fg-premium hover:bg-accent-primary hover:text-white hover:border-accent-primary transition-all duration-300 font-semibold group-hover:shadow-lg mt-4 bg-transparent"
+                      className="w-full border-white/10 text-white hover:bg-accent-primary hover:text-white hover:border-accent-primary transition-all duration-300 font-semibold group-hover:shadow-lg mt-4 bg-white/5 backdrop-blur-sm"
                       asChild
                     >
                       <Link href={`/academics/programs/${program.id}`} className="flex items-center justify-center">
