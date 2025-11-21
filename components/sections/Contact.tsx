@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useRef, useLayoutEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,8 +11,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useSchool } from '@/components/SchoolProvider'
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function Contact() {
   const { school } = useSchool();
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const infoRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<HTMLDivElement>(null)
   
   const [formData, setFormData] = useState({
     name: '',
@@ -20,6 +28,63 @@ export function Contact() {
     subject: '',
     message: ''
   })
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header Animation
+      gsap.from(headerRef.current, {
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: "top 80%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+      })
+
+      // Info Cards Animation
+      const cards = gsap.utils.toArray('.contact-card')
+      gsap.from(cards, {
+        scrollTrigger: {
+          trigger: infoRef.current,
+          start: "top 75%",
+        },
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out"
+      })
+
+      // Form Animation
+      gsap.from(formRef.current, {
+        scrollTrigger: {
+          trigger: formRef.current,
+          start: "top 75%",
+        },
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      })
+
+      // Map Animation
+      gsap.from(mapRef.current, {
+        scrollTrigger: {
+          trigger: mapRef.current,
+          start: "top 85%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out"
+      })
+
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,97 +100,75 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 via-blue-50/30 to-white relative overflow-hidden">
+    <section id="contact" ref={containerRef} className="py-24 lg:py-32 bg-premium relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-400/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-20 w-[600px] h-[600px] bg-accent-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 right-20 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <Badge className="bg-blue-100 text-blue-800 mb-6 px-4 py-2 border-blue-200">
+        <div ref={headerRef} className="text-center mb-20">
+          <Badge variant="outline" className="mb-6 px-4 py-2 border-accent-primary/30 text-accent-primary bg-accent-primary/10 backdrop-blur-sm">
             <MessageSquare className="h-4 w-4 mr-2" />
             Contact Us
           </Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold heading-premium mb-6">
-            Get in Touch
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
+            Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-primary to-blue-400">Touch</span>
           </h2>
-          <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Have questions about admissions, programs, or campus life? We&apos;re here to help you learn more about {school?.name || 'our school'}.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Information */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
+          <div ref={infoRef} className="space-y-6">
             {[
-              { icon: MapPin, title: 'Visit Us', content: `${school?.address || ''}\n${school?.city || ''}`, gradient: 'from-blue-600 to-blue-700' },
-              { icon: Phone, title: 'Call Us', content: school?.phone || '', gradient: 'from-green-600 to-green-700' },
-              { icon: Mail, title: 'Email Us', content: school?.email || '', gradient: 'from-purple-600 to-purple-700' },
-              { icon: Clock, title: 'Office Hours', content: 'Monday - Friday: 8:00 AM - 5:00 PM\nSaturday: 9:00 AM - 2:00 PM\nSunday: Closed', gradient: 'from-orange-600 to-orange-700' }
+              { icon: MapPin, title: 'Visit Us', content: `${school?.address || ''}\n${school?.city || ''}`, color: 'text-blue-400' },
+              { icon: Phone, title: 'Call Us', content: school?.phone || '', color: 'text-green-400' },
+              { icon: Mail, title: 'Email Us', content: school?.email || '', color: 'text-purple-400' },
+              { icon: Clock, title: 'Office Hours', content: 'Monday - Friday: 8:00 AM - 5:00 PM\nSaturday: 9:00 AM - 2:00 PM\nSunday: Closed', color: 'text-orange-400' }
             ].map((item, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
+                className="contact-card"
               >
-                <Card className="bg-white border-gray-200 shadow-md hover:shadow-xl transition-all duration-500 group overflow-hidden relative">
+                <Card className="bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-500 group overflow-hidden relative">
                   {/* Gradient accent line */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient}`} />
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${item.color.replace('text-', '')} to-transparent opacity-50`} />
                   
                   <CardHeader>
-                    <CardTitle className="flex items-center text-gray-900 group-hover:text-blue-700 transition-colors">
-                      <div className={`w-12 h-12 bg-gradient-to-br ${item.gradient} rounded-xl flex items-center justify-center mr-3 shadow-md group-hover:scale-110 transition-transform`}>
-                        <item.icon className="w-6 h-6 text-white" />
+                    <CardTitle className="flex items-center text-white group-hover:text-accent-primary transition-colors">
+                      <div className={`w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mr-3 border border-white/10 group-hover:border-accent-primary/50 transition-colors`}>
+                        <item.icon className={`w-6 h-6 ${item.color}`} />
                       </div>
                       {item.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                    <p className="text-gray-400 leading-relaxed whitespace-pre-line group-hover:text-gray-300 transition-colors">
                       {item.content}
                     </p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2"
-          >
-            <Card className="shadow-xl border-gray-200 bg-white">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
-                <CardTitle className="text-2xl text-gray-900">Send us a Message</CardTitle>
-                <p className="text-gray-600 mt-2">Fill out the form below and we&apos;ll get back to you as soon as possible.</p>
+          <div ref={formRef} className="lg:col-span-2">
+            <Card className="shadow-2xl border-white/10 bg-white/5 backdrop-blur-md">
+              <CardHeader className="bg-white/5 border-b border-white/10">
+                <CardTitle className="text-2xl text-white">Send us a Message</CardTitle>
+                <p className="text-gray-400 mt-2">Fill out the form below and we&apos;ll get back to you as soon as possible.</p>
               </CardHeader>
               <CardContent className="pt-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="name" className="block text-sm font-semibold text-gray-300 mb-2">
                         Full Name *
                       </label>
                       <Input
@@ -135,11 +178,11 @@ export function Contact() {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
-                        className="premium-input border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                        className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-accent-primary/20 transition-all duration-300"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
                         Email Address *
                       </label>
                       <Input
@@ -150,14 +193,14 @@ export function Contact() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="john.doe@example.com"
-                        className="premium-input border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                        className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-accent-primary/20 transition-all duration-300"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="phone" className="block text-sm font-semibold text-gray-300 mb-2">
                         Phone Number
                       </label>
                       <Input
@@ -167,11 +210,11 @@ export function Contact() {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="+1 (555) 000-0000"
-                        className="premium-input border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                        className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-accent-primary/20 transition-all duration-300"
                       />
                     </div>
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label htmlFor="subject" className="block text-sm font-semibold text-gray-300 mb-2">
                         Subject *
                       </label>
                       <Input
@@ -181,13 +224,13 @@ export function Contact() {
                         value={formData.subject}
                         onChange={handleChange}
                         placeholder="Admission Inquiry"
-                        className="premium-input border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                        className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-accent-primary/20 transition-all duration-300"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="message" className="block text-sm font-semibold text-gray-300 mb-2">
                       Message *
                     </label>
                     <Textarea
@@ -198,13 +241,13 @@ export function Contact() {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Tell us more about your inquiry..."
-                      className="premium-input border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 resize-none"
+                      className="bg-black/20 border-white/10 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-accent-primary/20 transition-all duration-300 resize-none"
                     />
                   </div>
 
                   <Button 
                     type="submit" 
-                    className="w-full premium-button gradient-primary text-white font-bold py-6 text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
+                    className="w-full bg-accent-primary hover:bg-accent-primary/90 text-white font-bold py-6 text-lg shadow-lg shadow-accent-primary/20 hover:shadow-accent-primary/40 transition-all duration-300"
                   >
                     <Send className="w-5 h-5 mr-2" />
                     Send Message
@@ -212,37 +255,31 @@ export function Contact() {
                 </form>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
 
         {/* Map Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
-          <Card className="shadow-xl border-gray-200 overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
-              <CardTitle className="text-2xl text-gray-900 flex items-center">
-                <MapPin className="h-6 w-6 mr-3 text-blue-600" />
+        <div ref={mapRef} className="mt-20">
+          <Card className="shadow-xl border-white/10 bg-white/5 overflow-hidden">
+            <CardHeader className="bg-white/5 border-b border-white/10">
+              <CardTitle className="text-2xl text-white flex items-center">
+                <MapPin className="h-6 w-6 mr-3 text-accent-primary" />
                 Find Us on the Map
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative group">
+              <div className="w-full h-96 bg-black/40 flex items-center justify-center relative group">
                 <div className="text-center text-gray-500">
-                  <MapPin className="w-16 h-16 mx-auto mb-4 text-blue-600" />
-                  <p className="font-semibold text-lg">Interactive Map Placeholder</p>
-                  <p className="text-sm mt-2">Replace with Google Maps embed or custom map</p>
+                  <MapPin className="w-16 h-16 mx-auto mb-4 text-accent-primary/50" />
+                  <p className="font-semibold text-lg text-gray-400">Interactive Map Placeholder</p>
+                  <p className="text-sm mt-2 text-gray-500">Replace with Google Maps embed or custom map</p>
                 </div>
                 {/* Overlay hint */}
-                <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-accent-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

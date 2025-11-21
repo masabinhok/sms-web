@@ -6,7 +6,6 @@ import { Highlights } from '@/components/sections/Highlights'
 import { Gallery } from '@/components/sections/Gallery'
 import { Testimonials } from '@/components/sections/Testimonials'
 import { Contact } from '@/components/sections/Contact'
-import { Footer } from '@/components/sections/Footer'
 
 export default function Homepage() {
   return (

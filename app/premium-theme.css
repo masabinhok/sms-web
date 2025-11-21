@@ -1,0 +1,67 @@
+/* Premium Dark-First Theme (Linear/Notion/Apple inspired) */
+
+:root {
+  /* Base Dark Tokens */
+  --bg-premium: #08090A; /* Deep dark, almost black */
+  --bg-premium-secondary: #121416; /* Slightly lighter for cards/sidebars */
+  --fg-premium: #EAEAEA; /* Soft white */
+  --fg-premium-muted: #888888;
+  
+  /* Glassmorphism */
+  --glass-bg-dark: rgba(20, 20, 20, 0.6);
+  --glass-border-dark: rgba(255, 255, 255, 0.08);
+  --glass-blur: 12px;
+  
+  /* Accents */
+  --accent-primary: #5E6AD2; /* Linear-like purple-blue */
+  --accent-glow: rgba(94, 106, 210, 0.4);
+}
+
+/* Enforce Dark Mode Preference by default for this theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+}
+
+/* Premium Glass Utility */
+.glass-panel {
+  background: var(--glass-bg-dark);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border-dark);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar specific glass */
+.sidebar-glass {
+  background: rgba(10, 10, 12, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--glass-border-dark);
+}
+
+/* Smooth text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* GSAP Helper Classes */
+.gsap-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  [data-premium] {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

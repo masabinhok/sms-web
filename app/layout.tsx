@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./premium-theme.css";
 import { SCHOOL_CONFIG } from "@/lib/constants";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
@@ -41,8 +42,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-inter antialiased">
+    <html lang="en" className={`${inter.variable} dark`}>
+      <head>
+        <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js" />
+      </head>
+      <body className="font-inter antialiased bg-premium text-fg-premium">
         <ErrorBoundary>
           <ReactQueryProvider>
             <AuthProvider>

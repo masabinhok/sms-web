@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,9 +11,58 @@ import { Badge } from '@/components/ui/badge'
 import { useSchool } from '@/components/SchoolProvider'
 import { TESTIMONIALS } from '@/lib/constants/testimonials'
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function Testimonials() {
   const { school } = useSchool();
   const [currentIndex, setCurrentIndex] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const slideRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header Animation
+      gsap.from(headerRef.current, {
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: "top 80%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+      })
+
+      // Grid Animation (for larger screens)
+      const cards = gsap.utils.toArray('.testimonial-card')
+      gsap.from(cards, {
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 75%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out"
+      })
+
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  // Slide Animation
+  useEffect(() => {
+    if (slideRef.current) {
+      gsap.fromTo(slideRef.current,
+        { opacity: 0, x: 50 },
+        { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
+      )
+    }
+  }, [currentIndex])
 
   const nextTestimonial = () => {
     setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS.length)
@@ -23,100 +73,80 @@ export function Testimonials() {
   }
 
   return (
-    <section className="py-20 lg:py-32 bg-gradient-to-br from-white via-purple-50/20 to-white relative overflow-hidden">
+    <section ref={containerRef} className="py-24 lg:py-32 bg-premium relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-purple-400/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 right-20 w-[600px] h-[600px] bg-accent-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 left-20 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]" />
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <Badge className="bg-purple-100 text-purple-800 mb-6 px-4 py-2 border-purple-200">
+        <div ref={headerRef} className="text-center mb-20">
+          <Badge variant="outline" className="mb-6 px-4 py-2 border-accent-primary/30 text-accent-primary bg-accent-primary/10 backdrop-blur-sm">
             <Star className="h-4 w-4 mr-2" />
             Testimonials
           </Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold heading-premium mb-6">
-            What Our Community Says
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
+            What Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-primary to-blue-400">Community</span> Says
           </h2>
-          <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Hear from parents, students, and alumni about their experiences at {school?.name || 'our school'}.
           </p>
-        </motion.div>
+        </div>
 
         {/* Testimonial Carousel */}
         <div className="relative max-w-5xl mx-auto">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card className="bg-gradient-to-br from-blue-50 via-white to-purple-50 border-none shadow-2xl overflow-hidden relative">
+          <div ref={slideRef} className="relative">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-md shadow-2xl overflow-hidden relative">
               {/* Decorative quote marks */}
-              <div className="absolute top-0 left-0 text-blue-600/10 text-9xl font-serif leading-none select-none">"</div>
-              <div className="absolute bottom-0 right-0 text-purple-600/10 text-9xl font-serif leading-none select-none rotate-180">"</div>
+              <div className="absolute top-0 left-0 text-accent-primary/10 text-9xl font-serif leading-none select-none">"</div>
+              <div className="absolute bottom-0 right-0 text-blue-500/10 text-9xl font-serif leading-none select-none rotate-180">"</div>
               
               <CardContent className="p-12 lg:p-16 text-center relative z-10">
-                <motion.div
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200 }}
-                >
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl">
-                    <Quote className="w-10 h-10 text-white" />
-                  </div>
-                </motion.div>
+                <div className="w-20 h-20 bg-gradient-to-br from-accent-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-accent-primary/20">
+                  <Quote className="w-10 h-10 text-white" />
+                </div>
                 
-                <blockquote className="text-xl lg:text-2xl text-gray-800 mb-10 leading-relaxed font-medium">
+                <blockquote className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium italic">
                   &quot;{TESTIMONIALS[currentIndex].content}&quot;
                 </blockquote>
                 
                 <div className="flex items-center justify-center space-x-5">
-                  <motion.div 
-                    className="w-20 h-20 relative rounded-full overflow-hidden ring-4 ring-blue-200 shadow-lg"
-                    whileHover={{ scale: 1.1 }}
-                  >
+                  <div className="w-20 h-20 relative rounded-full overflow-hidden ring-4 ring-white/10 shadow-lg">
                     <Image
                       src={TESTIMONIALS[currentIndex].image}
                       alt={TESTIMONIALS[currentIndex].name}
                       fill
                       className="object-cover"
                     />
-                  </motion.div>
+                  </div>
                   <div className="text-left">
-                    <div className="font-bold text-lg text-gray-900">
+                    <div className="font-bold text-lg text-white">
                       {TESTIMONIALS[currentIndex].name}
                     </div>
-                    <div className="text-gray-600">
+                    <div className="text-accent-primary">
                       {TESTIMONIALS[currentIndex].role}
                     </div>
                     {/* Star rating */}
                     <div className="flex mt-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                       ))}
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Navigation */}
           <div className="flex justify-center items-center space-x-6 mt-10">
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={prevTestimonial}
-              className="rounded-full p-3 h-auto border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-xl"
+              className="rounded-full w-12 h-12 border-white/10 bg-white/5 text-white hover:bg-accent-primary hover:border-accent-primary hover:text-white transition-all duration-300"
             >
               <ChevronLeft className="w-6 h-6" />
             </Button>
@@ -129,8 +159,8 @@ export function Testimonials() {
                   onClick={() => setCurrentIndex(index)}
                   className={`transition-all duration-300 rounded-full ${
                     index === currentIndex 
-                      ? 'w-10 h-3 bg-gradient-to-r from-blue-600 to-purple-600' 
-                      : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
+                      ? 'w-10 h-2 bg-accent-primary' 
+                      : 'w-2 h-2 bg-white/20 hover:bg-white/40'
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
@@ -139,9 +169,9 @@ export function Testimonials() {
 
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={nextTestimonial}
-              className="rounded-full p-3 h-auto border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-md hover:shadow-xl"
+              className="rounded-full w-12 h-12 border-white/10 bg-white/5 text-white hover:bg-accent-primary hover:border-accent-primary hover:text-white transition-all duration-300"
             >
               <ChevronRight className="w-6 h-6" />
             </Button>
@@ -149,57 +179,50 @@ export function Testimonials() {
         </div>
 
         {/* All Testimonials Grid (Hidden on mobile) */}
-        <div className="hidden lg:grid grid-cols-3 gap-8 mt-20">
+        <div ref={gridRef} className="hidden lg:grid grid-cols-3 gap-8 mt-20">
           {TESTIMONIALS.map((testimonial, index) => (
-            <motion.div
+            <div
               key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -8 }}
+              className="testimonial-card h-full"
             >
-              <Card className="h-full bg-white border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+              <Card className="h-full bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-500 group relative overflow-hidden">
                 {/* Hover gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 to-purple-600/0 group-hover:from-blue-600/5 group-hover:to-purple-600/5 transition-all duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/0 to-blue-600/0 group-hover:from-accent-primary/10 group-hover:to-blue-600/10 transition-all duration-500" />
                 
                 <CardContent className="p-8 relative z-10">
                   <div className="flex mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                     ))}
                   </div>
                   
-                  <Quote className="w-10 h-10 text-blue-600/20 mb-4" />
+                  <Quote className="w-8 h-8 text-white/20 mb-4 group-hover:text-accent-primary/50 transition-colors" />
                   
-                  <p className="text-gray-600 mb-6 line-clamp-4 leading-relaxed">
+                  <p className="text-gray-400 mb-6 line-clamp-4 leading-relaxed group-hover:text-gray-300 transition-colors">
                     &quot;{testimonial.content}&quot;
                   </p>
                   
-                  <div className="flex items-center space-x-4 pt-4 border-t border-gray-100">
-                    <motion.div 
-                      className="w-14 h-14 relative rounded-full overflow-hidden ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all"
-                      whileHover={{ scale: 1.1 }}
-                    >
+                  <div className="flex items-center space-x-4 pt-4 border-t border-white/10">
+                    <div className="w-12 h-12 relative rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-accent-primary transition-all">
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}
                         fill
                         className="object-cover"
                       />
-                    </motion.div>
+                    </div>
                     <div>
-                      <div className="font-bold text-gray-900 text-sm group-hover:text-blue-700 transition-colors">
+                      <div className="font-bold text-white text-sm group-hover:text-accent-primary transition-colors">
                         {testimonial.name}
                       </div>
-                      <div className="text-gray-600 text-xs">
+                      <div className="text-gray-500 text-xs group-hover:text-gray-400">
                         {testimonial.role}
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

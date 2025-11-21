@@ -1,68 +1,109 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useLayoutEffect } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, X, Image as ImageIcon } from 'lucide-react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ChevronLeft, ChevronRight, X, Image as ImageIcon, ZoomIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { SCHOOL_CONFIG } from '@/lib/constants'
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function Gallery() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
 
-  const nextImage = () => {
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header Animation
+      gsap.from(headerRef.current, {
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: "top 80%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out"
+      })
+
+      // Grid Animation
+      const cards = gsap.utils.toArray('.gallery-card')
+      gsap.from(cards, {
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 75%",
+        },
+        y: 100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out"
+      })
+
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  // Modal Animation
+  useLayoutEffect(() => {
+    if (selectedImage !== null && modalRef.current) {
+      gsap.fromTo(modalRef.current,
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }
+      )
+    }
+  }, [selectedImage])
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (selectedImage !== null) {
       setSelectedImage((selectedImage + 1) % SCHOOL_CONFIG.GALLERY_IMAGES.length)
     }
   }
 
-  const prevImage = () => {
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (selectedImage !== null) {
       setSelectedImage((selectedImage - 1 + SCHOOL_CONFIG.GALLERY_IMAGES.length) % SCHOOL_CONFIG.GALLERY_IMAGES.length)
     }
   }
 
   return (
-    <section className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
+    <section ref={containerRef} className="py-24 lg:py-32 bg-premium relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-10 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-10 w-96 h-96 bg-purple-400/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-primary/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <Badge className="bg-purple-100 text-purple-800 mb-6 px-4 py-2 border-purple-200">
+        <div ref={headerRef} className="text-center mb-20">
+          <Badge variant="outline" className="mb-6 px-4 py-2 border-accent-primary/30 text-accent-primary bg-accent-primary/10 backdrop-blur-sm">
             <ImageIcon className="h-4 w-4 mr-2" />
             Photo Gallery
           </Badge>
-          <h2 className="text-4xl lg:text-5xl font-bold heading-premium mb-6">
-            Campus Life Gallery
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
+            Campus Life <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-primary to-blue-400">Gallery</span>
           </h2>
-          <p className="text-xl text-premium max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Take a glimpse into our vibrant campus life and modern facilities that create an inspiring learning environment.
           </p>
-        </motion.div>
+        </div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {SCHOOL_CONFIG.GALLERY_IMAGES.map((image, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -8 }}
-              className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500"
+              className="gallery-card group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10 shadow-2xl"
               onClick={() => setSelectedImage(index)}
             >
               {/* Image */}
@@ -74,66 +115,57 @@ export function Gallery() {
               />
               
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
               
               {/* Zoom icon */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                <motion.div 
-                  className="w-16 h-16 bg-white/95 rounded-full flex items-center justify-center shadow-xl backdrop-blur-sm"
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                  </svg>
-                </motion.div>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                <div className="w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-accent-primary hover:border-accent-primary transition-colors duration-300">
+                  <ZoomIn className="w-6 h-6" />
+                </div>
               </div>
               
               {/* Image number badge */}
-              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-500">
+              <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/10 text-white px-3 py-1 rounded-full text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-2 group-hover:translate-y-0">
                 {index + 1} / {SCHOOL_CONFIG.GALLERY_IMAGES.length}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Modal */}
         {selectedImage !== null && (
-          <motion.div 
-            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div 
+            className="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
           >
-            <div className="relative max-w-5xl w-full">
+            <div 
+              ref={modalRef}
+              className="relative max-w-6xl w-full h-[80vh] flex flex-col items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
               <Button
                 variant="ghost"
-                size="sm"
-                className="absolute -top-16 right-0 text-white hover:bg-white/10 hover:text-white transition-colors"
+                size="icon"
+                className="absolute -top-12 right-0 text-white/70 hover:text-white hover:bg-white/10 transition-colors rounded-full"
                 onClick={() => setSelectedImage(null)}
               >
                 <X className="w-6 h-6" />
-                <span className="ml-2">Close</span>
               </Button>
               
-              <motion.div 
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
+              <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-black/50">
                 <Image
                   src={SCHOOL_CONFIG.GALLERY_IMAGES[selectedImage]}
                   alt={`Gallery image ${selectedImage + 1}`}
                   fill
-                  className="object-cover"
+                  className="object-contain"
+                  priority
                 />
-              </motion.div>
+              </div>
 
               <Button
                 variant="ghost"
-                size="sm"
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/30 backdrop-blur-sm rounded-full p-3 transition-all"
+                size="icon"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10"
                 onClick={prevImage}
               >
                 <ChevronLeft className="w-8 h-8" />
@@ -141,37 +173,30 @@ export function Gallery() {
               
               <Button
                 variant="ghost"
-                size="sm"
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/30 backdrop-blur-sm rounded-full p-3 transition-all"
+                size="icon"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10"
                 onClick={nextImage}
               >
                 <ChevronRight className="w-8 h-8" />
               </Button>
               
               {/* Image counter */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-md border border-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
                 {selectedImage + 1} / {SCHOOL_CONFIG.GALLERY_IMAGES.length}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mt-20"
-        >
+        <div className="text-center mt-20">
           <Button 
             size="lg" 
-            asChild 
-            className="premium-button gradient-primary text-white font-bold px-8 py-6 text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+            className="bg-accent-primary hover:bg-accent-primary/90 text-white font-medium px-8 py-6 text-lg shadow-lg shadow-accent-primary/20 hover:shadow-accent-primary/40 transition-all duration-300 rounded-full"
           >
-            <a href="/gallery">View Full Gallery</a>
+            View Full Gallery
           </Button>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

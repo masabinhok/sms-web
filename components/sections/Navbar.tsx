@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useSchool } from "@/components/SchoolProvider";
 import { NAVIGATION_MENU } from "@/lib/constants/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   X,
@@ -27,6 +26,8 @@ import {
   Users,
 } from "lucide-react";
 import { useAuth } from "@/store/authStore";
+import gsap from "gsap";
+import { animateIn, staggerList } from "@/lib/gsap";
 
 // Create a client-only component for user authentication UI
 const UserAuthButton = dynamic(() => Promise.resolve(({ isScrolled }: { isScrolled: boolean }) => {
@@ -37,10 +38,10 @@ const UserAuthButton = dynamic(() => Promise.resolve(({ isScrolled }: { isScroll
       variant="outline" 
       size="sm"
       asChild
-      className={`transition-all duration-300 ${
+      className={`transition-all duration-300 rounded-lg ${
         isScrolled 
-          ? 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white' 
-          : 'border-white text-white hover:bg-white hover:text-blue-900'
+          ? 'border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-white' 
+          : 'border-white/20 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm'
       }`}
     >
       {user ? (
@@ -62,7 +63,7 @@ const UserAuthButton = dynamic(() => Promise.resolve(({ isScrolled }: { isScroll
     <Button 
       variant="outline" 
       size="sm"
-      className="border-gray-300 text-gray-600"
+      className="border-white/10 text-white/50"
       disabled
     >
       <Users className="h-4 w-4 mr-2" />
@@ -76,14 +77,14 @@ const MobileUserAuthButton = dynamic(() => Promise.resolve(({ onClose }: { onClo
   const { user } = useAuth();
   
   return user ? (
-    <Button asChild variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+    <Button asChild variant="outline" className="w-full border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-white">
       <Link href={`/${user.role.toLowerCase()}`} onClick={onClose}>
         <Users className="h-4 w-4 mr-2" />
         {user.username}
       </Link>
     </Button>
   ) : (
-    <Button asChild variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+    <Button asChild variant="outline" className="w-full border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-white">
       <Link href="/auth/login" onClick={onClose}>
         <Users className="h-4 w-4 mr-2" />
         Login
@@ -104,6 +105,8 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { school } = useSchool();
+  const navRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,44 +114,61 @@ export function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    // Initial animation
+    const ctx = gsap.context(() => {
+      gsap.from(navRef.current, { y: -100, duration: 1, ease: "power3.out" });
+      gsap.from(".nav-top-bar", { opacity: 0, duration: 0.5, delay: 0.5 });
+      gsap.from(".nav-logo", { x: -20, opacity: 0, duration: 0.5, delay: 0.6 });
+      gsap.from(".nav-menu-item", { y: -10, opacity: 0, stagger: 0.05, duration: 0.5, delay: 0.7 });
+      gsap.from(".nav-cta", { x: 20, opacity: 0, duration: 0.5, delay: 0.8 });
+    }, navRef);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      ctx.revert();
+    };
   }, []);
 
+  useEffect(() => {
+    if (isOpen && mobileMenuRef.current) {
+      gsap.fromTo(mobileMenuRef.current, 
+        { height: 0, opacity: 0 },
+        { height: "auto", opacity: 1, duration: 0.4, ease: "power3.out" }
+      );
+      staggerList(".mobile-nav-item", { delay: 0.2 });
+    }
+  }, [isOpen]);
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+    <nav
+      ref={navRef}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-200/50"
+          ? "bg-bg-premium/80 backdrop-blur-xl shadow-lg border-b border-white/5"
           : "bg-transparent"
       }`}
     >
       {/* Top Bar - Contact Info */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className={`hidden lg:block transition-all duration-300 ${
+      <div
+        className={`nav-top-bar hidden lg:block transition-all duration-300 ${
           isScrolled 
-            ? "py-1 bg-blue-900/5" 
-            : "py-2 bg-gradient-to-r from-blue-950/90 to-blue-900/90"
+            ? "py-1 bg-black/20 border-b border-white/5" 
+            : "py-2 bg-gradient-to-r from-black/40 to-transparent border-b border-white/5"
         }`}
       >
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between text-sm">
-            <div className={`flex items-center space-x-6 transition-colors ${
-              isScrolled ? "text-gray-600" : "text-white/90"
-            }`}>
-              <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between text-xs font-medium">
+            <div className="flex items-center space-x-6 text-fg-premium-muted">
+              <div className="flex items-center space-x-2 hover:text-white transition-colors">
                 <Phone className="h-3 w-3" />
                 <span>{school?.phone || 'Loading...'}</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 hover:text-white transition-colors">
                 <Mail className="h-3 w-3" />
                 <span>{school?.email || 'Loading...'}</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 hover:text-white transition-colors">
                 <MapPin className="h-3 w-3" />
                 <span>{school?.address || 'Loading...'}</span>
               </div>
@@ -156,11 +176,7 @@ export function Navbar() {
             <div className="flex items-center space-x-4">
               <Badge 
                 variant="secondary" 
-                className={`transition-all ${
-                  isScrolled 
-                    ? "bg-blue-100 text-blue-800 border-blue-200" 
-                    : "bg-yellow-500/20 text-yellow-100 border-yellow-400/30"
-                }`}
+                className="bg-accent-primary/10 text-accent-primary border-accent-primary/20 hover:bg-accent-primary/20 transition-colors"
               >
                 <Sparkles className="h-3 w-3 mr-1" />
                 Admissions Open 2025
@@ -168,72 +184,54 @@ export function Navbar() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Main Navigation */}
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex items-center space-x-4"
-          >
-            <Link href="/" className="flex items-center space-x-4">
+          <div className="nav-logo flex items-center space-x-4">
+            <Link href="/" className="flex items-center space-x-3 group">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full blur-lg opacity-20 animate-pulse" />
-                <img
-                  src="/school-logo.svg"
-                  alt={school?.name || 'School Logo'}
-                  className="h-12 w-12 relative z-10"
-                />
+                <div className="absolute inset-0 bg-accent-primary rounded-xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg relative z-10">
+                  S
+                </div>
               </div>
               <div>
-                <h1 className={`font-bold text-xl transition-colors duration-300 ${
-                  isScrolled ? 'text-gray-900' : 'text-white'
-                }`}>
+                <h1 className="font-bold text-lg text-fg-premium tracking-tight group-hover:text-white transition-colors">
                   {school?.name || 'Loading...'}
                 </h1>
-                <p className={`text-sm transition-colors duration-300 ${
-                  isScrolled ? 'text-gray-600' : 'text-white/80'
-                }`}>
+                <p className="text-xs text-fg-premium-muted group-hover:text-fg-premium transition-colors">
                   {school?.tagline || ''}
                 </p>
               </div>
             </Link>
-          </motion.div>
+          </div>
 
           {/* Desktop Navigation */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="hidden lg:block"
-          >
+          <div className="hidden lg:block">
             <NavigationMenu viewport={false}>
-              <NavigationMenuList className="flex space-x-2">
+              <NavigationMenuList className="flex space-x-1">
                 {NAVIGATION_MENU.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <NavigationMenuItem key={item.title}>
+                    <NavigationMenuItem key={item.title} className="nav-menu-item">
                       <NavigationMenuTrigger 
-                        className={`group bg-transparent hover:bg-white/10 ${
-                          isScrolled ? 'text-gray-900 hover:text-blue-600' : 'text-white hover:text-blue-200'
-                        } transition-all duration-300 font-medium px-4 py-2 h-10 flex items-center space-x-2 data-[state=open]:bg-white/10`}
+                        className="group bg-transparent hover:bg-white/5 text-fg-premium-muted hover:text-white transition-all duration-300 font-medium px-4 py-2 h-9 text-sm rounded-lg data-[state=open]:bg-white/5 data-[state=open]:text-white"
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className="h-3.5 w-3.5 mr-2 opacity-70 group-hover:opacity-100 transition-opacity" />
                         <span>{item.title}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 bg-white rounded-lg shadow-xl border border-gray-200">
+                        <ul className="grid w-[400px] gap-2 p-3 bg-bg-premium border border-white/10 rounded-xl shadow-2xl shadow-black/50">
                           <li className="row-span-3">
-                            <div className="py-3 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-lg -mx-4 -mt-4 mb-3 px-6 pt-4 pb-3">
-                              <h4 className="text-lg font-semibold text-gray-900 flex items-center">
-                                <Icon className="h-5 w-5 mr-2 text-blue-600" />
+                            <div className="p-4 bg-white/5 rounded-lg mb-2 border border-white/5">
+                              <h4 className="text-base font-semibold text-white flex items-center mb-1">
+                                <Icon className="h-4 w-4 mr-2 text-accent-primary" />
                                 {item.title}
                               </h4>
-                              <p className="text-sm text-gray-600 mt-1">
+                              <p className="text-xs text-fg-premium-muted leading-relaxed">
                                 {item.description}
                               </p>
                             </div>
@@ -245,15 +243,17 @@ export function Navbar() {
                                 <NavigationMenuLink asChild>
                                   <Link
                                     href={subItem.href}
-                                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-50 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                    className="block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white group"
                                   >
                                     <div className="flex items-start space-x-3">
-                                      <SubIcon className="h-4 w-4 mt-0.5 text-gray-400 hover:text-blue-500 transition-colors flex-shrink-0" />
+                                      <div className="p-1.5 rounded-md bg-white/5 group-hover:bg-accent-primary/20 transition-colors">
+                                        <SubIcon className="h-3.5 w-3.5 text-fg-premium-muted group-hover:text-accent-primary transition-colors" />
+                                      </div>
                                       <div className="space-y-1">
-                                        <div className="text-sm font-medium leading-none text-gray-900 hover:text-blue-600">
+                                        <div className="text-sm font-medium leading-none text-fg-premium group-hover:text-white">
                                           {subItem.title}
                                         </div>
-                                        <p className="line-clamp-2 text-xs leading-snug text-gray-500">
+                                        <p className="line-clamp-2 text-[10px] leading-snug text-fg-premium-muted group-hover:text-fg-premium/70">
                                           {subItem.description}
                                         </p>
                                       </div>
@@ -270,105 +270,88 @@ export function Navbar() {
                 })}
               </NavigationMenuList>
             </NavigationMenu>
-          </motion.div>
+          </div>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-            className="hidden lg:flex items-center space-x-4"
-          >
+          <div className="nav-cta hidden lg:flex items-center space-x-3">
             <UserAuthButton isScrolled={isScrolled} />
 
             <Button 
               asChild
-              className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 hover:from-yellow-500 hover:to-yellow-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-white text-black hover:bg-gray-200 font-semibold shadow-lg shadow-white/10 hover:shadow-white/20 transition-all duration-300 rounded-lg h-9 px-4 text-sm"
             >
               <Link href="/admissions">
                 <GraduationCap className="h-4 w-4 mr-2" />
                 Apply Now
               </Link>
             </Button>
-          </motion.div>
+          </div>
 
           {/* Mobile Menu Button */}
-          <motion.button
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
-            className={`lg:hidden p-2 rounded-md transition-colors duration-300 ${
-              isScrolled ? 'text-gray-900' : 'text-white'
-            }`}
+          <button
+            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors text-white"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </motion.button>
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/50"
-          >
-            <div className="container mx-auto px-6 py-6">
-              <div className="space-y-4">
-                {NAVIGATION_MENU.map((item, index) => {
-                  const Icon = item.icon;
-                  return (
-                    <motion.div
-                      key={item.title}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="space-y-2"
-                    >
-                      <div className="flex items-center space-x-3 py-3 px-4 rounded-lg bg-blue-50/50 text-gray-900 font-semibold">
-                        <Icon className="h-5 w-5 text-blue-600" />
-                        <span>{item.title}</span>
-                      </div>
-                      <div className="ml-6 space-y-1">
-                        {item.items.map((subItem) => {
-                          const SubIcon = subItem.icon;
-                          return (
-                            <Link
-                              key={subItem.title}
-                              href={subItem.href}
-                              className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-blue-50 transition-colors duration-200 text-gray-700 group"
-                              onClick={() => setIsOpen(false)}
-                            >
-                              <SubIcon className="h-4 w-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                              <div>
-                                <div className="font-medium text-sm">{subItem.title}</div>
-                                <div className="text-xs text-gray-500">{subItem.description}</div>
-                              </div>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  );
-                })}                {/* Mobile CTA Buttons */}
-                <div className="border-t border-gray-200 pt-4 space-y-3">
-                  <Button asChild className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-semibold">
-                    <Link href="/admissions" onClick={() => setIsOpen(false)}>
-                      <GraduationCap className="h-4 w-4 mr-2" />
-                      Apply Now
-                    </Link>
-                  </Button>
-                  <MobileUserAuthButton onClose={() => setIsOpen(false)} />
-                </div>
+      {isOpen && (
+        <div
+          ref={mobileMenuRef}
+          className="lg:hidden bg-bg-premium border-t border-white/10 overflow-hidden"
+        >
+          <div className="container mx-auto px-6 py-6">
+            <div className="space-y-6">
+              {NAVIGATION_MENU.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="mobile-nav-item space-y-3 opacity-0"
+                  >
+                    <div className="flex items-center space-x-3 py-2 px-2 border-b border-white/5 text-fg-premium font-semibold">
+                      <Icon className="h-4 w-4 text-accent-primary" />
+                      <span className="text-sm uppercase tracking-wider">{item.title}</span>
+                    </div>
+                    <div className="ml-4 space-y-1 border-l border-white/5 pl-4">
+                      {item.items.map((subItem) => {
+                        const SubIcon = subItem.icon;
+                        return (
+                          <Link
+                            key={subItem.title}
+                            href={subItem.href}
+                            className="flex items-center space-x-3 py-2 px-2 rounded-lg hover:bg-white/5 transition-colors duration-200 text-fg-premium-muted group"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <SubIcon className="h-3.5 w-3.5 text-fg-premium-muted/50 group-hover:text-white transition-colors" />
+                            <div>
+                              <div className="font-medium text-sm group-hover:text-white transition-colors">{subItem.title}</div>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              
+              {/* Mobile CTA Buttons */}
+              <div className="mobile-nav-item border-t border-white/10 pt-6 space-y-3 opacity-0">
+                <Button asChild className="w-full bg-white text-black hover:bg-gray-200 font-semibold">
+                  <Link href="/admissions" onClick={() => setIsOpen(false)}>
+                    <GraduationCap className="h-4 w-4 mr-2" />
+                    Apply Now
+                  </Link>
+                </Button>
+                <MobileUserAuthButton onClose={() => setIsOpen(false)} />
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 }
