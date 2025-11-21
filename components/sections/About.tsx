@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import gsap from 'gsap'
 import { revealOnScroll, staggerList } from '@/lib/gsap'
+import { ABOUT_IMAGE, PATTERN_IMAGE } from '@/lib/constants/media'
 
 export function About() {
   const { school } = useSchool();
@@ -117,7 +118,7 @@ export function About() {
               {/* Main Image */}
               <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/5">
                 <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-purple-900/20 z-10" />
-                <img src="/images/about-school.jpg" alt="About School" className="w-full h-full object-cover" />
+                <img src={ABOUT_IMAGE} alt="About School" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-premium via-transparent to-transparent z-20" />
                 
                 {/* Overlay Content */}
@@ -258,7 +259,7 @@ export function About() {
         {/* Call to Action Section */}
         <div className="about-cta text-center opacity-0">
           <Card className="bg-gradient-to-r from-accent-primary to-indigo-900 text-white border-none overflow-hidden relative">
-            <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10 mix-blend-overlay" />
+            <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{ backgroundImage: `url('${PATTERN_IMAGE}')` }} />
             <CardContent className="p-12 relative z-10">
               <Heart className="h-12 w-12 text-pink-400 mx-auto mb-6 animate-pulse" />
               <h3 className="text-3xl font-bold mb-4">Ready to Join Our Community?</h3>

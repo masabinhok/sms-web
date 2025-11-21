@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useSchool } from '@/components/SchoolProvider'
 import gsap from 'gsap'
 import { animateIn, staggerList } from '@/lib/gsap'
+import { HERO_IMAGE, ABOUT_IMAGE } from '@/lib/constants/media'
 
 export function Hero() {
   const { school } = useSchool();
@@ -58,7 +59,7 @@ export function Hero() {
       {/* Premium Background with Parallax Effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="hero-bg absolute inset-0 bg-gradient-to-br from-[#0F172A] via-[#1E1E24] to-[#0F172A] scale-110" />
-        <div className="absolute inset-0 bg-[url('/images/hero.jpg')] bg-cover bg-center bg-no-repeat opacity-20 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 mix-blend-overlay" style={{ backgroundImage: `url('${HERO_IMAGE}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-bg-premium via-transparent to-bg-premium/50" />
         
         {/* Animated Particles */}
@@ -167,7 +168,7 @@ export function Hero() {
               {/* Main Image Card */}
               <div className="float-card-1 relative z-10 w-[80%] aspect-[4/5] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10" />
-                  <img src="/images/about-school.jpg" alt="Campus" className="w-full h-full object-cover" />
+                  <img src={ABOUT_IMAGE} alt="Campus" className="w-full h-full object-cover" />
                   <div className="absolute bottom-8 left-8 z-20">
                     <h3 className="text-white font-bold text-2xl mb-1">Modern Campus</h3>
                     <p className="text-white/70 text-sm">State-of-the-art facilities for holistic growth</p>
