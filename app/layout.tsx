@@ -7,6 +7,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
 import MessageList from "@/components/MessageList";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ReactQueryProvider } from "@/components/ReactQueryProvider";
 import "@/lib/env"; // Validate environment variables at startup
 const inter = Inter({
   subsets: ["latin"],
@@ -43,11 +44,13 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="font-inter antialiased">
         <ErrorBoundary>
-          <AuthProvider>
-            <AuthFailureHandler />
-            <MessageList />
-            <Suspense fallback={<div />}>{children}</Suspense>
-          </AuthProvider>
+          <ReactQueryProvider>
+            <AuthProvider>
+              <AuthFailureHandler />
+              <MessageList />
+              <Suspense fallback={<div />}>{children}</Suspense>
+            </AuthProvider>
+          </ReactQueryProvider>
         </ErrorBoundary>
       </body>
     </html>
