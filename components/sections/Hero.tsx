@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ChevronDown, Play, Award, Users, BookOpen, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,7 @@ import { HERO_IMAGE, ABOUT_IMAGE } from '@/lib/constants/media'
 export function Hero() {
   const { school } = useSchool();
   const heroRef = useRef<HTMLElement>(null);
+  const [particles, setParticles] = useState<Array<{left: string, top: string, delay: string, opacity: number}>>([]);
   
   const heroStats = [
     { icon: Users, label: "Students", value: "1,500+" },
@@ -21,6 +22,13 @@ export function Hero() {
   ];
 
   useEffect(() => {
+    setParticles([...Array(20)].map(() => ({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 5}s`,
+        opacity: Math.random() * 0.5 + 0.2
+    })));
+
     const ctx = gsap.context(() => {
       // Background parallax
       gsap.to('.hero-bg', {
@@ -65,15 +73,15 @@ export function Hero() {
         {/* Animated Particles */}
         <div className="absolute inset-0 opacity-30">
             {/* Particles can be implemented with CSS or Canvas for better performance, keeping simple divs for now */}
-             {[...Array(20)].map((_, i) => (
+             {particles.map((p, i) => (
                 <div 
                     key={i}
                     className="absolute w-1 h-1 bg-accent-primary rounded-full animate-pulse"
                     style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 5}s`,
-                        opacity: Math.random() * 0.5 + 0.2
+                        left: p.left,
+                        top: p.top,
+                        animationDelay: p.delay,
+                        opacity: p.opacity
                     }}
                 />
              ))}
