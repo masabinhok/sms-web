@@ -1,4 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+import { getApiUrl } from './env';
+import { logger, logError } from './logger';
+
+const API_BASE_URL = getApiUrl();
 
 // ==================== TYPES ====================
 
@@ -131,7 +134,6 @@ export async function getAllClasses(academicYear?: string, isActive?: boolean) {
   if (isActive !== undefined) params.append('isActive', String(isActive))
 
   const url = `${API_BASE_URL}/academics/classes?${params.toString()}`
-  console.log('Fetching classes from:', url)
 
   const response = await fetch(url, {
     method: 'GET',
@@ -139,19 +141,13 @@ export async function getAllClasses(academicYear?: string, isActive?: boolean) {
     credentials: 'include',
   })
 
-  console.log('Classes response status:', response.status)
-
   if (!response.ok) {
     const errorText = await response.text()
-    console.error('Classes fetch error:', errorText)
+    logError(new Error(errorText), 'Fetch classes');
     throw new Error('Failed to fetch classes')
   }
 
   const data = await response.json()
-  console.log('Classes raw response:', data)
-  console.log('Is array?', Array.isArray(data))
-  console.log('Data type:', typeof data)
-  console.log('Data keys:', data ? Object.keys(data) : 'null')
   
   // Handle different response formats
   if (Array.isArray(data)) {
@@ -236,7 +232,6 @@ export async function getAllSubjects(category?: string, isActive?: boolean) {
   if (isActive !== undefined) params.append('isActive', String(isActive))
 
   const url = `${API_BASE_URL}/academics/subjects?${params.toString()}`
-  console.log('Fetching subjects from:', url)
 
   const response = await fetch(url, {
     method: 'GET',
@@ -244,19 +239,13 @@ export async function getAllSubjects(category?: string, isActive?: boolean) {
     credentials: 'include',
   })
 
-  console.log('Subjects response status:', response.status)
-
   if (!response.ok) {
     const errorText = await response.text()
-    console.error('Subjects fetch error:', errorText)
+    logError(new Error(errorText), 'Fetch subjects');
     throw new Error('Failed to fetch subjects')
   }
 
   const data = await response.json()
-  console.log('Subjects raw response:', data)
-  console.log('Is array?', Array.isArray(data))
-  console.log('Data type:', typeof data)
-  console.log('Data keys:', data ? Object.keys(data) : 'null')
   
   // Handle different response formats
   if (Array.isArray(data)) {

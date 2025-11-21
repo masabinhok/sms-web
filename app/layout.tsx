@@ -6,6 +6,8 @@ import { SCHOOL_CONFIG } from "@/lib/constants";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { AuthFailureHandler } from "@/hooks/useAuthFailure";
 import MessageList from "@/components/MessageList";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import "@/lib/env"; // Validate environment variables at startup
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -40,11 +42,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-inter antialiased">
-        <AuthProvider>
-          <AuthFailureHandler />
-          <MessageList />
-          <Suspense fallback={<div />}>{children}</Suspense>
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <AuthFailureHandler />
+            <MessageList />
+            <Suspense fallback={<div />}>{children}</Suspense>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

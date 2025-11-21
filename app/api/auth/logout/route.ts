@@ -1,17 +1,17 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/env";
+import { authLogger, logError } from "@/lib/logger";
 
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refresh_token")?.value;
-    
-    console.log("Logout endpoint called");
 
     // Call backend logout endpoint if we have a refresh token
     if (refreshToken) {
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        await fetch(`${getApiUrl()}/auth/logout`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
@@ -19,9 +19,9 @@ export async function POST(request: Request) {
           },
           credentials: "include",
         });
-        console.log("Backend logout successful");
+        authLogger.logout();
       } catch (error) {
-        console.error("Backend logout failed:", error);
+        logError(error, 'Backend logout');
         // Continue with local logout even if backend fails
       }
     }
@@ -44,12 +44,10 @@ export async function POST(request: Request) {
     // Also try alternative cookie names just in case
     response.cookies.set("refreshToken", "", cookieOptions);
     response.cookies.set("accessToken", "", cookieOptions);
-    
-    console.log("Auth cookies cleared");
 
     return response;
   } catch (error) {
-    console.error("Logout error:", error);
+    logError(error, 'Logout error');
     
     // Even on error, try to clear cookies
     const response = NextResponse.json(

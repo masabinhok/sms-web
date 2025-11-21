@@ -17,37 +17,35 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   const router = useRouter();
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
 
-  // Try to fetch user on mount
+  // Consolidated authentication and authorization logic
   useEffect(() => {
+    // Try to fetch user if not authenticated and not loading
     if (!isAuthenticated && !loading) {
       fetchUser();
+      return;
     }
-  }, [fetchUser, isAuthenticated, loading]);
 
-  // Check for password change requirement
-  useEffect(() => {
-    if (!loading && isAuthenticated && user) {
-      if (requiresPasswordChange || user.passwordChangeCount === 0) {
-        setShowPasswordDialog(true);
-      }
-    }
-  }, [loading, isAuthenticated, user, requiresPasswordChange]);
+    // If still loading, wait
+    if (loading) return;
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    // Not authenticated - redirect to login
+    if (!isAuthenticated) {
       router.push('/auth/login?from=' + window.location.pathname);
+      return;
     }
-  }, [loading, isAuthenticated, router]);
 
-  // Check role-based access: strictly allow only users whose role is in allowedRoles
-  useEffect(() => {
-    if (!loading && isAuthenticated && user && allowedRoles && allowedRoles.length > 0) {
+    // Check password change requirement
+    if (user && (requiresPasswordChange || user.passwordChangeCount === 0)) {
+      setShowPasswordDialog(true);
+    }
+
+    // Check role-based access
+    if (user && allowedRoles && allowedRoles.length > 0) {
       if (!allowedRoles.includes(user.role)) {
         router.push('/unauthorized');
       }
     }
-  }, [loading, isAuthenticated, user, allowedRoles, router]);
+  }, [loading, isAuthenticated, user, requiresPasswordChange, allowedRoles, router, fetchUser]);
 
   if (loading) {
     return (

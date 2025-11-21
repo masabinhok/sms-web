@@ -27,7 +27,6 @@ export function middleware(req: NextRequest) {
   // This prevents redirect loops after logout
   const hasNoTokens = !req.cookies.get('access_token')?.value && !req.cookies.get('refresh_token')?.value;
   if (hasNoTokens) {
-    console.log('No authentication tokens found, redirecting to login');
     const loginUrl = new URL('/auth/login', req.url);
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
@@ -35,21 +34,15 @@ export function middleware(req: NextRequest) {
 
   const accessToken = req.cookies.get('access_token')?.value;
   const refreshToken = req.cookies.get('refresh_token')?.value;
-  
-  console.log('Middleware - Pathname:', pathname, 'Has access token:', !!accessToken, 'Has refresh token:', !!refreshToken);
 
   // If we have access token, validate it
   if (accessToken) {
     try {
       const decoded = jwtDecode<JwtPayload>(accessToken);
       const userRole = decoded.role;
-      
-      console.log('Middleware - User role from JWT:', userRole, 'Pathname:', pathname);
 
       // Check if token is expired
       if (decoded.exp * 1000 < Date.now()) {
-        console.log('JWT Token expired, checking for refresh token');
-        
         if (refreshToken) {
           // Redirect to refresh route
           const refreshUrl = req.nextUrl.clone();
@@ -58,7 +51,6 @@ export function middleware(req: NextRequest) {
           return NextResponse.redirect(refreshUrl);
         } else {
           // No refresh token, redirect to login
-          localStorage.clear();
           const loginUrl = new URL('/auth/login', req.url);
           loginUrl.searchParams.set('from', pathname);
           return NextResponse.redirect(loginUrl);
@@ -81,7 +73,6 @@ export function middleware(req: NextRequest) {
       return NextResponse.next();
 
     } catch (error) {
-      console.error('JWT decode error:', error);
       // Invalid access token, check for refresh token
       if (refreshToken) {
         const refreshUrl = req.nextUrl.clone();
@@ -94,7 +85,6 @@ export function middleware(req: NextRequest) {
 
   // No access token but have refresh token
   if (!accessToken && refreshToken) {
-    console.log('No access token but refresh token exists, attempting refresh');
     const refreshUrl = req.nextUrl.clone();
     refreshUrl.pathname = "/api/auth/refresh";
     refreshUrl.searchParams.set("redirect", pathname);
@@ -102,7 +92,6 @@ export function middleware(req: NextRequest) {
   }
 
   // No valid authentication found
-  console.log('No valid authentication found, redirecting to login');
   const loginUrl = new URL('/auth/login', req.url);
   loginUrl.searchParams.set('from', pathname);
   return NextResponse.redirect(loginUrl);

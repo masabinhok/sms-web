@@ -1,4 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+import { getApiUrl } from './env';
+import { logError } from './logger';
+
+const API_BASE_URL = getApiUrl();
 
 export interface School {
   id: string
@@ -43,14 +46,14 @@ export async function getSchoolInfo(): Promise<School | null> {
     })
 
     if (!response.ok) {
-      console.error('Failed to fetch school info:', response.status)
+      logError(new Error(`Failed with status ${response.status}`), 'Fetch school info');
       return null
     }
 
     const data: SchoolResponse = await response.json()
     return data.school
   } catch (error) {
-    console.error('Error fetching school info:', error)
+    logError(error, 'Fetch school info');
     return null
   }
 }

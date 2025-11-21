@@ -72,24 +72,26 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-6 mb-6">
-            <h3 className="text-white font-semibold mb-3 text-lg">Demo Credentials</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Username:</span>
-                <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
-                  admin-demo
-                </code>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Password:</span>
-                <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
-                  Admin!123
-                </code>
+          {/* Demo Credentials - Only show in development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-6 mb-6">
+              <h3 className="text-white font-semibold mb-3 text-lg">Demo Credentials</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Username:</span>
+                  <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
+                    admin-demo
+                  </code>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Password:</span>
+                  <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
+                    Admin!123
+                  </code>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Server Notice */}
           <div className="bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-6">

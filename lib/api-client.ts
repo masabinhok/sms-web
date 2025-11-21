@@ -1,6 +1,8 @@
 import { ApiUserResponse } from "@/types/auth"
+import { getApiUrl } from './env';
+import { logger, logError, authLogger } from './logger';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_BASE_URL = getApiUrl();
 
 interface ApiOptions extends RequestInit {
   data?: any
@@ -63,7 +65,7 @@ class ApiClient {
       const text = await response.text()
       responseData = text ? JSON.parse(text) : null
     } catch (error) {
-      console.warn('Failed to parse response JSON:', error)
+      logger.warn('Failed to parse response JSON:', error)
       responseData = null
     }
 
@@ -137,14 +139,14 @@ class ApiClient {
       })
 
       if (response.ok) {
-        console.log('Token refreshed successfully')
+        authLogger.tokenRefresh(true);
         return true
       } else {
-        console.log('Token refresh failed with status:', response.status)
+        authLogger.tokenRefresh(false);
         return false
       }
     } catch (error) {
-      console.error('Token refresh failed:', error)
+      logError(error, 'Token refresh');
       return false
     }
   }
@@ -209,15 +211,15 @@ export const authApi = {
       })
 
       if (response.ok) {
-        console.log('Token refreshed successfully via API route')
+        authLogger.tokenRefresh(true);
         return true
       } else {
         const errorText = await response.text().catch(() => '')
-        console.log('Token refresh failed:', response.status, errorText)
+        logger.warn('Token refresh failed:', response.status, errorText)
         return false
       }
     } catch (error) {
-      console.error('Token refresh error:', error)
+      logError(error, 'Token refresh');
       return false
     }
   }

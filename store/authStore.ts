@@ -2,6 +2,7 @@ import { authApi, ApiError } from '@/lib/api-client';
 import { User, UserRole, LoginCredentials } from '@/types/auth';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { logError, authLogger } from '@/lib/logger';
 
 interface AuthState {
     user: User | null;
@@ -49,6 +50,7 @@ export const useAuth = create<AuthState>()(
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Login failed';
+          authLogger.loginFailure(errorMessage);
           set({ 
             loading: false, 
             error: errorMessage, 
@@ -78,7 +80,7 @@ export const useAuth = create<AuthState>()(
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to fetch user profile';
-          console.error('Failed to fetch user profile:', error);
+          logError(error, 'Fetch user profile');
           set({ 
             loading: false, 
             error: errorMessage, 
@@ -90,14 +92,13 @@ export const useAuth = create<AuthState>()(
       },
 
       logout: async () => {
-        console.log('Logging out - initiating logout flow');
+        authLogger.logout();
 
         // First attempt to notify the server to clear auth cookies/session
         try {
           await authApi.logout();
-          console.log('Logout API successful - cookies cleared');
         } catch (error) {
-          console.error('Logout API call failed:', error);
+          logError(error, 'Logout API call');
           // Continue to clear local state even if API fails
         }
 
@@ -124,7 +125,7 @@ export const useAuth = create<AuthState>()(
               }
             });
           } catch (err) {
-            console.warn('Failed to clear localStorage keys during logout', err);
+            // Silent fail for localStorage cleanup
           }
 
           // Notify other parts of the app (and other tabs) that logout occurred

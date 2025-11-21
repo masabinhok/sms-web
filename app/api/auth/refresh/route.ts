@@ -1,15 +1,14 @@
 // app/api/auth/refresh/route.ts
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/env";
+import { authLogger, logError } from "@/lib/logger";
 
 async function refreshTokenLogic(request: Request) {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh_token")?.value;
 
-  console.log("Refresh token endpoint called", refreshToken ? "with token" : "without token");
-
   if (!refreshToken) {
-    console.log("No refresh token found in cookies");
     return NextResponse.json(
       { error: "No refresh token found" },
       { status: 401 }
@@ -17,10 +16,8 @@ async function refreshTokenLogic(request: Request) {
   }
 
   try {
-    console.log("Attempting to refresh token with backend...");
-    
     // Backend expects the refresh token as a cookie, not in headers or body
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+    const response = await fetch(`${getApiUrl()}/auth/refresh`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -30,26 +27,20 @@ async function refreshTokenLogic(request: Request) {
       credentials: "include",
     });
 
-    console.log("Backend response status:", response.status);
-    console.log("Backend response headers:", Object.fromEntries(response.headers.entries()));
-
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'No error text');
-      console.log("Backend error response:", errorText);
       throw new Error(`Backend refresh failed with status ${response.status}: ${errorText}`);
     }
 
     let data;
     try {
       const responseText = await response.text();
-      console.log("Backend response text:", responseText);
       data = responseText ? JSON.parse(responseText) : {};
     } catch (parseError) {
-      console.log("Failed to parse backend response, treating as success");
       data = { success: true };
     }
 
-    console.log("Backend refresh successful, data:", data);
+    authLogger.tokenRefresh(true);
 
     // Extract tokens from response headers (set-cookie)
     const responseHeaders = response.headers;
@@ -62,31 +53,21 @@ async function refreshTokenLogic(request: Request) {
       }
     }
     
-    console.log("All Set-Cookie headers:", setCookieHeaders);
-    
     let newRefreshToken = data.refreshToken;
     let newAccessToken = data.accessToken;
     
     // Parse tokens from all set-cookie headers
     for (const cookieHeader of setCookieHeaders) {
-      console.log("Parsing full cookie header:", cookieHeader.substring(0, 200) + "...");
-      
       // Look for access_token anywhere in the header
       const accessTokenMatch = cookieHeader.match(/access_token=([A-Za-z0-9._-]+)/);
       if (accessTokenMatch) {
         newAccessToken = accessTokenMatch[1];
-        console.log("✅ Extracted access token:", newAccessToken.substring(0, 50) + "...");
-      } else {
-        console.log("❌ No access token found in this header");
       }
       
       // Look for refresh_token anywhere in the header  
       const refreshTokenMatch = cookieHeader.match(/refresh_token=([A-Za-z0-9._-]+)/);
       if (refreshTokenMatch) {
         newRefreshToken = refreshTokenMatch[1];
-        console.log("✅ Extracted refresh token:", newRefreshToken.substring(0, 50) + "...");
-      } else {
-        console.log("❌ No refresh token found in this header");
       }
     }
 
@@ -98,7 +79,6 @@ async function refreshTokenLogic(request: Request) {
     
     if (redirectPath && request.method === "GET") {
       // For GET requests with redirect, redirect to the specified path
-      console.log("Redirecting to:", redirectPath);
       res = NextResponse.redirect(new URL(redirectPath, request.url));
     } else {
       // For POST requests, return JSON response
@@ -107,7 +87,6 @@ async function refreshTokenLogic(request: Request) {
 
     // Set access token cookie if we have one
     if (newAccessToken) {
-      console.log("✅ Setting access token cookie");
       res.cookies.set("access_token", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -115,13 +94,10 @@ async function refreshTokenLogic(request: Request) {
         path: "/",
         maxAge: 15 * 60, // 15 minutes
       });
-    } else {
-      console.log("⚠️  No access token received from backend - this may cause authentication issues");
     }
 
     // Set refresh token cookie - use the new one from backend or keep existing
     const finalRefreshToken = newRefreshToken || refreshToken;
-    console.log("✅ Setting refresh token cookie");
     res.cookies.set("refresh_token", finalRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -132,14 +108,14 @@ async function refreshTokenLogic(request: Request) {
 
     return res;
   } catch (err) {
-    console.error("Refresh error:", err);
+    logError(err, 'Token refresh route');
+    authLogger.tokenRefresh(false);
     
     // For GET requests with redirect, redirect to login
     const url = new URL(request.url);
     const redirectPath = url.searchParams.get("redirect");
     
     if (redirectPath && request.method === "GET") {
-      console.log("Refresh failed, redirecting to login with from parameter");
       const loginUrl = new URL("/auth/login", request.url);
       loginUrl.searchParams.set("from", redirectPath);
       return NextResponse.redirect(loginUrl);
