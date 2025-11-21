@@ -120,7 +120,7 @@ export function Highlights() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent-primary/10 rounded-full -translate-y-32 translate-x-32 blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full translate-y-32 -translate-x-32 blur-3xl" />
             
-            <CardContent className="p-12 lg:p-16 relative z-10">
+            <CardContent className="p-8 md:p-12 lg:p-16 relative z-10">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
                 {[
                   { value: '25+', label: 'Years of Excellence' },
@@ -132,10 +132,10 @@ export function Highlights() {
                     key={index}
                     className="stat-item group"
                   >
-                    <div className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-accent-primary to-purple-400 bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-accent-primary to-purple-400 bg-clip-text text-transparent mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300">
                       {stat.value}
                     </div>
-                    <div className="text-fg-premium-muted font-medium group-hover:text-white transition-colors">
+                    <div className="text-fg-premium-muted font-medium text-sm md:text-base group-hover:text-white transition-colors">
                       {stat.label}
                     </div>
                   </div>

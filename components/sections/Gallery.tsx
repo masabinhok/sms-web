@@ -140,13 +140,13 @@ export function Gallery() {
           >
             <div 
               ref={modalRef}
-              className="relative max-w-6xl w-full h-[80vh] flex flex-col items-center justify-center"
+              className="relative max-w-6xl w-full h-[60vh] md:h-[80vh] flex flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute -top-12 right-0 text-white/70 hover:text-white hover:bg-white/10 transition-colors rounded-full"
+                className="absolute -top-12 right-0 text-white/70 hover:text-white hover:bg-white/10 transition-colors rounded-full z-50"
                 onClick={() => setSelectedImage(null)}
               >
                 <X className="w-6 h-6" />
@@ -165,23 +165,23 @@ export function Gallery() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10"
+                className="absolute left-0 md:left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10 z-50"
                 onClick={prevImage}
               >
-                <ChevronLeft className="w-8 h-8" />
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
               </Button>
               
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10"
+                className="absolute right-0 md:right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/10 bg-black/50 backdrop-blur-sm rounded-full p-2 transition-all border border-white/10 z-50"
                 onClick={nextImage}
               >
-                <ChevronRight className="w-8 h-8" />
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
               </Button>
               
               {/* Image counter */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-md border border-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
+              <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-md border border-white/10 text-white px-4 py-2 rounded-full text-sm font-medium">
                 {selectedImage + 1} / {SCHOOL_CONFIG.GALLERY_IMAGES.length}
               </div>
             </div>

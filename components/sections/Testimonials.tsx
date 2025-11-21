@@ -103,17 +103,17 @@ export function Testimonials() {
               <div className="absolute top-0 left-0 text-accent-primary/10 text-9xl font-serif leading-none select-none">"</div>
               <div className="absolute bottom-0 right-0 text-blue-500/10 text-9xl font-serif leading-none select-none rotate-180">"</div>
               
-              <CardContent className="p-12 lg:p-16 text-center relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-accent-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-accent-primary/20">
-                  <Quote className="w-10 h-10 text-white" />
+              <CardContent className="p-6 md:p-12 lg:p-16 text-center relative z-10">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-accent-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-lg shadow-accent-primary/20">
+                  <Quote className="w-8 h-8 md:w-10 md:h-10 text-white" />
                 </div>
                 
-                <blockquote className="text-xl lg:text-2xl text-gray-200 mb-10 leading-relaxed font-medium italic">
+                <blockquote className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 md:mb-10 leading-relaxed font-medium italic">
                   &quot;{TESTIMONIALS[currentIndex].content}&quot;
                 </blockquote>
                 
-                <div className="flex items-center justify-center space-x-5">
-                  <div className="w-20 h-20 relative rounded-full overflow-hidden ring-4 ring-white/10 shadow-lg">
+                <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-5">
+                  <div className="w-16 h-16 md:w-20 md:h-20 relative rounded-full overflow-hidden ring-4 ring-white/10 shadow-lg">
                     <Image
                       src={TESTIMONIALS[currentIndex].image}
                       alt={TESTIMONIALS[currentIndex].name}
@@ -121,17 +121,17 @@ export function Testimonials() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="text-left">
+                  <div className="text-center md:text-left">
                     <div className="font-bold text-lg text-white">
                       {TESTIMONIALS[currentIndex].name}
                     </div>
-                    <div className="text-accent-primary">
+                    <div className="text-accent-primary text-sm md:text-base">
                       {TESTIMONIALS[currentIndex].role}
                     </div>
                     {/* Star rating */}
-                    <div className="flex mt-2">
+                    <div className="flex justify-center md:justify-start mt-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                        <Star key={i} className="w-3 h-3 md:w-4 md:h-4 fill-yellow-500 text-yellow-500" />
                       ))}
                     </div>
                   </div>

@@ -260,10 +260,10 @@ export function About() {
         <div className="about-cta text-center opacity-0">
           <Card className="bg-gradient-to-r from-accent-primary to-indigo-900 text-white border-none overflow-hidden relative">
             <div className="absolute inset-0 opacity-10 mix-blend-overlay" style={{ backgroundImage: `url('${PATTERN_IMAGE}')` }} />
-            <CardContent className="p-12 relative z-10">
+            <CardContent className="p-8 md:p-12 relative z-10">
               <Heart className="h-12 w-12 text-pink-400 mx-auto mb-6 animate-pulse" />
-              <h3 className="text-3xl font-bold mb-4">Ready to Join Our Community?</h3>
-              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto font-light">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to Join Our Community?</h3>
+              <p className="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto font-light">
                 Experience the difference of quality education in a nurturing environment 
                 that prepares students for success in life.
               </p>

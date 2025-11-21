@@ -140,15 +140,15 @@ export function Hero() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 border-t border-white/5 pt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-white/5 pt-8">
               {heroStats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
                   <div
                     key={stat.label}
-                    className="hero-stat group cursor-default"
+                    className="hero-stat group cursor-default flex sm:block items-center sm:items-start gap-4 sm:gap-0"
                   >
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-0 sm:mb-2">
                         <div className="p-2 rounded-lg bg-white/5 group-hover:bg-accent-primary/20 transition-colors duration-300">
                             <Icon className="h-5 w-5 text-accent-primary" />
                         </div>
