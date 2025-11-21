@@ -1,6 +1,7 @@
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import Link from 'next/link'
-import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb } from 'lucide-react'
+import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb, ArrowRight, Clock } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function AdminDashboard() {
   // Mock data - replace with real data from API
@@ -11,7 +12,9 @@ export default function AdminDashboard() {
       change: '+12%',
       trend: 'up',
       icon: GraduationCap,
-      color: 'bg-blue-500',
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20'
     },
     {
       title: 'Total Teachers',
@@ -19,7 +22,9 @@ export default function AdminDashboard() {
       change: '+3%',
       trend: 'up',
       icon: Users,
-      color: 'bg-green-500',
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20'
     },
     {
       title: 'Active Classes',
@@ -27,7 +32,9 @@ export default function AdminDashboard() {
       change: '+5%',
       trend: 'up',
       icon: BookOpen,
-      color: 'bg-purple-500',
+      color: 'text-purple-400',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20'
     },
     {
       title: 'Attendance Rate',
@@ -35,42 +42,48 @@ export default function AdminDashboard() {
       change: '+2.1%',
       trend: 'up',
       icon: Award,
-      color: 'bg-orange-500',
+      color: 'text-amber-400',
+      bg: 'bg-amber-500/10',
+      border: 'border-amber-500/20'
     },
   ]
 
   const quickActions = [
     {
-      title: 'Create Student Profile',
+      title: 'Create Student',
       description: 'Add a new student to the system',
       href: '/admin/add-student',
       icon: GraduationCap,
-      color: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
-      iconColor: 'text-blue-600',
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10',
+      hover: 'group-hover:bg-blue-500/20'
     },
     {
-      title: 'Create Teacher Profile',
+      title: 'Create Teacher',
       description: 'Register a new teacher',
       href: '/admin/add-teacher',
       icon: Users,
-      color: 'bg-green-50 hover:bg-green-100 border-green-200',
-      iconColor: 'text-green-600',
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      hover: 'group-hover:bg-emerald-500/20'
     },
     {
-      title: 'Create Admin Profile',
+      title: 'Create Admin',
       description: 'Add a new administrator',
       href: '/supersuperadmin/add-admin',
       icon: UserPlus,
-      color: 'bg-purple-50 hover:bg-purple-100 border-purple-200',
-      iconColor: 'text-purple-600',
+      color: 'text-purple-400',
+      bg: 'bg-purple-500/10',
+      hover: 'group-hover:bg-purple-500/20'
     },
     {
       title: 'System Settings',
       description: 'Configure system preferences',
       href: '/admin/settings',
       icon: Settings,
-      color: 'bg-gray-50 hover:bg-gray-100 border-gray-200',
-      iconColor: 'text-gray-600',
+      color: 'text-gray-400',
+      bg: 'bg-white/5',
+      hover: 'group-hover:bg-white/10'
     },
   ]
 
@@ -83,43 +96,43 @@ export default function AdminDashboard() {
 
   return (
     <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <div className="space-y-6 mx-auto max-w-6xl p-6">
+      <div className="space-y-8 mx-auto max-w-7xl p-6 lg:p-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="mt-2 text-gray-600">Welcome back! Here's what's happening in your school today.</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-fg-premium tracking-tight">Admin Dashboard</h1>
+            <p className="mt-2 text-fg-premium-muted">Welcome back! Here's what's happening in your school today.</p>
+          </div>
+          <div className="flex items-center gap-3">
+             <div className="text-right hidden md:block">
+                <div className="text-sm font-medium text-fg-premium">Academic Year</div>
+                <div className="text-xs text-fg-premium-muted">2024-2025</div>
+             </div>
+             <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                <Calendar className="h-5 w-5 text-accent-primary" />
+             </div>
+          </div>
         </div>
 
         {/* Setup Guidelines Banner */}
         <Link 
           href="/admin/guidelines"
-          className="block group"
+          className="block group relative overflow-hidden rounded-2xl border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 via-orange-500/5 to-transparent p-1 transition-all hover:border-yellow-500/50"
         >
-          <div className="relative overflow-hidden rounded-xl border-2 border-yellow-300 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 p-6 shadow-sm transition-all hover:shadow-lg hover:border-yellow-400">
-            <div className="flex items-start gap-4">
-              <div className="rounded-full bg-yellow-400 p-3 group-hover:scale-110 transition-transform">
-                <Lightbulb className="h-6 w-6 text-yellow-900" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
-                  New to the system? View Setup Guidelines
-                  <svg
-                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </h3>
-                <p className="text-sm text-gray-700">
-                  Follow our step-by-step guide to properly configure your school: Setup school info → Create classes & subjects → Add teachers → Enroll students
-                </p>
-              </div>
+          <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="relative p-6 flex items-start gap-5">
+            <div className="rounded-xl bg-yellow-500/20 p-3 group-hover:scale-110 transition-transform border border-yellow-500/20">
+              <Lightbulb className="h-6 w-6 text-yellow-400" />
             </div>
-            {/* Decorative element */}
-            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-yellow-200 opacity-20 blur-2xl" />
-            <div className="absolute -right-8 -bottom-8 h-32 w-32 rounded-full bg-orange-200 opacity-20 blur-2xl" />
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-fg-premium mb-1 flex items-center gap-2">
+                New to the system? View Setup Guidelines
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 text-yellow-400" />
+              </h3>
+              <p className="text-sm text-fg-premium-muted max-w-3xl">
+                Follow our step-by-step guide to properly configure your school: Setup school info → Create classes & subjects → Add teachers → Enroll students
+              </p>
+            </div>
           </div>
         </Link>
 
@@ -128,21 +141,20 @@ export default function AdminDashboard() {
           {stats.map((stat) => (
             <div
               key={stat.title}
-              className="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+              className={`relative overflow-hidden rounded-2xl border ${stat.border} ${stat.bg} p-6 transition-all hover:scale-[1.02] hover:shadow-lg`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
-                  <div className="mt-2 flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-600">{stat.change}</span>
-                    <span className="text-sm text-gray-500">from last month</span>
-                  </div>
+              <div className="flex items-center justify-between mb-4">
+                <div className={`rounded-lg p-2.5 ${stat.bg} border ${stat.border}`}>
+                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
                 </div>
-                <div className={`rounded-full ${stat.color} p-3`}>
-                  <stat.icon className="h-6 w-6 text-white" />
+                <div className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full border border-emerald-400/20">
+                    <TrendingUp className="h-3 w-3" />
+                    {stat.change}
                 </div>
+              </div>
+              <div>
+                  <p className="text-sm font-medium text-fg-premium-muted">{stat.title}</p>
+                  <p className="mt-1 text-3xl font-bold text-fg-premium">{stat.value}</p>
               </div>
             </div>
           ))}
@@ -150,31 +162,27 @@ export default function AdminDashboard() {
 
         {/* Quick Actions */}
         <div>
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">Quick Actions</h2>
+          <h2 className="mb-5 text-xl font-bold text-fg-premium flex items-center gap-2">
+            <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
+            Quick Actions
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action) => (
               <Link
                 key={action.title}
                 href={action.href}
-                className={`group relative flex flex-col rounded-xl border p-6 transition-all ${action.color}`}
+                className="group relative flex flex-col rounded-2xl border border-white/5 bg-bg-premium-secondary p-6 transition-all hover:border-accent-primary/30 hover:shadow-lg hover:shadow-accent-primary/5"
               >
-                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg ${action.iconColor} bg-white`}>
+                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${action.bg} ${action.color} border border-white/5 group-hover:scale-110 transition-transform duration-300`}>
                   <action.icon className="h-6 w-6" />
                 </div>
-                <h3 className="mb-2 font-semibold text-gray-900 group-hover:text-gray-700">
+                <h3 className="mb-2 font-semibold text-fg-premium group-hover:text-accent-primary transition-colors">
                   {action.title}
                 </h3>
-                <p className="text-sm text-gray-600">{action.description}</p>
-                <div className="mt-4 flex items-center text-sm font-medium text-gray-700">
+                <p className="text-sm text-fg-premium-muted mb-4 line-clamp-2">{action.description}</p>
+                <div className="mt-auto flex items-center text-xs font-medium text-accent-primary opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                   <span>Get started</span>
-                  <svg
-                    className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </div>
               </Link>
             ))}
@@ -184,20 +192,23 @@ export default function AdminDashboard() {
         {/* Bottom Grid - Recent Activity & Upcoming Events */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Recent Activity */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+          <div className="glass-panel rounded-2xl p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-fg-premium flex items-center gap-2">
+                <Clock className="h-5 w-5 text-accent-primary" />
+                Recent Activity
+              </h2>
+              <Button variant="ghost" size="sm" className="text-xs text-fg-premium-muted hover:text-white hover:bg-white/5">
                 View all
-              </button>
+              </Button>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-1">
               {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-start gap-3 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
-                  <div className="mt-1 h-2 w-2 rounded-full bg-blue-500" />
+                <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                  <div className="mt-1.5 h-2 w-2 rounded-full bg-accent-primary shadow-[0_0_8px_rgba(94,106,210,0.6)]" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                    <p className="text-xs text-gray-500">{activity.time}</p>
+                    <p className="text-sm font-medium text-fg-premium group-hover:text-white transition-colors">{activity.action}</p>
+                    <p className="text-xs text-fg-premium-muted">{activity.time}</p>
                   </div>
                 </div>
               ))}
@@ -205,42 +216,45 @@ export default function AdminDashboard() {
           </div>
 
           {/* Upcoming Events */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Upcoming Events</h2>
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+          <div className="glass-panel rounded-2xl p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-fg-premium flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-purple-400" />
+                Upcoming Events
+              </h2>
+              <Button variant="ghost" size="sm" className="text-xs text-fg-premium-muted hover:text-white hover:bg-white/5">
                 View calendar
-              </button>
+              </Button>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 rounded-lg bg-blue-50 p-4">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-blue-600 text-white">
-                  <span className="text-xs font-medium">OCT</span>
-                  <span className="text-lg font-bold">15</span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
+                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/20">
+                  <span className="text-[10px] font-bold uppercase">Oct</span>
+                  <span className="text-lg font-bold leading-none">15</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">Parent-Teacher Meeting</h3>
-                  <p className="text-sm text-gray-600">10:00 AM - Main Hall</p>
+                  <h3 className="font-semibold text-fg-premium text-sm">Parent-Teacher Meeting</h3>
+                  <p className="text-xs text-fg-premium-muted">10:00 AM - Main Hall</p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 rounded-lg bg-green-50 p-4">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-green-600 text-white">
-                  <span className="text-xs font-medium">OCT</span>
-                  <span className="text-lg font-bold">20</span>
+              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
+                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/20">
+                  <span className="text-[10px] font-bold uppercase">Oct</span>
+                  <span className="text-lg font-bold leading-none">20</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">Annual Sports Day</h3>
-                  <p className="text-sm text-gray-600">9:00 AM - Sports Ground</p>
+                  <h3 className="font-semibold text-fg-premium text-sm">Annual Sports Day</h3>
+                  <p className="text-xs text-fg-premium-muted">9:00 AM - Sports Ground</p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 rounded-lg bg-purple-50 p-4">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-purple-600 text-white">
-                  <span className="text-xs font-medium">OCT</span>
-                  <span className="text-lg font-bold">25</span>
+              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
+                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/20">
+                  <span className="text-[10px] font-bold uppercase">Oct</span>
+                  <span className="text-lg font-bold leading-none">25</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">Exam Week Begins</h3>
-                  <p className="text-sm text-gray-600">All day - All classes</p>
+                  <h3 className="font-semibold text-fg-premium text-sm">Exam Week Begins</h3>
+                  <p className="text-xs text-fg-premium-muted">All day - All classes</p>
                 </div>
               </div>
             </div>

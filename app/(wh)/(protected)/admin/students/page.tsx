@@ -137,16 +137,16 @@ export default function StudentsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Students</h1>
-          <p className="text-gray-600 mt-1">Manage student profiles and information</p>
+          <h1 className="text-3xl font-bold text-fg-premium tracking-tight">Students</h1>
+          <p className="text-fg-premium-muted mt-1">Manage student profiles and information</p>
         </div>
         <Button
           onClick={() => router.push('/admin/add-student')}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-white"
         >
           <Plus className="w-4 h-4" />
           Add Student
@@ -155,30 +155,30 @@ export default function StudentsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="glass-panel p-4 rounded-xl border border-white/5">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="p-3 bg-accent-primary/10 rounded-lg border border-accent-primary/20">
+              <Users className="w-6 h-6 text-accent-primary" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total Students</p>
-              <p className="text-2xl font-bold text-gray-900">{total}</p>
+              <p className="text-sm text-fg-premium-muted">Total Students</p>
+              <p className="text-2xl font-bold text-fg-premium">{total}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
+      <div className="glass-panel p-4 rounded-xl border border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-premium-muted w-4 h-4" />
               <Input
                 placeholder="Search by name, email, roll number..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
               />
             </div>
           </div>
@@ -186,23 +186,25 @@ export default function StudentsPage() {
             placeholder="Filter by class..."
             value={className}
             onChange={(e) => setClassName(e.target.value)}
+            className="bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
           />
           <Input
             placeholder="Filter by section..."
             value={section}
             onChange={(e) => setSection(e.target.value)}
+            className="bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="glass-panel rounded-xl border border-white/5 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-white/5 border-b border-white/5">
               <tr>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => handleSort('fullName')}
                 >
                   <div className="flex items-center gap-2">
@@ -211,7 +213,7 @@ export default function StudentsPage() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => handleSort('class')}
                 >
                   <div className="flex items-center gap-2">
@@ -220,7 +222,7 @@ export default function StudentsPage() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => handleSort('section')}
                 >
                   <div className="flex items-center gap-2">
@@ -229,7 +231,7 @@ export default function StudentsPage() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
                   onClick={() => handleSort('rollNumber')}
                 >
                   <div className="flex items-center gap-2">
@@ -237,27 +239,27 @@ export default function StudentsPage() {
                     <ArrowUpDown className="w-4 h-4" />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
                   Guardian
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-right text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-fg-premium-muted">
                     Loading students...
                   </td>
                 </tr>
               ) : students.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-fg-premium-muted">
                     No students found
                   </td>
                 </tr>
@@ -265,38 +267,38 @@ export default function StudentsPage() {
                 students.map((student) => (
                   <tr 
                     key={student.id} 
-                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                    className="hover:bg-white/5 cursor-pointer transition-colors group"
                     onClick={() => router.push(`/admin/students/${student.id}`)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{student.fullName}</div>
-                      <div className="text-sm text-gray-500">{formatDate(student.dob)}</div>
+                      <div className="font-medium text-fg-premium group-hover:text-white transition-colors">{student.fullName}</div>
+                      <div className="text-sm text-fg-premium-muted">{formatDate(student.dob)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium">
                       {student.classId}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium">
                       {student.rollNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium-muted">
                       {student.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{student.guardianName}</div>
-                      <div className="text-sm text-gray-500">{student.guardianContact}</div>
+                      <div className="text-sm text-fg-premium">{student.guardianName}</div>
+                      <div className="text-sm text-fg-premium-muted">{student.guardianContact}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => router.push(`/admin/students/${student.id}/edit`)}
-                          className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded transition-colors"
+                          className="text-emerald-400 hover:text-emerald-300 p-2 hover:bg-emerald-500/10 rounded-lg transition-colors"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(student)}
-                          className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
+                          className="text-red-400 hover:text-red-300 p-2 hover:bg-red-500/10 rounded-lg transition-colors"
                           title="Delete"
                           disabled={deleting === student.id}
                         >
@@ -313,8 +315,8 @@ export default function StudentsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+          <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between bg-white/5">
+            <div className="text-sm text-fg-premium-muted">
               Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, total)} of {total} results
             </div>
             <div className="flex items-center gap-2">
@@ -323,11 +325,12 @@ export default function StudentsPage() {
                 size="sm"
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
+                className="border-white/10 bg-transparent text-fg-premium hover:bg-white/10 hover:text-white"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </Button>
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-fg-premium">
                 Page {page} of {totalPages}
               </span>
               <Button
@@ -335,6 +338,7 @@ export default function StudentsPage() {
                 size="sm"
                 onClick={() => setPage(page + 1)}
                 disabled={page === totalPages}
+                className="border-white/10 bg-transparent text-fg-premium hover:bg-white/10 hover:text-white"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />
@@ -346,10 +350,10 @@ export default function StudentsPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, student: null })}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] bg-bg-premium border-white/10">
           <DialogHeader>
-            <DialogTitle>Delete Student</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-fg-premium">Delete Student</DialogTitle>
+            <DialogDescription className="text-fg-premium-muted">
               Are you sure you want to delete {deleteDialog.student?.fullName}? This action cannot be undone and will also remove their login credentials.
             </DialogDescription>
           </DialogHeader>
@@ -357,6 +361,7 @@ export default function StudentsPage() {
             <Button
               variant="outline"
               onClick={() => setDeleteDialog({ open: false, student: null })}
+              className="border-white/10 text-fg-premium hover:bg-white/10 hover:text-white"
             >
               Cancel
             </Button>
@@ -364,6 +369,7 @@ export default function StudentsPage() {
               variant="destructive"
               onClick={confirmDelete}
               disabled={!!deleting}
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </Button>
