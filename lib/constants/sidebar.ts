@@ -3,8 +3,8 @@ const navSection = (title: string, items: { label: string; href: string }[]) => 
 export const adminSections = [
     navSection('Admin', [
     { label: 'Dashboard', href: '/admin' },
-    { label: 'Setup Guidelines', href: '/admin/guidelines' },
-    { label: 'Settings', href: '/admin/settings' },
+    // { label: 'Setup Guidelines', href: '/admin/guidelines' },
+    // { label: 'Settings', href: '/admin/settings' },
   ]),
   navSection('User Management', [
     { label: 'Student Management', href: '/admin/students' },
