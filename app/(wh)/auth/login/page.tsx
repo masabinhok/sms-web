@@ -4,9 +4,13 @@ import React, { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import { useAuth } from '@/store/authStore'
 import { UserRole } from '@/types/auth'
+import { motion } from 'framer-motion'
+import { Lock, User as UserIcon, Shield, GraduationCap, Github, AlertCircle, Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -57,191 +61,289 @@ export default function LoginPage() {
     }
   }
 
+  const roleIcons = {
+    STUDENT: GraduationCap,
+    TEACHER: UserIcon,
+    ADMIN: Shield,
+    SUPERADMIN: Sparkles,
+  }
+
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gray-50">
+    <div className="h-screen flex flex-col lg:flex-row bg-bg-premium overflow-hidden">
       {/* Left Side - Branding & Info */}
-      <div className="lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 lg:p-12 flex flex-col justify-center">
-        <div className="max-w-lg mx-auto w-full">
+      <div className="lg:w-1/2 relative overflow-hidden p-6 lg:p-8 flex flex-col justify-center">
+        {/* Animated Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 via-bg-premium to-accent-secondary/10"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(94,106,210,0.15),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(107,127,255,0.1),transparent_50%)]"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative max-w-lg mx-auto w-full z-10"
+        >
           {/* Logo/Title */}
-          <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mb-6"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center shadow-lg shadow-accent-primary/30">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <div className="w-2 h-2 rounded-full bg-accent-primary animate-pulse"></div>
+            </div>
+            <h1 className="text-2xl lg:text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text  mb-2">
               School Management System
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-fg-premium-muted text-base">
               Streamline your educational institution
             </p>
-          </div>
+          </motion.div>
 
           {/* Demo Credentials - Only show in development */}
           {process.env.NODE_ENV === 'development' && (
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-6 mb-6">
-              <h3 className="text-white font-semibold mb-3 text-lg">Demo Credentials</h3>
-              <div className="space-y-2 text-sm">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="glass-panel rounded-xl p-4 mb-4 border border-white/10"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Lock className="w-4 h-4 text-accent-primary" />
+                <h3 className="text-fg-premium font-semibold text-sm">Demo Credentials</h3>
+              </div>
+              <div className="space-y-2 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Username:</span>
-                  <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
+                  <span className="text-fg-premium-muted">Username:</span>
+                  <code className="bg-bg-premium-secondary text-accent-primary px-2 py-1 rounded font-mono border border-white/10">
                     admin-demo
                   </code>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Password:</span>
-                  <code className="bg-black/30 text-white px-3 py-1 rounded font-mono">
+                  <span className="text-fg-premium-muted">Password:</span>
+                  <code className="bg-bg-premium-secondary text-accent-primary px-2 py-1 rounded font-mono border border-white/10">
                     Admin!123
                   </code>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Server Notice */}
-          <div className="bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-6">
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <div className="text-sm text-yellow-100">
-                <p className="font-semibold mb-1">Server Status Notice</p>
-                <p className="text-yellow-200/90 mb-2">
-                  The backend server is currently not deployed. To test the demo, please email{' '}
-                  <a href="mailto:sabin.shrestha.er@gmail.com" className="underline hover:text-white">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="glass-panel rounded-xl p-4 border border-yellow-500/20 bg-yellow-500/5"
+          >
+            <div className="flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+              <div className="text-xs">
+                <p className="font-semibold mb-1.5 text-yellow-400">Server Notice</p>
+                <p className="text-fg-premium-muted mb-2 leading-relaxed">
+                  Backend not deployed. Email{' '}
+                  <a href="mailto:sabin.shrestha.er@gmail.com" className="text-accent-primary hover:text-accent-secondary underline transition-colors">
                     sabin.shrestha.er@gmail.com
                   </a>{' '}
-                  or host the server locally.
+                  or host locally.
                 </p>
                 <a 
                   href="https://github.com/masabinhok/sms-api" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-yellow-100 hover:text-white font-medium"
+                  className="inline-flex items-center gap-1.5 text-accent-primary hover:text-accent-secondary font-medium transition-colors group"
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                  View Backend Repository
+                  <Github className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
+                  Backend Repo
                 </a>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="lg:w-1/2 flex items-center justify-center p-8 lg:p-12">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Welcome Back
-            </h2>
-            <p className="text-gray-600">
-              Sign in to access your account
-            </p>
-          </div>
+      <div className="lg:w-1/2 flex items-center justify-center p-6 lg:p-8 bg-bg-premium-secondary relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="w-full max-w-md relative z-10"
+        >
+          <Card className="glass-panel border-white/10">
+            <CardHeader className="space-y-2 text-center pb-4">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="mx-auto w-12 h-12 rounded-xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center shadow-lg shadow-accent-primary/30"
+              >
+                <Shield className="w-6 h-6 text-white" />
+              </motion.div>
+              <CardTitle className="text-2xl font-bold text-fg-premium">
+                Welcome Back
+              </CardTitle>
+              <CardDescription className="text-fg-premium-muted text-sm">
+                Sign in to access your account
+              </CardDescription>
+            </CardHeader>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
-                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Username */}
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                Username
-              </label>
-              <Input
-                id="username"
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                placeholder="Enter your username"
-                required
-                className="w-full h-11"
-                disabled={loading}
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder="Enter your password"
-                required
-                minLength={6}
-                className="w-full h-11"
-                disabled={loading}
-              />
-            </div>
-
-            {/* Role Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Select Role
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {(['STUDENT', 'TEACHER', 'ADMIN', 'SUPERADMIN'] as UserRole[]).map((role) => (
-                  <button
-                    key={role}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, role })}
-                    disabled={loading}
-                    className={`
-                      px-4 py-3 text-sm font-medium rounded-lg border-2 transition-all
-                      ${formData.role === role 
-                        ? 'bg-gray-900 text-white border-gray-900 shadow-md' 
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-gray-900 hover:shadow-sm'
-                      }
-                      disabled:opacity-50 disabled:cursor-not-allowed
-                    `}
+            <CardContent className="pb-4">
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="space-y-3.5">
+                {/* Error Message */}
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="glass-panel border-red-500/30 bg-red-500/10 px-3 py-2 rounded-lg text-xs flex items-start gap-2"
                   >
-                    {role}
-                  </button>
-                ))}
-              </div>
-            </div>
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
+                    <span className="text-red-400">{error}</span>
+                  </motion.div>
+                )}
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full bg-gray-900 text-white hover:bg-gray-800 h-12 text-base font-medium rounded-lg shadow-lg hover:shadow-xl transition-all"
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Signing in...
-                </span>
-              ) : (
-                'Sign In'
-              )}
-            </Button>
-          </form>
+                {/* Username */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="username" className="text-fg-premium font-medium text-sm">
+                    Username
+                  </Label>
+                  <div className="relative">
+                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-premium-muted" />
+                    <Input
+                      id="username"
+                      type="text"
+                      value={formData.username}
+                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                      placeholder="Enter your username"
+                      required
+                      className="w-full h-10 pl-9 bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted text-sm focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 transition-all"
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
 
-          {/* Forgot Password Link */}
-          <div className="text-center mt-6">
-            <Link 
-              href="/auth/forgot-password" 
-              className="text-sm text-gray-600 hover:text-gray-900 font-medium"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-        </div>
+                {/* Password */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className="text-fg-premium font-medium text-sm">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-fg-premium-muted" />
+                    <Input
+                      id="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      placeholder="Enter your password"
+                      required
+                      minLength={6}
+                      className="w-full h-10 pl-9 bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted text-sm focus:border-accent-primary focus:ring-2 focus:ring-accent-primary/20 transition-all"
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+
+                {/* Role Selection */}
+                <div className="space-y-2">
+                  <Label className="text-fg-premium font-medium text-sm">
+                    Select Role
+                  </Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['STUDENT', 'TEACHER', 'ADMIN', 'SUPERADMIN'] as UserRole[]).map((role) => {
+                      const Icon = roleIcons[role]
+                      return (
+                        <motion.button
+                          key={role}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, role })}
+                          disabled={loading}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`
+                            relative px-3 py-2.5 text-xs font-medium rounded-lg border-2 transition-all overflow-hidden group
+                            ${formData.role === role 
+                              ? 'bg-gradient-to-br from-accent-primary to-accent-secondary text-white border-accent-primary shadow-lg shadow-accent-primary/30' 
+                              : 'bg-white/5 text-fg-premium border-white/10 hover:border-accent-primary/50 hover:bg-white/10'
+                            }
+                            disabled:opacity-50 disabled:cursor-not-allowed
+                          `}
+                        >
+                          <div className="flex items-center justify-center gap-1.5">
+                            <Icon className="w-3.5 h-3.5" />
+                            <span>{role}</span>
+                          </div>
+                          {formData.role === role && (
+                            <motion.div
+                              layoutId="roleSelector"
+                              className="absolute inset-0 -z-10"
+                              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                            />
+                          )}
+                        </motion.button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary hover:from-accent-primary/90 hover:to-accent-secondary/90 text-white h-10 text-sm font-semibold rounded-lg shadow-lg shadow-accent-primary/30 hover:shadow-xl hover:shadow-accent-primary/40 transition-all relative overflow-hidden group"
+                  disabled={loading}
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {loading ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        >
+                          <Lock className="w-4 h-4" />
+                        </motion.div>
+                        <span>Signing in...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="w-4 h-4" />
+                        <span>Sign In</span>
+                      </>
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                </Button>
+
+                {/* Forgot Password Link */}
+                <div className="text-center pt-1">
+                  <Link 
+                    href="/auth/forgot-password" 
+                    className="text-xs text-fg-premium-muted hover:text-accent-primary font-medium transition-colors inline-flex items-center gap-1 group"
+                  >
+                    <span>Forgot password?</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </Link>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Additional Info */}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="text-center text-fg-premium-muted text-xs mt-3"
+          >
+            Protected by enterprise-grade security
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   )
