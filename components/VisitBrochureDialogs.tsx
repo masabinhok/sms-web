@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Calendar, Clock, Users, Download, FileText } from 'lucide-react'
-import { scheduleVisit, getBrochureDownloadUrl } from '@/lib/brochure-api'
+import { scheduleVisit, getBrochureDownloadUrl, requestBrochureDownload } from '@/lib/brochure-api'
 import { useMessage } from '@/store/messageStore'
 
 interface ScheduleVisitDialogProps {
@@ -34,8 +34,13 @@ export function ScheduleVisitDialog({ open, onOpenChange }: ScheduleVisitDialogP
 
     try {
       await scheduleVisit({
-        ...formData,
-        numberOfVisitors: parseInt(formData.numberOfVisitors)
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        preferredDate: formData.preferredDate,
+        preferredTime: formData.preferredTime,
+        numberOfVisitors: formData.numberOfVisitors,
+        notes: formData.message
       })
 
       addMessage('Visit scheduled successfully! We will contact you shortly to confirm.', 'success')
@@ -220,8 +225,9 @@ interface BrochureDialogProps {
 
 export function BrochureDialog({ open, onOpenChange }: BrochureDialogProps) {
   const { addMessage } = useMessage()
-  const [email, setEmail] = useState('')
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [isDownloading, setIsDownloading] = useState(false)
 
   const handleDownload = async (e: React.FormEvent) => {
@@ -229,19 +235,19 @@ export function BrochureDialog({ open, onOpenChange }: BrochureDialogProps) {
     setIsDownloading(true)
 
     try {
-      // Track the download request
-      // In real implementation, this would call the API
-      const downloadUrl = getBrochureDownloadUrl()
+      // Call API to track download request
+      const response = await requestBrochureDownload({ name, email, phone })
       
-      // Simulate download
+      // Show success message
       addMessage('Thank you! Your brochure download will begin shortly. Check your email for additional information.', 'success')
       
-      // For template: Show message about PDF
-      window.open(downloadUrl, '_blank')
+      // Open the PDF in new tab
+      window.open(response.downloadUrl || getBrochureDownloadUrl(), '_blank')
       
       onOpenChange(false)
-      setEmail('')
       setName('')
+      setEmail('')
+      setPhone('')
     } catch (error) {
       addMessage('Failed to download brochure. Please try again.', 'error')
       console.error('Brochure download error:', error)
@@ -284,6 +290,19 @@ export function BrochureDialog({ open, onOpenChange }: BrochureDialogProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
+              className="bg-black/20 border border-white/20 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-1 focus:ring-accent-primary h-11"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="brochure-phone" className="text-fg-premium text-sm font-medium">Phone Number *</Label>
+            <Input
+              id="brochure-phone"
+              type="tel"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1-555-0123"
               className="bg-black/20 border border-white/20 text-white placeholder:text-gray-500 focus:border-accent-primary focus:ring-1 focus:ring-accent-primary h-11"
             />
             <p className="text-xs text-fg-premium-muted mt-2">

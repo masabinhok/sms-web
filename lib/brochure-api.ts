@@ -9,8 +9,8 @@ export interface ScheduleVisitData {
   phone: string;
   preferredDate: string;
   preferredTime: string;
-  numberOfVisitors?: number;
-  message?: string;
+  numberOfVisitors?: string;
+  notes?: string;
 }
 
 export interface ScheduleVisitResponse {
@@ -54,8 +54,7 @@ export async function scheduleVisit(
  * Tracks download requests for analytics
  */
 export async function requestBrochureDownload(
-  email: string,
-  name?: string
+  data: { name: string; email: string; phone: string }
 ): Promise<{ success: boolean; downloadUrl: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/public/brochure-request`, {
@@ -63,7 +62,7 @@ export async function requestBrochureDownload(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, name }),
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
