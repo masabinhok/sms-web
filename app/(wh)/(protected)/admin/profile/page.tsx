@@ -360,6 +360,22 @@ export default function AdminProfile() {
                     Enable 2FA
                   </Button>
                 </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border border-red-500/20 bg-red-500/5">
+                  <div className="space-y-1">
+                    <h4 className="font-medium text-fg-premium">Logout</h4>
+                    <p className="text-sm text-fg-premium-muted">
+                      Sign out of your account
+                    </p>
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                   onClick={logout}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Logout
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
