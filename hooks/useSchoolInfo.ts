@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react'
 import { getSchoolInfo, School } from '@/lib/school-api'
 
 /**
- * Hook to fetch and manage school information
+ * Hook to fetch and manage school information from API
+ * 
+ * @deprecated For landing page, use static SCHOOL_INFO from @/lib/constants/school-info instead
+ * This hook is only for authenticated admin routes that need dynamic/editable school data
+ * 
  * Returns the school data and loading state
  */
 export function useSchoolInfo() {

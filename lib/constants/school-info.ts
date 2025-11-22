@@ -1,94 +1,68 @@
 /**
- * School Information Template
+ * School Information - Client-Side Static Data
  * 
- * Replace all {{PLACEHOLDER}} values with your actual school information
- * This file contains all customizable school details used throughout the website
+ * This file provides static school information for the landing page.
+ * No API calls are made - all data is loaded from JSON at build time.
  */
 
+import schoolData from '@/lib/data/school-data.json';
+
+// Flatten the structure to match component expectations
 export const SCHOOL_INFO = {
   // Basic Information
-  name: "{{SCHOOL_NAME}}",
-  tagline: "{{TAGLINE}}",
-  motto: "Empowering Minds, Shaping Futures",
+  name: schoolData.name,
+  tagline: schoolData.tagline,
+  motto: schoolData.motto,
   
-  // Contact Information
-  contact: {
-    address: "{{CONTACT_ADDRESS}}",
-    city: "{{CITY}}",
-    state: "{{STATE}}",
-    country: "{{COUNTRY}}",
-    zipCode: "{{ZIP_CODE}}",
-    phone: "{{PHONE_NUMBER}}",
-    alternatePhone: "{{ALTERNATE_PHONE}}",
-    email: "{{EMAIL_ADDRESS}}",
-    admissionEmail: "{{ADMISSION_EMAIL}}",
-    website: "{{WEBSITE_URL}}"
-  },
+  // Contact Information (flattened for direct access)
+  address: schoolData.address,
+  city: schoolData.city,
+  state: schoolData.state,
+  country: schoolData.country,
+  zipCode: schoolData.zipCode,
+  phone: schoolData.phone,
+  alternatePhone: schoolData.alternatePhone,
+  email: schoolData.email,
+  admissionEmail: schoolData.admissionEmail,
+  website: schoolData.website,
 
-  // Social Media Links
-  social: {
-    facebook: "{{FACEBOOK_URL}}",
-    instagram: "{{INSTAGRAM_URL}}",
-    twitter: "{{TWITTER_URL}}",
-    youtube: "{{YOUTUBE_URL}}",
-    linkedin: "{{LINKEDIN_URL}}"
-  },
+  // Social Media Links (flattened)
+  facebook: schoolData.facebook,
+  instagram: schoolData.instagram,
+  twitter: schoolData.twitter,
+  youtube: schoolData.youtube,
+  linkedin: schoolData.linkedin,
 
-  // Hero Section Content
-  hero: {
-    title: "Welcome to {{SCHOOL_NAME}}",
-    subtitle: "{{HERO_DESCRIPTION}}",
-    description: "Nurturing excellence in education since {{FOUNDING_YEAR}}. We provide world-class education in a caring environment.",
-    ctaPrimary: "Learn More",
-    ctaSecondary: "Admissions Open",
-    videoUrl: "{{VIRTUAL_TOUR_VIDEO_URL}}"
-  },
+  // Hero Section Content (flattened)
+  heroTitle: schoolData.heroTitle,
+  heroSubtitle: schoolData.heroSubtitle,
+  heroDescription: schoolData.heroDescription,
+  heroCTA: schoolData.heroCTA,
+  heroVideoUrl: schoolData.heroVideoUrl,
 
-  // About Section Content
-  about: {
-    title: "About {{SCHOOL_NAME}}",
-    description: "{{ABOUT_TEXT}}",
-    mission: "{{MISSION_STATEMENT}}",
-    vision: "{{VISION_STATEMENT}}",
-    values: [
-      "Excellence in Education",
-      "Character Development",
-      "Innovation and Creativity",
-      "Community Service",
-      "Global Perspective"
-    ],
-    foundingYear: "{{FOUNDING_YEAR}}",
-    principalName: "{{PRINCIPAL_NAME}}",
-    principalMessage: "{{PRINCIPAL_MESSAGE}}"
-  },
+  // About Section Content (flattened)
+  description: schoolData.description,
+  mission: schoolData.mission,
+  vision: schoolData.vision,
+  values: schoolData.values,
+  foundingYear: schoolData.foundingYear,
+  principalName: schoolData.principalName,
+  principalMessage: schoolData.principalMessage,
 
   // Statistics
-  stats: {
-    yearsOfExperience: "25+",
-    totalStudents: "1000+",
-    qualifiedTeachers: "50+",
-    successRate: "95%",
-    campusArea: "{{CAMPUS_AREA}}",
-    classrooms: "{{NUMBER_OF_CLASSROOMS}}",
-    laboratories: "{{NUMBER_OF_LABS}}",
-    libraries: "{{NUMBER_OF_LIBRARIES}}"
-  },
+  stats: schoolData.stats,
 
   // Office Hours
-  officeHours: {
-    weekdays: "Monday - Friday: 8:00 AM - 5:00 PM",
-    saturday: "Saturday: 9:00 AM - 2:00 PM",
-    sunday: "Sunday: Closed",
-    holidays: "Closed on public holidays"
-  },
+  officeHours: schoolData.officeHours,
 
-  // Accreditation & Affiliations
-  accreditation: {
-    affiliatedTo: "{{AFFILIATION_BOARD}}",
-    recognizedBy: "{{RECOGNITION_AUTHORITY}}",
-    accreditedBy: "{{ACCREDITATION_BODY}}",
-    schoolCode: "{{SCHOOL_CODE}}"
-  }
+  // Accreditation & Affiliations (flattened)
+  affiliatedTo: schoolData.affiliatedTo,
+  recognizedBy: schoolData.recognizedBy,
+  accreditedBy: schoolData.accreditedBy,
+  schoolCode: schoolData.schoolCode,
+
+  // Additional Information
+  achievements: schoolData.achievements,
 } as const;
 
 // Current year for footer

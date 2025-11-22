@@ -32,27 +32,27 @@ export const SCHOOL_CONFIG = {
   
   // Contact Information
   CONTACT: {
-    ADDRESS: SCHOOL_INFO.contact.address,
-    CITY: SCHOOL_INFO.contact.city,
-    PHONE: SCHOOL_INFO.contact.phone,
-    EMAIL: SCHOOL_INFO.contact.email,
-    WEBSITE: SCHOOL_INFO.contact.website
+    ADDRESS: SCHOOL_INFO.address,
+    CITY: SCHOOL_INFO.city,
+    PHONE: SCHOOL_INFO.phone,
+    EMAIL: SCHOOL_INFO.email,
+    WEBSITE: SCHOOL_INFO.website
   },
 
   // Hero Section
   HERO: {
-    TITLE: SCHOOL_INFO.hero.title,
-    SUBTITLE: SCHOOL_INFO.hero.subtitle,
-    CTA_PRIMARY: SCHOOL_INFO.hero.ctaPrimary,
-    CTA_SECONDARY: SCHOOL_INFO.hero.ctaSecondary
+    TITLE: SCHOOL_INFO.heroTitle,
+    SUBTITLE: SCHOOL_INFO.heroSubtitle,
+    CTA_PRIMARY: SCHOOL_INFO.heroCTA,
+    CTA_SECONDARY: "Admissions Open"
   },
 
   // About Section
   ABOUT: {
-    TITLE: SCHOOL_INFO.about.title,
-    DESCRIPTION: SCHOOL_INFO.about.description,
-    MISSION: SCHOOL_INFO.about.mission,
-    VISION: SCHOOL_INFO.about.vision
+    TITLE: `About ${SCHOOL_INFO.name}`,
+    DESCRIPTION: SCHOOL_INFO.description,
+    MISSION: SCHOOL_INFO.mission,
+    VISION: SCHOOL_INFO.vision
   },
 
   // Programs
@@ -86,10 +86,10 @@ export const SCHOOL_CONFIG = {
 
   // Social Media
   SOCIAL: {
-    FACEBOOK: SCHOOL_INFO.social.facebook,
-    INSTAGRAM: SCHOOL_INFO.social.instagram,
-    TWITTER: SCHOOL_INFO.social.twitter,
-    YOUTUBE: SCHOOL_INFO.social.youtube
+    FACEBOOK: SCHOOL_INFO.facebook,
+    INSTAGRAM: SCHOOL_INFO.instagram,
+    TWITTER: SCHOOL_INFO.twitter,
+    YOUTUBE: SCHOOL_INFO.youtube
   },
 
   // Navigation Menu
