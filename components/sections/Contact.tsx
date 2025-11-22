@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useSchool } from '@/components/SchoolProvider'
 import { submitContactInquiry } from '@/lib/contact-api'
-import { useToast } from '@/hooks/use-toast'
 import { useMessage } from '@/store/messageStore'
 
 gsap.registerPlugin(ScrollTrigger)
