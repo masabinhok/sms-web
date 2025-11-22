@@ -174,15 +174,15 @@ export default function TeachersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent flex items-center gap-3">
-            <GraduationCap className="w-10 h-10 text-green-600" />
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text flex items-center gap-3">
+            <GraduationCap className="w-10 h-10 text-accent-primary" />
             Teachers Directory
           </h1>
           <p className="text-fg-premium-muted mt-2 text-lg">Manage teacher profiles and information</p>
         </div>
         <Button
           onClick={() => router.push('/admin/add-teacher')}
-          className="flex items-center gap-2 bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0"
+          className="flex items-center gap-2 bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0 shadow-lg shadow-accent-primary/20"
         >
           <Plus className="w-4 h-4" />
           Add Teacher

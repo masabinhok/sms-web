@@ -195,10 +195,11 @@ export default function ClassManagementPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text ">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text  flex items-center gap-3">
+            <GraduationCap className="w-10 h-10 text-accent-primary" />
             Class Management
           </h1>
-          <p className="text-fg-premium-muted mt-2">
+          <p className="text-fg-premium-muted mt-2 text-lg">
             Manage classes, sections, and academic years with ease
           </p>
         </div>
@@ -206,7 +207,7 @@ export default function ClassManagementPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Button onClick={openCreateDialog} size="lg" className="shadow-lg shadow-[var(--accent-primary)]/40 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] border-2 border-[var(--accent-primary)]/50 text-white hover:opacity-90 hover:shadow-lg hover:shadow-[var(--accent-primary)]/60 transition-all">
+          <Button onClick={openCreateDialog} size="lg" className="shadow-lg shadow-accent-primary/30 bg-gradient-to-r from-accent-primary to-accent-secondary border-0 text-white hover:opacity-90 hover:shadow-xl hover:shadow-accent-primary/40 transition-all">
             <Plus className="mr-2 h-5 w-5" /> Create Class
           </Button>
         </motion.div>

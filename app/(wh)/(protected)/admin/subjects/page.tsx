@@ -203,10 +203,11 @@ export default function SubjectManagementPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text ">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text  flex items-center gap-3">
+            <BookOpen className="w-10 h-10 text-accent-primary" />
             Subject Management
           </h1>
-          <p className="text-fg-premium-muted mt-2">
+          <p className="text-fg-premium-muted mt-2 text-lg">
             Manage subjects, courses, and their configurations
           </p>
         </div>
@@ -214,7 +215,7 @@ export default function SubjectManagementPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Button onClick={openCreateDialog} size="lg" className="shadow-lg bg-gradient-to-r from-accent-primary to-accent-secondary border-0 text-white hover:opacity-90">
+          <Button onClick={openCreateDialog} size="lg" className="shadow-lg shadow-accent-primary/30 bg-gradient-to-r from-accent-primary to-accent-secondary border-0 text-white hover:opacity-90 hover:shadow-xl hover:shadow-accent-secondary/40 transition-all">
             <Plus className="mr-2 h-5 w-5" /> Create Subject
           </Button>
         </motion.div>
