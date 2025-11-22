@@ -3,7 +3,7 @@
 import { useAuth } from '@/store/authStore'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { User, Mail, Shield, Calendar, Key } from 'lucide-react'
+import { User, Mail, Shield, Calendar, Key, Camera, Lock, Phone } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,6 +20,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { passwordChangeSchema, type PasswordChangeFormData } from '@/lib/validation/password-change-schema'
 import { authApi } from '@/lib/api-client'
 import { useMessage } from '@/store/messageStore'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { motion } from 'framer-motion'
 
 export default function AdminProfile() {
   const { user, loading } = useAuth();
@@ -31,6 +36,12 @@ export default function AdminProfile() {
     name: '',
     email: '',
   });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   // React Hook Form for password change with Zod validation
   const {
@@ -69,19 +80,28 @@ export default function AdminProfile() {
     setIsEditDialogOpen(false);
   };
 
-  const handlePasswordSubmit = async (data: PasswordChangeFormData) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      addMessage('Passwords do not match', 'error');
+      return;
+    }
+    
     try {
-      const response = await authApi.changePassword(data.currentPassword, data.newPassword)
-      addMessage(`${response.message ? response.message : 'Password changed successfully'}`);
-      
-      // Success - close dialog and reset form
+      setIsLoading(true);
+      const response = await authApi.changePassword(passwordData.currentPassword, passwordData.newPassword);
+      addMessage(response.message || 'Password changed successfully');
       setIsPasswordDialogOpen(false);
-      resetPasswordForm();
-      
-    } catch (error) {
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch (error: any) {
       console.error('Password change failed:', error);
-      // TODO: Show error message
-      addMessage('Password change failed. Please try again.', 'error');
+      addMessage(error.message || 'Password change failed', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -144,242 +164,207 @@ export default function AdminProfile() {
   }
 
   return (
-    <div className="space-y-6 mx-auto max-w-4xl p-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white shadow-lg">
-        <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl font-bold">
-            {user.username.charAt(0).toUpperCase()}
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">{user.username}</h1>
-            <p className="text-blue-100 mt-1">Administrator Account</p>
-            <div className="flex items-center gap-2 mt-2">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-medium">{user.role}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-bg-premium p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text ">
+            Profile Settings
+          </h1>
+          <p className="text-fg-premium-muted mt-2">
+            Manage your account settings and preferences
+          </p>
+        </motion.div>
 
-      {/* Profile Information */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h2 className="text-xl font-semibold text-gray-900">Profile Information</h2>
-        </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {profileFields.map((field) => (
-              <div key={field.label} className="flex items-start gap-4">
-                <div className={`${field.bg} ${field.color} p-3 rounded-lg`}>
-                  <field.icon className="w-5 h-5" />
+        <div className="grid gap-6">
+          {/* Profile Information Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Card className="border-white/10 bg-white/5 glass-panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-fg-premium">
+                  <User className="w-5 h-5 text-accent-primary" />
+                  Personal Information
+                </CardTitle>
+                <CardDescription className="text-fg-premium-muted">
+                  Update your personal details and contact information
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center gap-6">
+                  <div className="relative group">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+                      {user?.username?.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                      <Camera className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-semibold text-fg-premium">{user?.username}</h3>
+                    <p className="text-fg-premium-muted">{user?.role}</p>
+                    <Badge className="bg-accent-primary/20 text-accent-primary border-accent-primary/20">
+                      Active Account
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-500">{field.label}</p>
-                  <p className="mt-1 text-gray-900 font-medium break-all">{field.value}</p>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="text-fg-premium">Username</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 h-4 w-4 text-fg-premium-muted" />
+                      <Input 
+                        defaultValue={user?.username} 
+                        className="pl-9 bg-white/5 border-white/10 text-fg-premium" 
+                        disabled 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-fg-premium">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-fg-premium-muted" />
+                      <Input 
+                        defaultValue="admin@school.com" 
+                        className="pl-9 bg-white/5 border-white/10 text-fg-premium" 
+                        disabled 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-fg-premium">Role</Label>
+                    <div className="relative">
+                      <Shield className="absolute left-3 top-3 h-4 w-4 text-fg-premium-muted" />
+                      <Input 
+                        defaultValue={user?.role} 
+                        className="pl-9 bg-white/5 border-white/10 text-fg-premium" 
+                        disabled 
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-fg-premium">Phone</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-fg-premium-muted" />
+                      <Input 
+                        placeholder="+1 (555) 000-0000" 
+                        className="pl-9 bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20" 
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+
+                <div className="flex justify-end">
+                  <Button className="bg-accent-primary hover:bg-accent-primary/90 text-white">
+                    Save Changes
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Security Settings Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card className="border-white/10 bg-white/5 glass-panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-fg-premium">
+                  <Lock className="w-5 h-5 text-accent-primary" />
+                  Security Settings
+                </CardTitle>
+                <CardDescription className="text-fg-premium-muted">
+                  Manage your password and security preferences
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-white/5">
+                  <div className="space-y-1">
+                    <h4 className="font-medium text-fg-premium">Password</h4>
+                    <p className="text-sm text-fg-premium-muted">
+                      Last changed 30 days ago
+                    </p>
+                  </div>
+                  <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white">
+                        Change Password
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-bg-premium border-white/10 text-fg-premium sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-fg-premium">Change Password</DialogTitle>
+                        <DialogDescription className="text-fg-premium-muted">
+                          Make sure your new password is strong and secure.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handlePasswordChange} className="space-y-4 mt-4">
+                        <div className="space-y-2">
+                          <Label className="text-fg-premium">Current Password</Label>
+                          <Input
+                            type="password"
+                            value={passwordData.currentPassword}
+                            onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                            className="bg-white/5 border-white/10 text-fg-premium"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-fg-premium">New Password</Label>
+                          <Input
+                            type="password"
+                            value={passwordData.newPassword}
+                            onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                            className="bg-white/5 border-white/10 text-fg-premium"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-fg-premium">Confirm New Password</Label>
+                          <Input
+                            type="password"
+                            value={passwordData.confirmPassword}
+                            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                            className="bg-white/5 border-white/10 text-fg-premium"
+                          />
+                        </div>
+                        <DialogFooter>
+                          <Button 
+                            type="submit" 
+                            disabled={isLoading}
+                            className="bg-accent-primary hover:bg-accent-primary/90 text-white"
+                          >
+                            {isLoading ? "Updating..." : "Update Password"}
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-white/5">
+                  <div className="space-y-1">
+                    <h4 className="font-medium text-fg-premium">Two-Factor Authentication</h4>
+                    <p className="text-sm text-fg-premium-muted">
+                      Add an extra layer of security to your account
+                    </p>
+                  </div>
+                  <Button variant="outline" className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white">
+                    Enable 2FA
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
-
-      {/* Account Details */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h2 className="text-xl font-semibold text-gray-900">Account Details</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="flex items-start gap-4">
-            <div className="bg-blue-50 text-blue-600 p-3 rounded-lg">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-500">Account Created</p>
-              <p className="mt-1 text-gray-900 font-medium">{formatDate(user.createdAt)}</p>
-            </div>
-          </div>
-          {user.updatedAt && (
-            <div className="flex items-start gap-4">
-              <div className="bg-green-50 text-green-600 p-3 rounded-lg">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">Last Updated</p>
-                <p className="mt-1 text-gray-900 font-medium">{formatDate(user.updatedAt)}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-4">
-        <button 
-          onClick={handleEditOpen}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-        >
-          Edit Profile
-        </button>
-        <button 
-          onClick={() => setIsPasswordDialogOpen(true)}
-          className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-        >
-          Change Password
-        </button>
-        <button 
-          onClick={async () => {
-            try {
-              // Wait for logout to complete (cookies cleared)
-              await logout();
-              console.log('Logout complete, redirecting...');
-            } catch (error) {
-              console.error('Logout error:', error);
-            } finally {
-              // Always redirect regardless
-              window.location.href = '/';
-            }
-          }}
-          className="px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
-        >
-          Logout
-        </button>
-      </div>
-
-      {/* Edit Profile Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[500px] bg-white">
-          <DialogHeader>
-            <DialogTitle className="text-gray-900">Edit Profile</DialogTitle>
-            <DialogDescription className="text-gray-600">
-              Update your profile information. Click save when you&apos;re done.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleEditSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="text-gray-700">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={editFormData.email}
-                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                  placeholder="Enter your email"
-                  className="bg-white border-gray-300 text-gray-900"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="username" className="text-gray-700">Username</Label>
-                <Input
-                  id="username"
-                  value={user?.username || ''}
-                  disabled
-                  className="bg-gray-100 cursor-not-allowed border-gray-300 text-gray-600"
-                />
-                <p className="text-xs text-gray-500">Username cannot be changed</p>
-              </div>
-            </div>
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={() => setIsEditDialogOpen(false)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                Save Changes
-              </button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Change Password Dialog */}
-      <Dialog open={isPasswordDialogOpen} onOpenChange={(open) => {
-        setIsPasswordDialogOpen(open);
-        if (!open) resetPasswordForm();
-      }}>
-        <DialogContent className="sm:max-w-[500px] bg-white">
-          <DialogHeader>
-            <DialogTitle className="text-gray-900">Change Password</DialogTitle>
-            <DialogDescription className="text-gray-600">
-              Enter your current password and choose a new password.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handlePasswordFormSubmit(handlePasswordSubmit)}>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="currentPassword" className="text-gray-700">Current Password</Label>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  placeholder="Enter current password"
-                  className="bg-white border-gray-300 text-gray-900"
-                  {...register('currentPassword')}
-                />
-                {errors.currentPassword && (
-                  <p className="text-sm text-red-600">{errors.currentPassword.message}</p>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="newPassword" className="text-gray-700">New Password</Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  placeholder="Enter new password"
-                  className="bg-white border-gray-300 text-gray-900"
-                  {...register('newPassword')}
-                />
-                {errors.newPassword && (
-                  <p className="text-sm text-red-600">{errors.newPassword.message}</p>
-                )}
-                <p className="text-xs text-gray-500">
-                  Password must be at least 8 characters and contain uppercase, lowercase, number, and special character (@$!%*?&)
-                </p>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700">Confirm New Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm new password"
-                  className="bg-white border-gray-300 text-gray-900"
-                  {...register('confirmPassword')}
-                />
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
-                )}
-              </div>
-              {newPassword && confirmPassword && newPassword !== confirmPassword && !errors.confirmPassword && (
-                <p className="text-sm text-orange-600">Passwords do not match</p>
-              )}
-            </div>
-            <DialogFooter>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsPasswordDialogOpen(false);
-                  resetPasswordForm();
-                }}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Changing...' : 'Change Password'}
-              </button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

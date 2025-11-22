@@ -114,15 +114,15 @@ export default function AdminSettings() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-6">
+    <div className="min-h-screen bg-bg-premium p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Settings className="w-8 h-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-fg-premium flex items-center gap-3">
+            <Settings className="w-8 h-8 text-accent-primary" />
             System Settings
           </h1>
-          <p className="text-gray-600 text-lg mt-2">
+          <p className="text-fg-premium-muted text-lg mt-2">
             Configure your school management system preferences and settings
           </p>
         </div>
@@ -140,22 +140,22 @@ export default function AdminSettings() {
                     href={category.href}
                     className="block group"
                   >
-                    <Card className="h-full border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-blue-300 hover:-translate-y-1">
+                    <Card className="h-full border-white/10 bg-white/5 transition-all duration-300 hover:shadow-lg hover:border-accent-primary/50 hover:-translate-y-1 glass-panel">
                       <CardHeader>
                         <div className="flex items-start justify-between mb-3">
-                          <div className={`${category.iconBg} p-3 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
-                            <Icon className={`w-6 h-6 ${category.color}`} />
+                          <div className={`p-3 rounded-xl bg-white/10 group-hover:scale-110 transition-transform duration-300`}>
+                            <Icon className={`w-6 h-6 text-accent-primary`} />
                           </div>
-                          <div className="flex items-center gap-1 text-green-600">
+                          <div className="flex items-center gap-1 text-green-400">
                             <CheckCircle2 className="w-4 h-4" />
                             <span className="text-xs font-medium">Available</span>
                           </div>
                         </div>
-                        <CardTitle className="text-lg flex items-center justify-between">
+                        <CardTitle className="text-lg flex items-center justify-between text-fg-premium">
                           {category.title}
-                          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                          <ChevronRight className="w-5 h-5 text-fg-premium-muted group-hover:text-accent-primary group-hover:translate-x-1 transition-all" />
                         </CardTitle>
-                        <CardDescription className="text-sm">
+                        <CardDescription className="text-sm text-fg-premium-muted">
                           {category.description}
                         </CardDescription>
                       </CardHeader>
@@ -163,20 +163,20 @@ export default function AdminSettings() {
                   </Link>
                 ) : (
                   <div className="cursor-not-allowed opacity-75">
-                    <Card className="h-full border-gray-200">
+                    <Card className="h-full border-white/10 bg-white/5 glass-panel">
                       <CardHeader>
                         <div className="flex items-start justify-between mb-3">
-                          <div className={`${category.iconBg} p-3 rounded-xl`}>
-                            <Icon className={`w-6 h-6 ${category.color}`} />
+                          <div className={`p-3 rounded-xl bg-white/5`}>
+                            <Icon className={`w-6 h-6 text-fg-premium-muted`} />
                           </div>
-                          <Badge variant="outline" className="text-gray-600 text-xs">
+                          <Badge variant="outline" className="text-fg-premium-muted border-white/10 text-xs">
                             Coming Soon
                           </Badge>
                         </div>
-                        <CardTitle className="text-lg">
+                        <CardTitle className="text-lg text-fg-premium-muted">
                           {category.title}
                         </CardTitle>
-                        <CardDescription className="text-sm">
+                        <CardDescription className="text-sm text-fg-premium-muted">
                           {category.description}
                         </CardDescription>
                       </CardHeader>
@@ -189,23 +189,23 @@ export default function AdminSettings() {
         </div>
 
         {/* Help Section */}
-        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <Card className="border-accent-primary/30 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 glass-panel">
           <CardContent className="pt-6">
             <div className="flex items-start gap-4">
-              <div className="bg-blue-600 p-3 rounded-lg">
+              <div className="bg-accent-primary p-3 rounded-lg">
                 <Settings className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-2">Need Help with Settings?</h3>
-                <p className="text-sm text-gray-700 mb-4">
+                <h3 className="font-semibold text-fg-premium mb-2">Need Help with Settings?</h3>
+                <p className="text-sm text-fg-premium-muted mb-4">
                   Each settings page includes detailed instructions and tooltips. If you need additional assistance,
                   please consult our documentation or contact support.
                 </p>
                 <div className="flex gap-3">
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 cursor-pointer">
+                  <Badge className="bg-accent-primary/20 text-accent-primary hover:bg-accent-primary/30 cursor-pointer border-accent-primary/20">
                     📚 View Documentation
                   </Badge>
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 cursor-pointer">
+                  <Badge className="bg-accent-primary/20 text-accent-primary hover:bg-accent-primary/30 cursor-pointer border-accent-primary/20">
                     💬 Contact Support
                   </Badge>
                 </div>

@@ -184,7 +184,7 @@ export default function ClassManagementPage() {
   }), [classes])
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 space-y-8">
+    <div className="min-h-screen bg-bg-premium p-6 space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -193,10 +193,10 @@ export default function ClassManagementPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text ">
             Class Management
           </h1>
-          <p className="text-slate-600 mt-2">
+          <p className="text-fg-premium-muted mt-2">
             Manage classes, sections, and academic years with ease
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function ClassManagementPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Button onClick={openCreateDialog} size="lg" className="shadow-lg">
+          <Button onClick={openCreateDialog} size="lg" className="shadow-lg shadow-[var(--accent-primary)]/40 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] border-2 border-[var(--accent-primary)]/50 text-white hover:opacity-90 hover:shadow-lg hover:shadow-[var(--accent-primary)]/60 transition-all">
             <Plus className="mr-2 h-5 w-5" /> Create Class
           </Button>
         </motion.div>
@@ -231,28 +231,28 @@ export default function ClassManagementPage() {
             value: stats.total,
             icon: GraduationCap,
             color: 'from-blue-500 to-blue-600',
-            bgColor: 'bg-blue-50'
+            bgColor: 'bg-blue-500/10'
           },
           {
             title: 'Active Classes',
             value: stats.active,
             icon: CheckCircle2,
             color: 'from-green-500 to-green-600',
-            bgColor: 'bg-green-50'
+            bgColor: 'bg-green-500/10'
           },
           {
             title: 'Inactive Classes',
             value: stats.inactive,
             icon: XCircle,
             color: 'from-orange-500 to-orange-600',
-            bgColor: 'bg-orange-50'
+            bgColor: 'bg-orange-500/10'
           },
           {
             title: 'Total Capacity',
             value: stats.totalCapacity,
             icon: Users,
             color: 'from-purple-500 to-purple-600',
-            bgColor: 'bg-purple-50'
+            bgColor: 'bg-purple-500/10'
           }
         ].map((stat) => (
           <motion.div
@@ -270,19 +270,19 @@ export default function ClassManagementPage() {
             }}
             whileHover={{ scale: 1.02 }}
           >
-            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="overflow-hidden border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 glass-panel">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600">
+                    <p className="text-sm font-medium text-[var(--fg-premium-muted)]">
                       {stat.title}
                     </p>
-                    <p className="text-3xl font-bold mt-2 bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                    <p className="text-3xl font-bold mt-2 text-[var(--fg-premium)]">
                       {stat.value}
                     </p>
                   </div>
                   <div className={`p-4 rounded-xl ${stat.bgColor}`}>
-                    <stat.icon className={`h-8 w-8 bg-gradient-to-br ${stat.color} bg-clip-text text-transparent`} strokeWidth={2} />
+                    <stat.icon className={`h-8 w-8 bg-gradient-to-br ${stat.color} bg-clip-text `} strokeWidth={2} />
                   </div>
                 </div>
               </CardContent>
@@ -297,34 +297,34 @@ export default function ClassManagementPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-white/10 glass-panel">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-blue-600" />
+            <CardTitle className="flex items-center gap-2 text-[var(--fg-premium)]">
+              <Filter className="h-5 w-5 text-[var(--accent-primary)]" />
               Search & Filters
             </CardTitle>
-            <CardDescription>Find and filter classes quickly</CardDescription>
+            <CardDescription className="text-[var(--fg-premium-muted)]">Find and filter classes quickly</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-fg-premium-muted" />
                 <Input
                   placeholder="Search by class name or section..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 border-slate-200 focus:border-blue-500 transition-colors"
+                  className="pl-10 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] transition-colors placeholder:text-white/20"
                 />
               </div>
 
               {/* Filters */}
               <div className="flex gap-4 flex-wrap">
                 <Select value={filterGrade} onValueChange={setFilterGrade}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-[150px] border-white/10 bg-white/5 text-[var(--fg-premium)]">
                     <SelectValue placeholder="Grade" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-[var(--fg-premium)]">
                     <SelectItem value="all">All Grades</SelectItem>
                     {uniqueGrades.map((grade) => (
                       <SelectItem key={grade} value={grade.toString()}>
@@ -335,10 +335,10 @@ export default function ClassManagementPage() {
                 </Select>
 
                 <Select value={filterYear} onValueChange={setFilterYear}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-[150px] border-white/10 bg-white/5 text-[var(--fg-premium)]">
                     <SelectValue placeholder="Academic Year" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-[var(--fg-premium)]">
                     <SelectItem value="all">All Years</SelectItem>
                     {uniqueYears.map((year) => (
                       <SelectItem key={year} value={year}>
@@ -349,10 +349,10 @@ export default function ClassManagementPage() {
                 </Select>
 
                 <Select value={filterActive} onValueChange={setFilterActive}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-[150px] border-white/10 bg-white/5 text-[var(--fg-premium)]">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-[var(--fg-premium)]">
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="active">Active Only</SelectItem>
                     <SelectItem value="inactive">Inactive Only</SelectItem>
@@ -367,23 +367,23 @@ export default function ClassManagementPage() {
                     setFilterYear('all')
                     setFilterActive('all')
                   }}
-                  className="gap-2"
+                  className="gap-2 border-white/10 bg-white/5 text-[var(--fg-premium)] hover:bg-white/10 hover:text-white"
                 >
                   <RefreshCw className="h-4 w-4" /> Reset
                 </Button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-slate-600">
+            <div className="flex items-center justify-between text-sm text-[var(--fg-premium-muted)]">
               <span>
-                Showing <span className="font-semibold text-blue-600">{filteredClasses.length}</span> of{' '}
-                <span className="font-semibold">{classes.length}</span> classes
+                Showing <span className="font-semibold text-[var(--accent-primary)]">{filteredClasses.length}</span> of{' '}
+                <span className="font-semibold text-[var(--fg-premium)]">{classes.length}</span> classes
               </span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 border-[var(--accent-primary)]/30 bg-white/5 text-[var(--fg-premium)] hover:bg-[var(--accent-primary)]/10 hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/50 transition-all shadow-sm hover:shadow-md">
                   <Download className="h-4 w-4" /> Export
                 </Button>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 border-[var(--accent-primary)]/30 bg-white/5 text-[var(--fg-premium)] hover:bg-[var(--accent-primary)]/10 hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/50 transition-all shadow-sm hover:shadow-md">
                   <Upload className="h-4 w-4" /> Import
                 </Button>
               </div>
@@ -398,19 +398,19 @@ export default function ClassManagementPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card className="shadow-lg border-0 overflow-hidden">
+        <Card className="shadow-lg border-white/10 overflow-hidden glass-panel">
           <CardContent className="p-0">
             {loading ? (
               <div className="p-8 space-y-4">
                 {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-16 w-full" />
+                  <Skeleton key={i} className="h-16 w-full bg-white/5" />
                 ))}
               </div>
             ) : filteredClasses.length === 0 ? (
               <div className="p-16 text-center">
-                <GraduationCap className="mx-auto h-16 w-16 text-slate-300 mb-4" />
-                <p className="text-slate-500 text-lg font-medium">No classes found</p>
-                <p className="text-slate-400 text-sm mt-2">
+                <GraduationCap className="mx-auto h-16 w-16 text-white/20 mb-4" />
+                <p className="text-[var(--fg-premium)] text-lg font-medium">No classes found</p>
+                <p className="text-[var(--fg-premium-muted)] text-sm mt-2">
                   {searchQuery || filterYear !== 'all' || filterActive !== 'all' || filterGrade !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Create your first class to get started'}
@@ -420,14 +420,14 @@ export default function ClassManagementPage() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50 hover:bg-slate-50">
-                      <TableHead className="font-semibold">Class Name</TableHead>
-                      <TableHead className="font-semibold">Grade</TableHead>
-                      <TableHead className="font-semibold">Section</TableHead>
-                      <TableHead className="font-semibold">Capacity</TableHead>
-                      <TableHead className="font-semibold">Academic Year</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="text-right font-semibold w-[120px]">Actions</TableHead>
+                    <TableRow className="bg-white/5 hover:bg-white/10 border-white/10">
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Class Name</TableHead>
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Grade</TableHead>
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Section</TableHead>
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Capacity</TableHead>
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Academic Year</TableHead>
+                      <TableHead className="font-semibold text-[var(--fg-premium)]">Status</TableHead>
+                      <TableHead className="text-right font-semibold w-[120px] text-[var(--fg-premium)]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -440,39 +440,39 @@ export default function ClassManagementPage() {
                           exit={{ opacity: 0, x: 20 }}
                           transition={{ delay: index * 0.05 }}
                           onClick={() => router.push(`/admin/classes/${classItem.id}`)}
-                          className="group hover:bg-blue-50 transition-colors border-b cursor-pointer"
+                          className="group hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer"
                         >
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium text-[var(--fg-premium)]">
                             <div className="flex items-center gap-3">
-                              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md">
+                              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center text-white font-bold shadow-md">
                                 {classItem.name.charAt(0)}
                               </div>
-                              <span className="group-hover:text-blue-600 transition-colors font-medium">
+                              <span className="group-hover:text-[var(--accent-primary)] transition-colors font-medium">
                                 {classItem.name}
                               </span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline" className="font-medium">
+                            <Badge variant="outline" className="font-medium border-white/20 text-[var(--fg-premium)]">
                               Grade {classItem.grade}
                             </Badge>
                           </TableCell>
                           <TableCell>
                             {classItem.section ? (
-                              <Badge variant="secondary" className="font-medium">{classItem.section}</Badge>
+                              <Badge variant="secondary" className="font-medium bg-white/10 text-[var(--fg-premium)] hover:bg-white/20">{classItem.section}</Badge>
                             ) : (
-                              <span className="text-slate-400">—</span>
+                              <span className="text-[var(--fg-premium-muted)]">—</span>
                             )}
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-slate-400" />
+                            <div className="flex items-center gap-2 text-[var(--fg-premium)]">
+                              <Users className="h-4 w-4 text-[var(--fg-premium-muted)]" />
                               <span className="font-medium">{classItem.capacity}</span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4 text-slate-400" />
+                            <div className="flex items-center gap-2 text-[var(--fg-premium)]">
+                              <Calendar className="h-4 w-4 text-[var(--fg-premium-muted)]" />
                               <span>{classItem.academicYear}</span>
                             </div>
                           </TableCell>
@@ -483,7 +483,7 @@ export default function ClassManagementPage() {
                             >
                               <Badge
                                 variant={classItem.isActive ? 'default' : 'secondary'}
-                                className={classItem.isActive ? 'bg-green-500 hover:bg-green-600 shadow-sm' : ''}
+                                className={classItem.isActive ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/20' : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20'}
                               >
                                 {classItem.isActive ? (
                                   <><CheckCircle2 className="h-3 w-3 mr-1" /> Active</>
@@ -499,7 +499,7 @@ export default function ClassManagementPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openEditDialog(classItem)}
-                                className="hover:bg-blue-100 hover:text-blue-700"
+                                className="hover:bg-[var(--accent-primary)]/10 hover:text-[var(--accent-primary)] text-[var(--fg-premium-muted)] hover:border-[var(--accent-primary)]/30 border border-transparent transition-all"
                               >
                                 <Pencil className="h-4 w-4 mr-1" /> Edit
                               </Button>
@@ -507,7 +507,7 @@ export default function ClassManagementPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openDeleteDialog(classItem)}
-                                className="hover:bg-red-50 hover:text-red-600"
+                                className="hover:bg-red-500/10 hover:text-red-400 text-[var(--fg-premium-muted)] hover:border-red-500/30 border border-transparent transition-all"
                               >
                                 <Trash2 className="h-4 w-4 mr-1" /> Delete
                               </Button>
@@ -526,21 +526,21 @@ export default function ClassManagementPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white">
-          <DialogHeader className="space-y-3 pb-6 border-b border-slate-200">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-[var(--bg-premium)] border-white/10 text-[var(--fg-premium)]">
+          <DialogHeader className="space-y-3 pb-6 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedClass ? 'bg-blue-100' : 'bg-green-100'}`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedClass ? 'bg-blue-500/20' : 'bg-green-500/20'}`}>
                 {selectedClass ? (
-                  <Pencil className="h-6 w-6 text-blue-600" />
+                  <Pencil className="h-6 w-6 text-blue-400" />
                 ) : (
-                  <Plus className="h-6 w-6 text-green-600" />
+                  <Plus className="h-6 w-6 text-green-400" />
                 )}
               </div>
               <div>
-                <DialogTitle className="text-2xl font-bold">
+                <DialogTitle className="text-2xl font-bold text-[var(--fg-premium)]">
                   {selectedClass ? 'Edit Class' : 'Create New Class'}
                 </DialogTitle>
-                <DialogDescription className="text-base mt-1">
+                <DialogDescription className="text-base mt-1 text-[var(--fg-premium-muted)]">
                   {selectedClass
                     ? 'Update class information below'
                     : 'Add a new class to your school management system'}
@@ -552,8 +552,8 @@ export default function ClassManagementPage() {
           <form onSubmit={handleSubmit} className="space-y-6 pt-6">
             <div className="grid grid-cols-2 gap-6">
               <div className="col-span-2">
-                <Label htmlFor="name" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                  Class Name <span className="text-red-500">*</span>
+                <Label htmlFor="name" className="text-sm font-semibold text-[var(--fg-premium)] flex items-center gap-1">
+                  Class Name <span className="text-red-400">*</span>
                 </Label>
                 <Input
                   id="name"
@@ -563,13 +563,13 @@ export default function ClassManagementPage() {
                   }
                   placeholder="e.g., Grade 5 - Section A"
                   required
-                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
                 />
               </div>
 
               <div>
-                <Label htmlFor="grade" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                  Grade <span className="text-red-500">*</span>
+                <Label htmlFor="grade" className="text-sm font-semibold text-[var(--fg-premium)] flex items-center gap-1">
+                  Grade <span className="text-red-400">*</span>
                 </Label>
                 <Select
                   value={formData.grade.toString()}
@@ -577,10 +577,10 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, grade: parseInt(value) })
                   }
                 >
-                  <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                  <SelectTrigger className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-gray-900 border-white/10 text-[var(--fg-premium)]">
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((grade) => (
                       <SelectItem key={grade} value={grade.toString()}>
                         Grade {grade}
@@ -591,7 +591,7 @@ export default function ClassManagementPage() {
               </div>
 
               <div>
-                <Label htmlFor="section" className="text-sm font-semibold text-slate-700">Section</Label>
+                <Label htmlFor="section" className="text-sm font-semibold text-[var(--fg-premium)]">Section</Label>
                 <Input
                   id="section"
                   value={formData.section}
@@ -599,13 +599,13 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, section: e.target.value })
                   }
                   placeholder="e.g., A, B, C"
-                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
                 />
               </div>
 
               <div>
-                <Label htmlFor="capacity" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                  Capacity <span className="text-red-500">*</span>
+                <Label htmlFor="capacity" className="text-sm font-semibold text-[var(--fg-premium)] flex items-center gap-1">
+                  Capacity <span className="text-red-400">*</span>
                 </Label>
                 <Input
                   id="capacity"
@@ -616,13 +616,13 @@ export default function ClassManagementPage() {
                   }
                   min={1}
                   required
-                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
                 />
               </div>
 
               <div>
-                <Label htmlFor="academicYear" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                  Academic Year <span className="text-red-500">*</span>
+                <Label htmlFor="academicYear" className="text-sm font-semibold text-[var(--fg-premium)] flex items-center gap-1">
+                  Academic Year <span className="text-red-400">*</span>
                 </Label>
                 <Input
                   id="academicYear"
@@ -632,13 +632,13 @@ export default function ClassManagementPage() {
                   }
                   placeholder="e.g., 2024-2025"
                   required
-                  className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
                 />
               </div>
 
               <div>
-                <Label htmlFor="isActive" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                  Status <span className="text-red-500">*</span>
+                <Label htmlFor="isActive" className="text-sm font-semibold text-[var(--fg-premium)] flex items-center gap-1">
+                  Status <span className="text-red-400">*</span>
                 </Label>
                 <Select
                   value={formData.isActive ? 'true' : 'false'}
@@ -646,18 +646,18 @@ export default function ClassManagementPage() {
                     setFormData({ ...formData, isActive: value === 'true' })
                   }
                 >
-                  <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                  <SelectTrigger className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-gray-900 border-white/10 text-[var(--fg-premium)]">
                     <SelectItem value="true">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-green-600" /> Active
+                        <CheckCircle2 className="h-4 w-4 text-green-400" /> Active
                       </div>
                     </SelectItem>
                     <SelectItem value="false">
                       <div className="flex items-center gap-2">
-                        <XCircle className="h-4 w-4 text-slate-400" /> Inactive
+                        <XCircle className="h-4 w-4 text-red-400" /> Inactive
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -666,7 +666,7 @@ export default function ClassManagementPage() {
             </div>
 
             <div>
-              <Label htmlFor="description" className="text-sm font-semibold text-slate-700">Description</Label>
+              <Label htmlFor="description" className="text-sm font-semibold text-[var(--fg-premium)]">Description</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -675,20 +675,20 @@ export default function ClassManagementPage() {
                 }
                 placeholder="Optional class description..."
                 rows={3}
-                className="mt-2 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                className="mt-2 border-white/10 bg-white/5 text-[var(--fg-premium)] focus:border-[var(--accent-primary)] focus:ring-[var(--accent-primary)]/20"
               />
             </div>
 
-            <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-slate-200">
+            <DialogFooter className="bg-white/5 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-white/10">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
-                className="hover:bg-white"
+                className="hover:bg-white/10 border-white/10 text-[var(--fg-premium)]"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="gap-2 bg-blue-600 hover:bg-blue-700">
+              <Button type="submit" className="gap-2 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] hover:opacity-90 text-white border-2 border-[var(--accent-primary)]/50 shadow-lg shadow-[var(--accent-primary)]/40 hover:shadow-lg hover:shadow-[var(--accent-primary)]/60 transition-all">
                 {selectedClass ? (
                   <><CheckCircle2 className="h-4 w-4" /> Update Class</>
                 ) : (
@@ -702,14 +702,14 @@ export default function ClassManagementPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[var(--bg-premium)] border-white/10 text-[var(--fg-premium)]">
           <DialogHeader>
-            <DialogTitle className="text-red-600 flex items-center gap-2 text-xl">
+            <DialogTitle className="text-red-400 flex items-center gap-2 text-xl">
               <Trash2 className="h-6 w-6" /> Confirm Deletion
             </DialogTitle>
-            <DialogDescription className="text-base pt-2">
+            <DialogDescription className="text-base pt-2 text-[var(--fg-premium-muted)]">
               Are you sure you want to delete{' '}
-              <span className="font-semibold text-slate-900">
+              <span className="font-semibold text-[var(--fg-premium)]">
                 {selectedClass?.name}
               </span>
               ? This action cannot be undone and will remove all associated data.
@@ -719,10 +719,11 @@ export default function ClassManagementPage() {
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
+              className="border-white/10 hover:bg-white/10 text-[var(--fg-premium)]"
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete} className="gap-2">
+            <Button variant="destructive" onClick={handleDelete} className="gap-2 bg-red-500 hover:bg-red-600 border-2 border-red-500/50 shadow-lg shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/40 transition-all">
               <Trash2 className="h-4 w-4" /> Delete Class
             </Button>
           </DialogFooter>

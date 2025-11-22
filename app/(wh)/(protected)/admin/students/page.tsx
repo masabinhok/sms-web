@@ -28,6 +28,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { GraduationCap } from 'lucide-react'
 
 export default function StudentsPage() {
   const router = useRouter()
@@ -137,181 +142,136 @@ export default function StudentsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-fg-premium tracking-tight">Students</h1>
-          <p className="text-fg-premium-muted mt-1">Manage student profiles and information</p>
-        </div>
-        <Button
-          onClick={() => router.push('/admin/add-student')}
-          className="flex items-center gap-2 bg-accent-primary hover:bg-accent-primary/90 text-white"
+    <div className="min-h-screen bg-bg-premium p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between"
         >
-          <Plus className="w-4 h-4" />
-          Add Student
-        </Button>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="glass-panel p-4 rounded-xl border border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-accent-primary/10 rounded-lg border border-accent-primary/20">
-              <Users className="w-6 h-6 text-accent-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-fg-premium-muted">Total Students</p>
-              <p className="text-2xl font-bold text-fg-premium">{total}</p>
-            </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text  flex items-center gap-3">
+              <GraduationCap className="w-10 h-10 text-accent-primary" />
+              Students Directory
+            </h1>
+            <p className="text-fg-premium-muted mt-2 text-lg">
+              Manage and monitor student records and performance
+            </p>
           </div>
-        </div>
-      </div>
+          <Button 
+            onClick={() => router.push('/admin/add-student')}
+            className="bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0 shadow-lg shadow-accent-primary/20"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add New Student
+          </Button>
+        </motion.div>
 
-      {/* Filters */}
-      <div className="glass-panel p-4 rounded-xl border border-white/5">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-premium-muted w-4 h-4" />
-              <Input
-                placeholder="Search by name, email, roll number..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
-              />
-            </div>
-          </div>
-          <Input
-            placeholder="Filter by class..."
-            value={className}
-            onChange={(e) => setClassName(e.target.value)}
-            className="bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
-          />
-          <Input
-            placeholder="Filter by section..."
-            value={section}
-            onChange={(e) => setSection(e.target.value)}
-            className="bg-bg-premium border-white/10 text-fg-premium placeholder:text-fg-premium-muted/50 focus:border-accent-primary/50"
-          />
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="glass-panel rounded-xl border border-white/5 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-white/5 border-b border-white/5">
-              <tr>
-                <th 
-                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
-                  onClick={() => handleSort('fullName')}
-                >
-                  <div className="flex items-center gap-2">
-                    Name
-                    <ArrowUpDown className="w-4 h-4" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Card className="border-white/10 bg-white/5 glass-panel">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-fg-premium">Student List</CardTitle>
+                <div className="flex gap-2">
+                  <div className="relative w-64">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-fg-premium-muted" />
+                    <Input
+                      placeholder="Search students..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="pl-8 bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 focus:border-accent-primary"
+                    />
                   </div>
-                </th>
-                <th 
-                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
-                  onClick={() => handleSort('class')}
-                >
-                  <div className="flex items-center gap-2">
-                    Class
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th 
-                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
-                  onClick={() => handleSort('section')}
-                >
-                  <div className="flex items-center gap-2">
-                    Section
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th 
-                  className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider cursor-pointer hover:bg-white/5 transition-colors"
-                  onClick={() => handleSort('rollNumber')}
-                >
-                  <div className="flex items-center gap-2">
-                    Roll No
-                    <ArrowUpDown className="w-4 h-4" />
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
-                  Guardian
-                </th>
-                <th className="px-6 py-4 text-right text-xs font-medium text-fg-premium-muted uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
+                  <Button variant="outline" className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filter
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-fg-premium-muted">
-                    Loading students...
-                  </td>
-                </tr>
-              ) : students.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-fg-premium-muted">
-                    No students found
-                  </td>
-                </tr>
+                <div className="text-center py-8 text-fg-premium-muted">Loading students...</div>
               ) : (
-                students.map((student) => (
-                  <tr 
-                    key={student.id} 
-                    className="hover:bg-white/5 cursor-pointer transition-colors group"
-                    onClick={() => router.push(`/admin/students/${student.id}`)}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-fg-premium group-hover:text-white transition-colors">{student.fullName}</div>
-                      <div className="text-sm text-fg-premium-muted">{formatDate(student.dob)}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium">
-                      {student.classId}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium">
-                      {student.rollNumber}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium-muted">
-                      {student.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-fg-premium">{student.guardianName}</div>
-                      <div className="text-sm text-fg-premium-muted">{student.guardianContact}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={() => router.push(`/admin/students/${student.id}/edit`)}
-                          className="text-emerald-400 hover:text-emerald-300 p-2 hover:bg-emerald-500/10 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(student)}
-                          className="text-red-400 hover:text-red-300 p-2 hover:bg-red-500/10 rounded-lg transition-colors"
-                          title="Delete"
-                          disabled={deleting === student.id}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                <div className="rounded-md border border-white/10 overflow-hidden">
+                  <Table>
+                    <TableHeader className="bg-white/5">
+                      <TableRow className="border-white/10 hover:bg-white/10">
+                        <TableHead className="text-fg-premium font-semibold">Name</TableHead>
+                        <TableHead className="text-fg-premium font-semibold">Class</TableHead>
+                        <TableHead className="text-fg-premium font-semibold">Section</TableHead>
+                        <TableHead className="text-fg-premium font-semibold">Roll No</TableHead>
+                        <TableHead className="text-fg-premium font-semibold">Email</TableHead>
+                        <TableHead className="text-fg-premium font-semibold">Guardian</TableHead>
+                        <TableHead className="text-right text-fg-premium font-semibold">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {students.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-8 text-fg-premium-muted">
+                            No students found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        students.map((student, index) => (
+                          <motion.tr
+                            key={student.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            className="group hover:bg-white/5 transition-colors border-b border-white/5"
+                            onClick={() => router.push(`/admin/students/${student.id}`)}
+                          >
+                            <TableCell className="font-medium text-fg-premium">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-xs font-bold">
+                                  {student.fullName.split(' ').map((n) => n[0]).join('')}
+                                </div>
+                                {student.fullName}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-fg-premium-muted">{student.classId}</TableCell>
+                            <TableCell className="text-fg-premium-muted">{student.rollNumber}</TableCell>
+                            <TableCell className="text-fg-premium-muted">{student.email}</TableCell>
+                            <TableCell className="text-fg-premium-muted">
+                              <div className="text-sm text-fg-premium">{student.guardianName}</div>
+                              <div className="text-sm text-fg-premium-muted">{student.guardianContact}</div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                                <Button
+                                  onClick={() => router.push(`/admin/students/${student.id}/edit`)}
+                                  variant="ghost" size="icon" className="text-fg-premium-muted hover:text-accent-primary hover:bg-accent-primary/10"
+                                  title="Edit"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  onClick={() => handleDelete(student)}
+                                  variant="ghost" size="icon" className="text-fg-premium-muted hover:text-red-400 hover:bg-red-500/10"
+                                  title="Delete"
+                                  disabled={deleting === student.id}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </motion.tr>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               )}
-            </tbody>
-          </table>
-        </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Pagination */}
         {totalPages > 1 && (
@@ -351,7 +311,7 @@ export default function StudentsPage() {
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, student: null })}>
         <DialogContent className="sm:max-w-[500px] bg-bg-premium border-white/10">
-          <DialogHeader>
+          <DialogHeader> 
             <DialogTitle className="text-fg-premium">Delete Student</DialogTitle>
             <DialogDescription className="text-fg-premium-muted">
               Are you sure you want to delete {deleteDialog.student?.fullName}? This action cannot be undone and will also remove their login credentials.

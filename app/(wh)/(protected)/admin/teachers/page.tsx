@@ -170,16 +170,16 @@ export default function TeachersPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="min-h-screen bg-bg-premium p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Teachers</h1>
-          <p className="text-gray-600 mt-1">Manage teacher profiles and information</p>
+          <h1 className="text-3xl font-bold text-fg-premium">Teachers</h1>
+          <p className="text-fg-premium-muted mt-1">Manage teacher profiles and information</p>
         </div>
         <Button
           onClick={() => router.push('/admin/add-teacher')}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+          className="flex items-center gap-2 bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0"
         >
           <Plus className="w-4 h-4" />
           Add Teacher
@@ -188,30 +188,30 @@ export default function TeachersPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="glass-panel p-4 rounded-lg border border-white/10">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-50 rounded-lg">
-              <Users className="w-6 h-6 text-green-600" />
+            <div className="p-3 bg-accent-primary/20 rounded-lg">
+              <Users className="w-6 h-6 text-accent-primary" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total Teachers</p>
-              <p className="text-2xl font-bold text-gray-900">{total}</p>
+              <p className="text-sm text-fg-premium-muted">Total Teachers</p>
+              <p className="text-2xl font-bold text-fg-premium">{total}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
+      <div className="glass-panel p-4 rounded-lg border border-white/10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fg-premium-muted w-4 h-4" />
               <Input
                 placeholder="Search by name, email, phone..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 focus:border-accent-primary"
               />
             </div>
           </div>
@@ -219,23 +219,25 @@ export default function TeachersPage() {
             placeholder="Filter by subject..."
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
+            className="bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 focus:border-accent-primary"
           />
           <Input
             placeholder="Filter by class..."
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
+            className="bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 focus:border-accent-primary"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="glass-panel rounded-lg border border-white/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-white/5 border-b border-white/10">
               <tr>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-3 text-left text-xs font-medium text-fg-premium uppercase tracking-wider cursor-pointer hover:bg-white/10"
                   onClick={() => handleSort('fullName')}
                 >
                   <div className="flex items-center gap-2">
@@ -244,7 +246,7 @@ export default function TeachersPage() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-3 text-left text-xs font-medium text-fg-premium uppercase tracking-wider cursor-pointer hover:bg-white/10"
                   onClick={() => handleSort('email')}
                 >
                   <div className="flex items-center gap-2">
@@ -253,7 +255,7 @@ export default function TeachersPage() {
                   </div>
                 </th>
                 <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-3 text-left text-xs font-medium text-fg-premium uppercase tracking-wider cursor-pointer hover:bg-white/10"
                   onClick={() => handleSort('phone')}
                 >
                   <div className="flex items-center gap-2">
@@ -261,27 +263,27 @@ export default function TeachersPage() {
                     <ArrowUpDown className="w-4 h-4" />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-fg-premium uppercase tracking-wider">
                   Subjects
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-fg-premium uppercase tracking-wider">
                   Classes
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-fg-premium uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-12 text-center text-fg-premium-muted">
                     Loading teachers...
                   </td>
                 </tr>
               ) : teachers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-12 text-center text-fg-premium-muted">
                     No teachers found
                   </td>
                 </tr>
@@ -289,17 +291,17 @@ export default function TeachersPage() {
                 teachers.map((teacher) => (
                   <tr 
                     key={teacher.id} 
-                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                    className="hover:bg-white/5 cursor-pointer transition-colors"
                     onClick={() => router.push(`/admin/teachers/${teacher.id}`)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{teacher.fullName}</div>
-                      <div className="text-sm text-gray-500">{formatDate(teacher.dob)}</div>
+                      <div className="font-medium text-fg-premium">{teacher.fullName}</div>
+                      <div className="text-sm text-fg-premium-muted">{formatDate(teacher.dob)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium-muted">
                       {teacher.email}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-fg-premium-muted">
                       {teacher.phone}
                     </td>
                     <td className="px-6 py-4">
@@ -308,16 +310,16 @@ export default function TeachersPage() {
                           teacher.subjectIds.slice(0, 2).map((subj, idx) => (
                             <Badge 
                               key={idx} 
-                              className="bg-blue-100 text-blue-700 border-blue-200 text-xs"
+                              className="bg-accent-primary/20 text-accent-primary border-accent-primary/30 text-xs"
                             >
                               {SUBJECTS_MAP[subj] || subj}
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-sm text-gray-400">None</span>
+                          <span className="text-sm text-fg-premium-muted">None</span>
                         )}
                         {teacher.subjectIds && teacher.subjectIds.length > 2 && (
-                          <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
+                          <Badge className="bg-white/10 text-fg-premium border-white/20 text-xs">
                             +{teacher.subjectIds.length - 2}
                           </Badge>
                         )}
@@ -329,16 +331,16 @@ export default function TeachersPage() {
                           teacher.classIds.slice(0, 2).map((cls, idx) => (
                             <Badge 
                               key={idx} 
-                              className="bg-purple-100 text-purple-700 border-purple-200 text-xs"
+                              className="bg-accent-secondary/20 text-accent-secondary border-accent-secondary/30 text-xs"
                             >
                               {CLASSES_MAP[cls] || cls}
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-sm text-gray-400">None</span>
+                          <span className="text-sm text-fg-premium-muted">None</span>
                         )}
                         {teacher.classIds && teacher.classIds.length > 2 && (
-                          <Badge className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
+                          <Badge className="bg-white/10 text-fg-premium border-white/20 text-xs">
                             +{teacher.classIds.length - 2}
                           </Badge>
                         )}
@@ -348,14 +350,14 @@ export default function TeachersPage() {
                       <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => router.push(`/admin/teachers/${teacher.id}/edit`)}
-                          className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded transition-colors"
+                          className="text-accent-primary hover:text-accent-primary/80 p-1 hover:bg-accent-primary/10 rounded transition-colors"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(teacher)}
-                          className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
+                          className="text-red-400 hover:text-red-300 p-1 hover:bg-red-500/10 rounded transition-colors"
                           title="Delete"
                           disabled={deleting === teacher.id}
                         >
@@ -372,8 +374,8 @@ export default function TeachersPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+          <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between">
+            <div className="text-sm text-fg-premium-muted">
               Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, total)} of {total} results
             </div>
             <div className="flex items-center gap-2">
@@ -382,11 +384,12 @@ export default function TeachersPage() {
                 size="sm"
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
+                className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
               </Button>
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-fg-premium">
                 Page {page} of {totalPages}
               </span>
               <Button
@@ -394,6 +397,7 @@ export default function TeachersPage() {
                 size="sm"
                 onClick={() => setPage(page + 1)}
                 disabled={page === totalPages}
+                className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
               >
                 Next
                 <ChevronRight className="w-4 h-4" />
@@ -405,10 +409,10 @@ export default function TeachersPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, teacher: null })}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] bg-bg-premium border-white/10 text-fg-premium">
           <DialogHeader>
-            <DialogTitle>Delete Teacher</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-fg-premium">Delete Teacher</DialogTitle>
+            <DialogDescription className="text-fg-premium-muted">
               Are you sure you want to delete {deleteDialog.teacher?.fullName}? This action cannot be undone and will also remove their login credentials.
             </DialogDescription>
           </DialogHeader>
@@ -416,6 +420,7 @@ export default function TeachersPage() {
             <Button
               variant="outline"
               onClick={() => setDeleteDialog({ open: false, teacher: null })}
+              className="border-white/10 hover:bg-white/10 text-fg-premium"
             >
               Cancel
             </Button>
@@ -423,6 +428,7 @@ export default function TeachersPage() {
               variant="destructive"
               onClick={confirmDelete}
               disabled={!!deleting}
+              className="bg-red-500 hover:bg-red-600"
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </Button>

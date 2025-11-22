@@ -176,7 +176,7 @@ const ActivityLogPage = () => {
   const stats = getActivityStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-6">
+    <div className="min-h-screen bg-bg-premium p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header Section */}
         <motion.div
@@ -186,11 +186,11 @@ const ActivityLogPage = () => {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center gap-3">
-              <ActivityIcon className="w-10 h-10 text-blue-600" />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text  flex items-center gap-3">
+              <ActivityIcon className="w-10 h-10 text-accent-primary" />
               Activity Logs
             </h1>
-            <p className="text-gray-600 mt-2 text-lg">
+            <p className="text-fg-premium-muted mt-2 text-lg">
               Monitor and track all system activities in real-time
             </p>
           </div>
@@ -198,12 +198,12 @@ const ActivityLogPage = () => {
             <Button
               variant="outline"
               onClick={fetchActivities}
-              className="premium-button border-blue-200 hover:border-blue-400 hover:bg-blue-50"
+              className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
             >
               <RefreshCcw className="w-4 h-4 mr-2" />
               Refresh
             </Button>
-            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white premium-button">
+            <Button className="bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0">
               <Download className="w-4 h-4 mr-2" />
               Export Logs
             </Button>
@@ -217,36 +217,36 @@ const ActivityLogPage = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <Card className="premium-card border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50">
+          <Card className="border-white/10 bg-white/5 glass-panel">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-700">Total Activities</CardTitle>
-              <BarChart3 className="w-5 h-5 text-blue-600" />
+              <CardTitle className="text-sm font-medium text-fg-premium-muted">Total Activities</CardTitle>
+              <BarChart3 className="w-5 h-5 text-accent-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{stats.totalActivities}</div>
-              <p className="text-xs text-gray-600 mt-1">All tracked events</p>
+              <div className="text-3xl font-bold text-fg-premium">{stats.totalActivities}</div>
+              <p className="text-xs text-fg-premium-muted mt-1">All tracked events</p>
             </CardContent>
           </Card>
 
-          <Card className="premium-card border-2 border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50">
+          <Card className="border-white/10 bg-white/5 glass-panel">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-700">Last 24 Hours</CardTitle>
-              <Clock className="w-5 h-5 text-emerald-600" />
+              <CardTitle className="text-sm font-medium text-fg-premium-muted">Last 24 Hours</CardTitle>
+              <Clock className="w-5 h-5 text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-emerald-600">{stats.recentActivities}</div>
-              <p className="text-xs text-gray-600 mt-1">Recent activities</p>
+              <div className="text-3xl font-bold text-green-400">{stats.recentActivities}</div>
+              <p className="text-xs text-fg-premium-muted mt-1">Recent activities</p>
             </CardContent>
           </Card>
 
-          <Card className="premium-card border-2 border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50">
+          <Card className="border-white/10 bg-white/5 glass-panel">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-700">Most Common</CardTitle>
-              <TrendingUp className="w-5 h-5 text-purple-600" />
+              <CardTitle className="text-sm font-medium text-fg-premium-muted">Most Common</CardTitle>
+              <TrendingUp className="w-5 h-5 text-purple-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-purple-600">{stats.mostCommonAction}</div>
-              <p className="text-xs text-gray-600 mt-1">Action type</p>
+              <div className="text-3xl font-bold text-purple-400">{stats.mostCommonAction}</div>
+              <p className="text-xs text-fg-premium-muted mt-1">Action type</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -257,12 +257,12 @@ const ActivityLogPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Card className="premium-card border-2 border-gray-200 hover:border-blue-300 transition-colors">
+          <Card className="border-white/10 bg-white/5 glass-panel">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Filter className="w-5 h-5 text-blue-600" />
-                  <CardTitle>Filter & Search</CardTitle>
+                  <Filter className="w-5 h-5 text-accent-primary" />
+                  <CardTitle className="text-fg-premium">Filter & Search</CardTitle>
                 </div>
                 <Button
                   variant="outline"
@@ -271,20 +271,20 @@ const ActivityLogPage = () => {
                     setFilters({ page: 1, limit: 20, order: 'desc' });
                     setSearchTerm('');
                   }}
-                  className="text-gray-600 hover:text-red-600 hover:border-red-300"
+                  className="text-fg-premium-muted hover:text-red-400 hover:border-red-500/50 border-white/10 bg-transparent"
                 >
                   <RefreshCcw className="w-3 h-3 mr-2" />
                   Clear Filters
                 </Button>
               </div>
-              <CardDescription>
+              <CardDescription className="text-fg-premium-muted">
                 Showing {activities.length} of {meta.total} activities
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-medium text-fg-premium flex items-center gap-2">
                     <Search className="w-4 h-4" />
                     Search
                   </label>
@@ -294,11 +294,11 @@ const ActivityLogPage = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                      className="premium-input"
+                      className="bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 focus:border-accent-primary"
                     />
                     <Button 
                       onClick={handleSearch}
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-accent-primary hover:bg-accent-primary/90 text-white"
                     >
                       <Search className="w-4 h-4" />
                     </Button>
@@ -306,15 +306,15 @@ const ActivityLogPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-medium text-fg-premium flex items-center gap-2">
                     <ActivityIcon className="w-4 h-4" />
                     Action Type
                   </label>
                   <Select onValueChange={(value) => handleFilterChange('action', value)}>
-                    <SelectTrigger className="premium-input">
+                    <SelectTrigger className="bg-white/5 border-white/10 text-fg-premium">
                       <SelectValue placeholder="All Actions" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                       <SelectItem value="all">All Actions</SelectItem>
                       <SelectItem value="CREATE">Create</SelectItem>
                       <SelectItem value="UPDATE">Update</SelectItem>
@@ -329,15 +329,15 @@ const ActivityLogPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-medium text-fg-premium flex items-center gap-2">
                     <User className="w-4 h-4" />
                     User Role
                   </label>
                   <Select onValueChange={(value) => handleFilterChange('userRole', value)}>
-                    <SelectTrigger className="premium-input">
+                    <SelectTrigger className="bg-white/5 border-white/10 text-fg-premium">
                       <SelectValue placeholder="All Roles" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                       <SelectItem value="all">All Roles</SelectItem>
                       <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
                       <SelectItem value="ADMIN">Admin</SelectItem>
@@ -348,15 +348,15 @@ const ActivityLogPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-medium text-fg-premium flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     Entity Type
                   </label>
                   <Select onValueChange={(value) => handleFilterChange('entityType', value)}>
-                    <SelectTrigger className="premium-input">
+                    <SelectTrigger className="bg-white/5 border-white/10 text-fg-premium">
                       <SelectValue placeholder="All Entities" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                       <SelectItem value="all">All Entities</SelectItem>
                       <SelectItem value="USER">User</SelectItem>
                       <SelectItem value="STUDENT">Student</SelectItem>
@@ -382,24 +382,24 @@ const ActivityLogPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <Card className="premium-card border-2 border-gray-200 overflow-hidden">
+          <Card className="border-white/10 bg-white/5 overflow-hidden glass-panel">
             {loading ? (
               <div className="p-16 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
-                  <RefreshCcw className="w-8 h-8 animate-spin text-blue-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-4">
+                  <RefreshCcw className="w-8 h-8 animate-spin text-accent-primary" />
                 </div>
-                <p className="text-lg font-medium text-gray-900">Loading activity logs...</p>
-                <p className="text-sm text-gray-600 mt-2">Please wait while we fetch the data</p>
+                <p className="text-lg font-medium text-fg-premium">Loading activity logs...</p>
+                <p className="text-sm text-fg-premium-muted mt-2">Please wait while we fetch the data</p>
               </div>
             ) : error ? (
               <div className="p-16 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
-                  <AlertCircle className="w-8 h-8 text-red-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 mb-4">
+                  <AlertCircle className="w-8 h-8 text-red-500" />
                 </div>
-                <p className="text-lg font-semibold text-red-600">Error loading activity logs</p>
-                <p className="text-sm text-gray-600 mt-2">{error}</p>
+                <p className="text-lg font-semibold text-red-400">Error loading activity logs</p>
+                <p className="text-sm text-fg-premium-muted mt-2">{error}</p>
                 <Button 
-                  className="mt-6 bg-blue-600 hover:bg-blue-700"
+                  className="mt-6 bg-accent-primary hover:bg-accent-primary/90 text-white"
                   onClick={fetchActivities}
                 >
                   <RefreshCcw className="w-4 h-4 mr-2" />
@@ -408,49 +408,49 @@ const ActivityLogPage = () => {
               </div>
             ) : activities.length === 0 ? (
               <div className="p-16 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                  <ActivityIcon className="w-8 h-8 text-gray-400" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-4">
+                  <ActivityIcon className="w-8 h-8 text-fg-premium-muted" />
                 </div>
-                <p className="text-lg font-medium text-gray-900">No activity logs found</p>
-                <p className="text-sm text-gray-600 mt-2">Try adjusting your filters or create some activities</p>
+                <p className="text-lg font-medium text-fg-premium">No activity logs found</p>
+                <p className="text-sm text-fg-premium-muted mt-2">Try adjusting your filters or create some activities</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-gradient-to-r from-gray-50 to-blue-50/50 hover:from-gray-100 hover:to-blue-100/50">
-                        <TableHead className="font-semibold text-gray-900">
+                      <TableRow className="bg-white/5 hover:bg-white/10 border-white/10">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
                             Timestamp
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-900">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <User className="w-4 h-4" />
                             User
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-900">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <Shield className="w-4 h-4" />
                             Role
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-900">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <ActivityIcon className="w-4 h-4" />
                             Action
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-900">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <FileText className="w-4 h-4" />
                             Description
                           </div>
                         </TableHead>
-                        <TableHead className="font-semibold text-gray-900">
+                        <TableHead className="font-semibold text-fg-premium">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             Entity
@@ -467,35 +467,35 @@ const ActivityLogPage = () => {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
-                            className="group hover:bg-blue-50/50 transition-colors border-b border-gray-100"
+                            className="group hover:bg-white/5 transition-colors border-b border-white/5"
                           >
                             <TableCell className="text-sm">
                               <div className="flex flex-col">
-                                <span className="font-medium text-gray-900">
+                                <span className="font-medium text-fg-premium">
                                   {formatRelativeTime(activity.createdAt)}
                                 </span>
-                                <span className="text-xs text-gray-500">
+                                <span className="text-xs text-fg-premium-muted">
                                   {formatDate(activity.createdAt)}
                                 </span>
                               </div>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-semibold text-sm shadow-md">
                                   {activity.username ? activity.username.charAt(0).toUpperCase() : '?'}
                                 </div>
                                 <div>
-                                  <div className="font-medium text-gray-900">
+                                  <div className="font-medium text-fg-premium">
                                     {activity.username || 'Unknown User'}
                                   </div>
-                                  <div className="text-xs text-gray-500 font-mono">
+                                  <div className="text-xs text-fg-premium-muted font-mono">
                                     {activity.userId.substring(0, 8)}...
                                   </div>
                                 </div>
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge className={`${roleColors[activity.userRole]} shadow-sm`}>
+                              <Badge className={`${roleColors[activity.userRole]} shadow-sm border-0`}>
                                 {activity.userRole}
                               </Badge>
                             </TableCell>
@@ -506,16 +506,16 @@ const ActivityLogPage = () => {
                               </Badge>
                             </TableCell>
                             <TableCell className="max-w-md">
-                              <div className="text-sm text-gray-900 font-medium">
+                              <div className="text-sm text-fg-premium font-medium">
                                 {activity.description}
                               </div>
                               {activity.metadata && Object.keys(activity.metadata).length > 0 && (
-                                <details className="text-xs text-gray-600 mt-2 group-hover:text-gray-900 transition-colors">
-                                  <summary className="cursor-pointer hover:text-blue-600 font-medium flex items-center gap-1">
+                                <details className="text-xs text-fg-premium-muted mt-2 group-hover:text-fg-premium transition-colors">
+                                  <summary className="cursor-pointer hover:text-accent-primary font-medium flex items-center gap-1">
                                     <Eye className="w-3 h-3" />
                                     View metadata
                                   </summary>
-                                  <pre className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg overflow-auto text-xs font-mono shadow-inner">
+                                  <pre className="mt-2 p-3 bg-black/30 border border-white/10 rounded-lg overflow-auto text-xs font-mono shadow-inner text-fg-premium">
                                     {JSON.stringify(activity.metadata, null, 2)}
                                   </pre>
                                 </details>
@@ -523,11 +523,11 @@ const ActivityLogPage = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex flex-col">
-                                <span className="text-sm font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded w-fit">
+                                <span className="text-sm font-semibold text-fg-premium bg-white/5 px-2 py-1 rounded w-fit border border-white/10">
                                   {activity.entityType}
                                 </span>
                                 {activity.entityId && (
-                                  <span className="text-xs text-gray-500 font-mono mt-1">
+                                  <span className="text-xs text-fg-premium-muted font-mono mt-1">
                                     ID: {activity.entityId.substring(0, 12)}...
                                   </span>
                                 )}
@@ -541,14 +541,14 @@ const ActivityLogPage = () => {
                 </div>
 
                 {/* Enhanced Pagination */}
-                <div className="p-6 border-t bg-gradient-to-r from-gray-50 to-blue-50/30">
+                <div className="p-6 border-t border-white/10 bg-white/5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="text-sm text-gray-700 font-medium">
-                        Page <span className="font-bold text-blue-600">{meta.page}</span> of{' '}
-                        <span className="font-bold text-blue-600">{meta.totalPages}</span>
+                      <div className="text-sm text-fg-premium font-medium">
+                        Page <span className="font-bold text-accent-primary">{meta.page}</span> of{' '}
+                        <span className="font-bold text-accent-primary">{meta.totalPages}</span>
                       </div>
-                      <div className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-200">
+                      <div className="text-xs text-fg-premium-muted bg-white/5 px-3 py-1 rounded-full border border-white/10">
                         {((meta.page - 1) * meta.limit) + 1}-{Math.min(meta.page * meta.limit, meta.total)} of {meta.total} activities
                       </div>
                     </div>
@@ -558,7 +558,7 @@ const ActivityLogPage = () => {
                         size="sm"
                         disabled={meta.page === 1}
                         onClick={() => handlePageChange(meta.page - 1)}
-                        className="premium-button disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 hover:border-blue-400"
+                        className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <ChevronLeft className="w-4 h-4 mr-1" />
                         Previous
@@ -568,7 +568,7 @@ const ActivityLogPage = () => {
                         size="sm"
                         disabled={meta.page === meta.totalPages}
                         onClick={() => handlePageChange(meta.page + 1)}
-                        className="premium-button disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-50 hover:border-blue-400"
+                        className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Next
                         <ChevronRight className="w-4 h-4 ml-1" />

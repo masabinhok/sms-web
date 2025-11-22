@@ -282,7 +282,7 @@ export default function ClassDetailPage() {
               <GraduationCap className="h-8 w-8 text-blue-600" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
+              <h1 className="text-4xl font-bold bg-clip-text  bg-gradient-to-r from-blue-600 to-blue-800">
                 {classData.name}
               </h1>
               <p className="text-lg text-slate-600 mt-1">

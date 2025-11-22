@@ -64,9 +64,9 @@ const InputField = ({
 
   return (
     <div>
-      <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-        {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-        {label} {required && <span className="text-red-500">*</span>}
+      <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium-muted">
+        {Icon && <Icon className="w-4 h-4 text-fg-premium-muted" />}
+        {label} {required && <span className="text-red-400">*</span>}
       </Label>
       <div className="relative">
         <Input
@@ -75,14 +75,14 @@ const InputField = ({
           placeholder={placeholder}
           maxLength={maxLength}
           {...register(name)}
-          className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
+          className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 ${hasError ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20' : ''} ${isValid ? 'border-green-500/50 focus:border-green-500 focus:ring-green-500/20' : 'focus:border-accent-primary focus:ring-accent-primary/20'}`}
         />
         {isValid && (
           <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
         )}
       </div>
       {hasError && (
-        <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+        <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
           <AlertCircle className="w-4 h-4" />
           <span>{hasError.message}</span>
         </div>
@@ -181,24 +181,24 @@ export default function CreateTeacherProfileForm() {
   const progress = Math.min((filledFieldsCount / totalRequiredFields) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
+    <div className="min-h-screen bg-bg-premium text-fg-premium">
       <div className="mx-auto max-w-5xl p-4 md:p-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-green-600 to-emerald-600 shadow-lg">
-                <Users className="h-7 w-7 text-white" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-primary/20 border border-accent-primary/30 shadow-lg shadow-accent-primary/10">
+                <Users className="h-7 w-7 text-accent-primary" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Create Teacher Profile</h1>
-                <p className="text-sm text-gray-600 mt-1">Add a new teacher to the system</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-fg-premium">Create Teacher Profile</h1>
+                <p className="text-sm text-fg-premium-muted mt-1">Add a new teacher to the system</p>
               </div>
             </div>
             <Button
               variant="outline"
               onClick={() => router.push('/admin/teachers')}
-              className="w-fit"
+              className="w-fit border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
             >
               <X className="w-4 h-4 mr-2" />
               Cancel
@@ -206,21 +206,21 @@ export default function CreateTeacherProfileForm() {
           </div>
 
           {/* Progress Bar */}
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div className="glass-panel rounded-xl p-4 border border-white/10 shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-gray-700">Form Progress</span>
+                <Sparkles className="w-4 h-4 text-accent-primary" />
+                <span className="text-sm font-medium text-fg-premium">Form Progress</span>
               </div>
-              <span className="text-sm font-semibold text-green-600">{Math.round(progress)}%</span>
+              <span className="text-sm font-semibold text-accent-primary">{Math.round(progress)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-white/10 rounded-full h-2.5">
               <div 
-                className="bg-gradient-to-r from-green-600 to-emerald-600 h-2.5 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-accent-primary to-accent-secondary h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-fg-premium-muted mt-2">
               {filledFieldsCount} of {totalRequiredFields} required fields completed
             </p>
           </div>
@@ -229,10 +229,10 @@ export default function CreateTeacherProfileForm() {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Personal Information Section */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="mb-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50 -m-6 p-6 rounded-t-xl">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                <User className="h-5 w-5 text-green-600" />
+          <div className="glass-panel rounded-xl border border-white/10 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="mb-6 pb-4 border-b border-white/10 bg-white/5 -m-6 p-6 rounded-t-xl">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-fg-premium">
+                <User className="h-5 w-5 text-accent-primary" />
                 Personal Information
               </h2>
             </div>
@@ -294,22 +294,22 @@ export default function CreateTeacherProfileForm() {
 
               {/* Gender */}
               <div>
-                <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                  <UserCircle className="h-4 w-4 text-gray-500" />
-                  Gender <span className="text-red-500">*</span>
+                <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium-muted">
+                  <UserCircle className="h-4 w-4 text-fg-premium-muted" />
+                  Gender <span className="text-red-400">*</span>
                 </Label>
                 <Select onValueChange={(val: GenderOption) => setValue("gender", val, { shouldDirty: true, shouldValidate: true })}>
-                  <SelectTrigger className={errors.gender ? "border-red-300 focus:border-red-500 focus:ring-red-500" : ""}>
+                  <SelectTrigger className={`bg-white/5 border-white/10 text-fg-premium ${errors.gender ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20" : "focus:border-accent-primary focus:ring-accent-primary/20"}`}>
                     <SelectValue placeholder="Select gender" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                     <SelectItem value="Male">Male</SelectItem>
                     <SelectItem value="Female">Female</SelectItem>
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.gender && (
-                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{errors.gender.message}</span>
                   </div>
@@ -318,9 +318,9 @@ export default function CreateTeacherProfileForm() {
 
               {/* Address */}
               <div className="md:col-span-2">
-                <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                  <MapPin className="h-4 w-4 text-gray-500" />
-                  Home Address <span className="text-red-500">*</span>
+                <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium-muted">
+                  <MapPin className="h-4 w-4 text-fg-premium-muted" />
+                  Home Address <span className="text-red-400">*</span>
                 </Label>
                 <Textarea
                   id="address"
@@ -328,15 +328,15 @@ export default function CreateTeacherProfileForm() {
                   rows={3}
                   maxLength={200}
                   {...register("address")}
-                  className={errors.address ? "border-red-300 focus:border-red-500 focus:ring-red-500" : ""}
+                  className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-white/20 ${errors.address ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20" : "focus:border-accent-primary focus:ring-accent-primary/20"}`}
                 />
                 {errors.address && (
-                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{errors.address.message}</span>
                   </div>
                 )}
-                <p className="mt-1.5 text-xs text-gray-500">
+                <p className="mt-1.5 text-xs text-fg-premium-muted">
                   {(watchedFields.address?.length || 0)}/200 characters
                 </p>
               </div>
@@ -344,24 +344,24 @@ export default function CreateTeacherProfileForm() {
           </div>
 
           {/* Teaching Subjects Section */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="mb-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 -m-6 p-6 rounded-t-xl">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                <BookOpen className="h-5 w-5 text-blue-600" />
+          <div className="glass-panel rounded-xl border border-white/10 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="mb-6 pb-4 border-b border-white/10 bg-white/5 -m-6 p-6 rounded-t-xl">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-fg-premium">
+                <BookOpen className="h-5 w-5 text-accent-secondary" />
                 Teaching Subjects
               </h2>
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">Select the subjects this teacher can teach (optional but recommended)</p>
+              <p className="text-sm text-fg-premium-muted">Select the subjects this teacher can teach (optional but recommended)</p>
               {loadingSubjects ? (
-                <div className="flex items-center justify-center p-8 border rounded-lg">
-                  <Loader2 className="w-6 h-6 animate-spin text-gray-400 mr-2" />
-                  <span className="text-sm text-gray-500">Loading subjects...</span>
+                <div className="flex items-center justify-center p-8 border border-white/10 rounded-lg bg-white/5">
+                  <Loader2 className="w-6 h-6 animate-spin text-fg-premium-muted mr-2" />
+                  <span className="text-sm text-fg-premium-muted">Loading subjects...</span>
                 </div>
               ) : subjects.length === 0 ? (
-                <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg">
-                  <p className="text-sm text-amber-800">No subjects available. Please create subjects first.</p>
+                <div className="p-4 border border-amber-500/30 bg-amber-500/10 rounded-lg">
+                  <p className="text-sm text-amber-400">No subjects available. Please create subjects first.</p>
                 </div>
               ) : (
                 <>
@@ -373,8 +373,8 @@ export default function CreateTeacherProfileForm() {
                         onClick={() => toggleSubject(subject.id)}
                         className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
                           selectedSubjectIds.includes(subject.id)
-                            ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 text-green-700 shadow-md'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50/50'
+                            ? 'border-accent-primary bg-accent-primary/20 text-accent-primary shadow-md'
+                            : 'border-white/10 bg-white/5 text-fg-premium hover:border-accent-primary/50 hover:bg-accent-primary/10'
                         }`}
                       >
                         {subject.name}
@@ -382,7 +382,7 @@ export default function CreateTeacherProfileForm() {
                     ))}
                   </div>
                   {selectedSubjectIds.length > 0 && (
-                    <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 rounded-lg p-3">
+                    <div className="flex items-center gap-2 text-sm text-accent-primary bg-accent-primary/10 rounded-lg p-3">
                       <CheckCircle className="w-4 h-4" />
                       <span>Selected: {selectedSubjectIds.length} subject{selectedSubjectIds.length !== 1 ? 's' : ''}</span>
                     </div>
@@ -393,24 +393,24 @@ export default function CreateTeacherProfileForm() {
           </div>
 
           {/* Teaching Classes Section */}
-          <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="mb-6 pb-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 -m-6 p-6 rounded-t-xl">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                <GraduationCap className="h-5 w-5 text-purple-600" />
+          <div className="glass-panel rounded-xl border border-white/10 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="mb-6 pb-4 border-b border-white/10 bg-white/5 -m-6 p-6 rounded-t-xl">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-fg-premium">
+                <GraduationCap className="h-5 w-5 text-accent-secondary" />
                 Teaching Classes
               </h2>
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">Select the classes this teacher can teach (optional but recommended)</p>
+              <p className="text-sm text-fg-premium-muted">Select the classes this teacher can teach (optional but recommended)</p>
               {loadingClasses ? (
-                <div className="flex items-center justify-center p-8 border rounded-lg">
-                  <Loader2 className="w-6 h-6 animate-spin text-gray-400 mr-2" />
-                  <span className="text-sm text-gray-500">Loading classes...</span>
+                <div className="flex items-center justify-center p-8 border border-white/10 rounded-lg bg-white/5">
+                  <Loader2 className="w-6 h-6 animate-spin text-fg-premium-muted mr-2" />
+                  <span className="text-sm text-fg-premium-muted">Loading classes...</span>
                 </div>
               ) : classes.length === 0 ? (
-                <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg">
-                  <p className="text-sm text-amber-800">No classes available. Please create classes first.</p>
+                <div className="p-4 border border-amber-500/30 bg-amber-500/10 rounded-lg">
+                  <p className="text-sm text-amber-400">No classes available. Please create classes first.</p>
                 </div>
               ) : (
                 <>
@@ -422,8 +422,8 @@ export default function CreateTeacherProfileForm() {
                         onClick={() => toggleClass(classItem.id)}
                         className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
                           selectedClassIds.includes(classItem.id)
-                            ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 text-purple-700 shadow-md'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50/50'
+                            ? 'border-accent-secondary bg-accent-secondary/20 text-accent-secondary shadow-md'
+                            : 'border-white/10 bg-white/5 text-fg-premium hover:border-accent-secondary/50 hover:bg-accent-secondary/10'
                         }`}
                       >
                         {classItem.name} {classItem.section ? `(${classItem.section})` : ''}
@@ -431,7 +431,7 @@ export default function CreateTeacherProfileForm() {
                     ))}
                   </div>
                   {selectedClassIds.length > 0 && (
-                    <div className="flex items-center gap-2 text-sm text-purple-600 bg-purple-50 rounded-lg p-3">
+                    <div className="flex items-center gap-2 text-sm text-accent-secondary bg-accent-secondary/10 rounded-lg p-3">
                       <CheckCircle className="w-4 h-4" />
                       <span>Selected: {selectedClassIds.length} class{selectedClassIds.length !== 1 ? 'es' : ''}</span>
                     </div>
@@ -442,17 +442,17 @@ export default function CreateTeacherProfileForm() {
           </div>
 
           {/* Form Actions */}
-          <div className="sticky bottom-0 bg-white rounded-xl border border-gray-200 shadow-lg p-6">
+          <div className="sticky bottom-0 glass-panel rounded-xl border border-white/10 shadow-lg p-6 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 {isValid && filledFieldsCount >= totalRequiredFields && (
-                  <div className="flex items-center gap-1.5 text-green-600">
+                  <div className="flex items-center gap-1.5 text-green-400">
                     <CheckCircle className="w-4 h-4" />
                     <span>All required fields valid - Ready to submit!</span>
                   </div>
                 )}
                 {Object.keys(errors).length > 0 && (
-                  <div className="flex items-center gap-1.5 text-red-600">
+                  <div className="flex items-center gap-1.5 text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{Object.keys(errors).length} validation error{Object.keys(errors).length !== 1 ? 's' : ''}</span>
                   </div>
@@ -468,7 +468,7 @@ export default function CreateTeacherProfileForm() {
                     setSelectedClassIds([]);
                   }}
                   disabled={loading}
-                  className="min-w-[120px]"
+                  className="min-w-[120px] border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
                 >
                   <X className="w-4 h-4 mr-2" />
                   Reset Form
@@ -476,7 +476,7 @@ export default function CreateTeacherProfileForm() {
                 <Button
                   type="submit"
                   disabled={loading || !isValid}
-                  className="min-w-[160px] bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  className="min-w-[160px] bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0"
                 >
                   {loading ? (
                     <>

@@ -192,7 +192,7 @@ export default function SubjectManagementPage() {
   }), [subjects])
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 space-y-8">
+    <div className="min-h-screen bg-bg-premium p-6 space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -201,10 +201,10 @@ export default function SubjectManagementPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text ">
             Subject Management
           </h1>
-          <p className="text-slate-600 mt-2">
+          <p className="text-fg-premium-muted mt-2">
             Manage subjects, courses, and their configurations
           </p>
         </div>
@@ -212,7 +212,7 @@ export default function SubjectManagementPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Button onClick={openCreateDialog} size="lg" className="shadow-lg">
+          <Button onClick={openCreateDialog} size="lg" className="shadow-lg bg-gradient-to-r from-accent-primary to-accent-secondary border-0 text-white hover:opacity-90">
             <Plus className="mr-2 h-5 w-5" /> Create Subject
           </Button>
         </motion.div>
@@ -239,28 +239,28 @@ export default function SubjectManagementPage() {
             value: stats.total,
             icon: BookOpen,
             color: 'from-purple-500 to-purple-600',
-            bgColor: 'bg-purple-50'
+            bgColor: 'bg-purple-500/10'
           },
           {
             title: 'Active Subjects',
             value: stats.active,
             icon: CheckCircle2,
             color: 'from-green-500 to-green-600',
-            bgColor: 'bg-green-50'
+            bgColor: 'bg-green-500/10'
           },
           {
             title: 'Inactive Subjects',
             value: stats.inactive,
             icon: XCircle,
             color: 'from-orange-500 to-orange-600',
-            bgColor: 'bg-orange-50'
+            bgColor: 'bg-orange-500/10'
           },
           {
             title: 'Total Credits',
             value: stats.totalCredits,
             icon: Award,
             color: 'from-blue-500 to-blue-600',
-            bgColor: 'bg-blue-50'
+            bgColor: 'bg-blue-500/10'
           }
         ].map((stat) => (
           <motion.div
@@ -278,19 +278,19 @@ export default function SubjectManagementPage() {
             }}
             whileHover={{ scale: 1.02 }}
           >
-            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="overflow-hidden border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 glass-panel">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600">
+                    <p className="text-sm font-medium text-fg-premium-muted">
                       {stat.title}
                     </p>
-                    <p className="text-3xl font-bold mt-2 bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                    <p className="text-3xl font-bold mt-2 text-fg-premium">
                       {stat.value}
                     </p>
                   </div>
                   <div className={`p-4 rounded-xl ${stat.bgColor}`}>
-                    <stat.icon className={`h-8 w-8 bg-gradient-to-br ${stat.color} bg-clip-text text-transparent`} strokeWidth={2} />
+                    <stat.icon className={`h-8 w-8 bg-gradient-to-br ${stat.color} bg-clip-text `} strokeWidth={2} />
                   </div>
                 </div>
               </CardContent>
@@ -305,34 +305,34 @@ export default function SubjectManagementPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card className="shadow-lg border-0">
+        <Card className="shadow-lg border-white/10 glass-panel">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-purple-600" />
+            <CardTitle className="flex items-center gap-2 text-fg-premium">
+              <Filter className="h-5 w-5 text-accent-primary" />
               Search & Filters
             </CardTitle>
-            <CardDescription>Find and filter subjects quickly</CardDescription>
+            <CardDescription className="text-fg-premium-muted">Find and filter subjects quickly</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Search */}
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-fg-premium-muted" />
                 <Input
                   placeholder="Search by subject name or code..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 border-slate-200 focus:border-purple-500 transition-colors"
+                  className="pl-10 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary transition-colors placeholder:text-white/20"
                 />
               </div>
 
               {/* Filters */}
               <div className="flex gap-4 flex-wrap">
                 <Select value={filterCategory} onValueChange={setFilterCategory}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[180px] border-white/10 bg-white/5 text-fg-premium">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                     <SelectItem value="all">All Categories</SelectItem>
                     {SUBJECT_CATEGORIES.map((category) => (
                       <SelectItem key={category} value={category}>
@@ -343,10 +343,10 @@ export default function SubjectManagementPage() {
                 </Select>
 
                 <Select value={filterActive} onValueChange={setFilterActive}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-[150px] border-white/10 bg-white/5 text-fg-premium">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="active">Active Only</SelectItem>
                     <SelectItem value="inactive">Inactive Only</SelectItem>
@@ -360,23 +360,23 @@ export default function SubjectManagementPage() {
                     setFilterCategory('all')
                     setFilterActive('all')
                   }}
-                  className="gap-2"
+                  className="gap-2 border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
                 >
                   <RefreshCw className="h-4 w-4" /> Reset
                 </Button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm text-slate-600">
+            <div className="flex items-center justify-between text-sm text-fg-premium-muted">
               <span>
-                Showing <span className="font-semibold text-purple-600">{filteredSubjects.length}</span> of{' '}
+                Showing <span className="font-semibold text-accent-primary">{filteredSubjects.length}</span> of{' '}
                 <span className="font-semibold">{subjects.length}</span> subjects
               </span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white">
                   <Download className="h-4 w-4" /> Export
                 </Button>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white">
                   <Upload className="h-4 w-4" /> Import
                 </Button>
               </div>
@@ -391,19 +391,19 @@ export default function SubjectManagementPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card className="shadow-lg border-0 overflow-hidden">
+        <Card className="shadow-lg border-white/10 overflow-hidden glass-panel">
           <CardContent className="p-0">
             {loading ? (
               <div className="p-8 space-y-4">
                 {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-16 w-full" />
+                  <Skeleton key={i} className="h-16 w-full bg-white/5" />
                 ))}
               </div>
             ) : filteredSubjects.length === 0 ? (
               <div className="p-16 text-center">
-                <BookOpen className="mx-auto h-16 w-16 text-slate-300 mb-4" />
-                <p className="text-slate-500 text-lg font-medium">No subjects found</p>
-                <p className="text-slate-400 text-sm mt-2">
+                <BookOpen className="mx-auto h-16 w-16 text-white/20 mb-4" />
+                <p className="text-fg-premium text-lg font-medium">No subjects found</p>
+                <p className="text-fg-premium-muted text-sm mt-2">
                   {searchQuery || filterCategory !== 'all' || filterActive !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Create your first subject to get started'}
@@ -413,15 +413,15 @@ export default function SubjectManagementPage() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50 hover:bg-slate-50">
-                      <TableHead className="font-semibold">Subject Name</TableHead>
-                      <TableHead className="font-semibold">Code</TableHead>
-                      <TableHead className="font-semibold">Category</TableHead>
-                      <TableHead className="font-semibold">Credits</TableHead>
-                      <TableHead className="font-semibold">Full Marks</TableHead>
-                      <TableHead className="font-semibold">Type</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="text-right font-semibold w-[120px]">Actions</TableHead>
+                    <TableRow className="bg-white/5 hover:bg-white/10 border-white/10">
+                      <TableHead className="font-semibold text-fg-premium">Subject Name</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Code</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Category</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Credits</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Full Marks</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Type</TableHead>
+                      <TableHead className="font-semibold text-fg-premium">Status</TableHead>
+                      <TableHead className="text-right font-semibold w-[120px] text-fg-premium">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -433,20 +433,20 @@ export default function SubjectManagementPage() {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 20 }}
                           transition={{ delay: index * 0.05 }}
-                          className="group hover:bg-purple-50 transition-colors border-b"
+                          className="group hover:bg-white/5 transition-colors border-b border-white/5"
                         >
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium text-fg-premium">
                             <div className="flex items-center gap-3">
-                              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md">
+                              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold shadow-md">
                                 {subject.name.charAt(0)}
                               </div>
-                              <span className="group-hover:text-purple-600 transition-colors font-medium">
+                              <span className="group-hover:text-accent-primary transition-colors font-medium">
                                 {subject.name}
                               </span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline" className="font-mono font-medium">
+                            <Badge variant="outline" className="font-mono font-medium border-white/20 text-fg-premium">
                               {subject.code}
                             </Badge>
                           </TableCell>
@@ -454,33 +454,33 @@ export default function SubjectManagementPage() {
                             <Badge 
                               variant="secondary"
                               className={
-                                subject.category === 'Core' ? 'bg-blue-100 text-blue-700' :
-                                subject.category === 'Elective' ? 'bg-green-100 text-green-700' :
-                                'bg-slate-100 text-slate-700'
+                                subject.category === 'Core' ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30' :
+                                subject.category === 'Elective' ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30' :
+                                'bg-white/10 text-fg-premium hover:bg-white/20'
                               }
                             >
                               {subject.category}
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Award className="h-4 w-4 text-slate-400" />
+                            <div className="flex items-center gap-2 text-fg-premium">
+                              <Award className="h-4 w-4 text-fg-premium-muted" />
                               <span className="font-medium">{subject.creditHours}</span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <FileText className="h-4 w-4 text-slate-400" />
+                            <div className="flex items-center gap-2 text-fg-premium">
+                              <FileText className="h-4 w-4 text-fg-premium-muted" />
                               <span>{subject.fullMarks}</span>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-1">
                               {subject.hasTheory && (
-                                <Badge variant="outline" className="text-xs">Theory</Badge>
+                                <Badge variant="outline" className="text-xs border-white/20 text-fg-premium">Theory</Badge>
                               )}
                               {subject.hasPractical && (
-                                <Badge variant="outline" className="text-xs">Practical</Badge>
+                                <Badge variant="outline" className="text-xs border-white/20 text-fg-premium">Practical</Badge>
                               )}
                             </div>
                           </TableCell>
@@ -491,7 +491,7 @@ export default function SubjectManagementPage() {
                             >
                               <Badge
                                 variant={subject.isActive ? 'default' : 'secondary'}
-                                className={subject.isActive ? 'bg-green-500 hover:bg-green-600 shadow-sm' : ''}
+                                className={subject.isActive ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/20' : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20'}
                               >
                                 {subject.isActive ? (
                                   <><CheckCircle2 className="h-3 w-3 mr-1" /> Active</>
@@ -507,7 +507,7 @@ export default function SubjectManagementPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openEditDialog(subject)}
-                                className="hover:bg-purple-100 hover:text-purple-700"
+                                className="hover:bg-accent-primary/10 hover:text-accent-primary text-fg-premium-muted"
                               >
                                 <Pencil className="h-4 w-4 mr-1" /> Edit
                               </Button>
@@ -515,7 +515,7 @@ export default function SubjectManagementPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openDeleteDialog(subject)}
-                                className="hover:bg-red-50 hover:text-red-600"
+                                className="hover:bg-red-500/10 hover:text-red-400 text-fg-premium-muted"
                               >
                                 <Trash2 className="h-4 w-4 mr-1" /> Delete
                               </Button>
@@ -534,21 +534,21 @@ export default function SubjectManagementPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white">
-          <DialogHeader className="space-y-3 pb-6 border-b border-slate-200">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-bg-premium border-white/10 text-fg-premium">
+          <DialogHeader className="space-y-3 pb-6 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedSubject ? 'bg-purple-100' : 'bg-green-100'}`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${selectedSubject ? 'bg-blue-500/20' : 'bg-green-500/20'}`}>
                 {selectedSubject ? (
-                  <Pencil className="h-6 w-6 text-purple-600" />
+                  <Pencil className="h-6 w-6 text-blue-400" />
                 ) : (
-                  <Plus className="h-6 w-6 text-green-600" />
+                  <Plus className="h-6 w-6 text-green-400" />
                 )}
               </div>
               <div>
-                <DialogTitle className="text-2xl font-bold">
+                <DialogTitle className="text-2xl font-bold text-fg-premium">
                   {selectedSubject ? 'Edit Subject' : 'Create New Subject'}
                 </DialogTitle>
-                <DialogDescription className="text-base mt-1">
+                <DialogDescription className="text-base mt-1 text-fg-premium-muted">
                   {selectedSubject
                     ? 'Update subject information below'
                     : 'Add a new subject to your school management system'}
@@ -560,13 +560,13 @@ export default function SubjectManagementPage() {
           <form onSubmit={handleSubmit} className="space-y-6 pt-6">
             {/* Basic Info */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-purple-600" /> Basic Information
+              <h3 className="text-sm font-semibold text-fg-premium flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-accent-primary" /> Basic Information
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Subject Name <span className="text-red-500">*</span>
+                  <Label htmlFor="name" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Subject Name <span className="text-red-400">*</span>
                   </Label>
                   <Input
                     id="name"
@@ -576,13 +576,13 @@ export default function SubjectManagementPage() {
                     }
                     placeholder="e.g., Mathematics"
                     required
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="code" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Subject Code <span className="text-red-500">*</span>
+                  <Label htmlFor="code" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Subject Code <span className="text-red-400">*</span>
                   </Label>
                   <Input
                     id="code"
@@ -592,13 +592,13 @@ export default function SubjectManagementPage() {
                     }
                     placeholder="e.g., MATH101"
                     required
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500 font-mono"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20 font-mono"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="category" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Category <span className="text-red-500">*</span>
+                  <Label htmlFor="category" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Category <span className="text-red-400">*</span>
                   </Label>
                   <Select
                     value={formData.category}
@@ -606,10 +606,10 @@ export default function SubjectManagementPage() {
                       setFormData({ ...formData, category: value })
                     }
                   >
-                    <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                    <SelectTrigger className="mt-2 border-white/10 bg-white/5 text-fg-premium">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
+                    <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                       {SUBJECT_CATEGORIES.map((cat) => (
                         <SelectItem key={cat} value={cat}>
                           {cat}
@@ -620,8 +620,8 @@ export default function SubjectManagementPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="creditHours" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Credit Hours <span className="text-red-500">*</span>
+                  <Label htmlFor="creditHours" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Credit Hours <span className="text-red-400">*</span>
                   </Label>
                   <Input
                     id="creditHours"
@@ -632,21 +632,21 @@ export default function SubjectManagementPage() {
                     }
                     min={1}
                     required
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                   />
                 </div>
               </div>
             </div>
 
             {/* Marks Configuration */}
-            <div className="space-y-4 pt-4 border-t border-slate-200">
-              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <Award className="h-4 w-4 text-purple-600" /> Marks Configuration
+            <div className="space-y-4 pt-4 border-t border-white/10">
+              <h3 className="text-sm font-semibold text-fg-premium flex items-center gap-2">
+                <Award className="h-4 w-4 text-accent-primary" /> Marks Configuration
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="fullMarks" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Full Marks <span className="text-red-500">*</span>
+                  <Label htmlFor="fullMarks" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Full Marks <span className="text-red-400">*</span>
                   </Label>
                   <Input
                     id="fullMarks"
@@ -657,13 +657,13 @@ export default function SubjectManagementPage() {
                     }
                     min={1}
                     required
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="passMarks" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Pass Marks <span className="text-red-500">*</span>
+                  <Label htmlFor="passMarks" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Pass Marks <span className="text-red-400">*</span>
                   </Label>
                   <Input
                     id="passMarks"
@@ -674,11 +674,11 @@ export default function SubjectManagementPage() {
                     }
                     min={1}
                     required
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                   />
                 </div>
 
-                <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
                   <input
                     type="checkbox"
                     id="hasTheory"
@@ -686,12 +686,12 @@ export default function SubjectManagementPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, hasTheory: e.target.checked })
                     }
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-accent-primary rounded border-white/20 bg-white/10 focus:ring-accent-primary"
                   />
-                  <Label htmlFor="hasTheory" className="text-sm font-medium cursor-pointer">Has Theory Component</Label>
+                  <Label htmlFor="hasTheory" className="text-sm font-medium cursor-pointer text-fg-premium">Has Theory Component</Label>
                 </div>
 
-                <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
                   <input
                     type="checkbox"
                     id="hasPractical"
@@ -699,14 +699,14 @@ export default function SubjectManagementPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, hasPractical: e.target.checked })
                     }
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-accent-primary rounded border-white/20 bg-white/10 focus:ring-accent-primary"
                   />
-                  <Label htmlFor="hasPractical" className="text-sm font-medium cursor-pointer">Has Practical Component</Label>
+                  <Label htmlFor="hasPractical" className="text-sm font-medium cursor-pointer text-fg-premium">Has Practical Component</Label>
                 </div>
 
                 {formData.hasTheory && (
                   <div>
-                    <Label htmlFor="theoryMarks" className="text-sm font-semibold text-slate-700">Theory Marks</Label>
+                    <Label htmlFor="theoryMarks" className="text-sm font-semibold text-fg-premium">Theory Marks</Label>
                     <Input
                       id="theoryMarks"
                       type="number"
@@ -718,14 +718,14 @@ export default function SubjectManagementPage() {
                         })
                       }
                       min={0}
-                      className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                      className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                     />
                   </div>
                 )}
 
                 {formData.hasPractical && (
                   <div>
-                    <Label htmlFor="practicalMarks" className="text-sm font-semibold text-slate-700">Practical Marks</Label>
+                    <Label htmlFor="practicalMarks" className="text-sm font-semibold text-fg-premium">Practical Marks</Label>
                     <Input
                       id="practicalMarks"
                       type="number"
@@ -737,20 +737,20 @@ export default function SubjectManagementPage() {
                         })
                       }
                       min={0}
-                      className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                      className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                     />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="space-y-4 pt-4 border-t border-slate-200">
-              <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <FileText className="h-4 w-4 text-purple-600" /> Additional Information
+            <div className="space-y-4 pt-4 border-t border-white/10">
+              <h3 className="text-sm font-semibold text-fg-premium flex items-center gap-2">
+                <FileText className="h-4 w-4 text-accent-primary" /> Additional Information
               </h3>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700">Description</Label>
+                  <Label htmlFor="description" className="text-sm font-semibold text-fg-premium">Description</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -759,13 +759,13 @@ export default function SubjectManagementPage() {
                     }
                     placeholder="Optional subject description"
                     rows={3}
-                    className="mt-2 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="mt-2 border-white/10 bg-white/5 text-fg-premium focus:border-accent-primary focus:ring-accent-primary/20"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="isActive" className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                    Status <span className="text-red-500">*</span>
+                  <Label htmlFor="isActive" className="text-sm font-semibold text-fg-premium flex items-center gap-1">
+                    Status <span className="text-red-400">*</span>
                   </Label>
                   <Select
                     value={formData.isActive ? 'true' : 'false'}
@@ -773,18 +773,18 @@ export default function SubjectManagementPage() {
                       setFormData({ ...formData, isActive: value === 'true' })
                     }
                   >
-                    <SelectTrigger className="mt-2 border-slate-300 bg-white">
+                    <SelectTrigger className="mt-2 border-white/10 bg-white/5 text-fg-premium">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
+                    <SelectContent className="bg-gray-900 border-white/10 text-fg-premium">
                       <SelectItem value="true">
                         <div className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-green-600" /> Active
+                          <CheckCircle2 className="h-4 w-4 text-green-400" /> Active
                         </div>
                       </SelectItem>
                       <SelectItem value="false">
                         <div className="flex items-center gap-2">
-                          <XCircle className="h-4 w-4 text-slate-400" /> Inactive
+                          <XCircle className="h-4 w-4 text-red-400" /> Inactive
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -793,16 +793,16 @@ export default function SubjectManagementPage() {
               </div>
             </div>
 
-            <DialogFooter className="bg-slate-50 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-slate-200">
+            <DialogFooter className="bg-white/5 -mx-6 -mb-6 px-6 py-4 mt-8 border-t border-white/10">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
-                className="hover:bg-white"
+                className="hover:bg-white/10 border-white/10 text-fg-premium"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="gap-2 bg-purple-600 hover:bg-purple-700">
+              <Button type="submit" className="gap-2 bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0">
                 {selectedSubject ? (
                   <><CheckCircle2 className="h-4 w-4" /> Update Subject</>
                 ) : (
@@ -816,14 +816,14 @@ export default function SubjectManagementPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-bg-premium border-white/10 text-fg-premium">
           <DialogHeader>
-            <DialogTitle className="text-red-600 flex items-center gap-2 text-xl">
+            <DialogTitle className="text-red-400 flex items-center gap-2 text-xl">
               <Trash2 className="h-6 w-6" /> Confirm Deletion
             </DialogTitle>
-            <DialogDescription className="text-base pt-2">
+            <DialogDescription className="text-base pt-2 text-fg-premium-muted">
               Are you sure you want to delete{' '}
-              <span className="font-semibold text-slate-900">
+              <span className="font-semibold text-fg-premium">
                 {selectedSubject?.name}
               </span>
               ? This action cannot be undone and will remove all associated data.
@@ -833,10 +833,11 @@ export default function SubjectManagementPage() {
             <Button
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
+              className="border-white/10 hover:bg-white/10 text-fg-premium"
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete} className="gap-2">
+            <Button variant="destructive" onClick={handleDelete} className="gap-2 bg-red-500 hover:bg-red-600">
               <Trash2 className="h-4 w-4" /> Delete Subject
             </Button>
           </DialogFooter>

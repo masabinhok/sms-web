@@ -1,9 +1,30 @@
+'use client'
+
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import Link from 'next/link'
-import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb, ArrowRight, Clock } from 'lucide-react'
+import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb, ArrowRight, Clock, LayoutDashboard, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { motion } from 'framer-motion'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card'
+import { Activity, RefreshCcw, Download, Zap } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/store/authStore'
 
 export default function AdminDashboard() {
+  const router = useRouter()
+  const { user } = useAuth()
+
+  const fetchDashboardData = () => {
+    // Refresh logic here
+    console.log('Refreshing dashboard data...')
+  }
+
   // Mock data - replace with real data from API
   const stats = [
     {
@@ -50,7 +71,7 @@ export default function AdminDashboard() {
 
   const quickActions = [
     {
-      title: 'Create Student',
+      label: 'Create Student',
       description: 'Add a new student to the system',
       href: '/admin/add-student',
       icon: GraduationCap,
@@ -59,7 +80,7 @@ export default function AdminDashboard() {
       hover: 'group-hover:bg-blue-500/20'
     },
     {
-      title: 'Create Teacher',
+      label: 'Create Teacher',
       description: 'Register a new teacher',
       href: '/admin/add-teacher',
       icon: Users,
@@ -68,7 +89,7 @@ export default function AdminDashboard() {
       hover: 'group-hover:bg-emerald-500/20'
     },
     {
-      title: 'Create Admin',
+      label: 'Create Admin',
       description: 'Add a new administrator',
       href: '/supersuperadmin/add-admin',
       icon: UserPlus,
@@ -77,7 +98,7 @@ export default function AdminDashboard() {
       hover: 'group-hover:bg-purple-500/20'
     },
     {
-      title: 'System Settings',
+      label: 'System Settings',
       description: 'Configure system preferences',
       href: '/admin/settings',
       icon: Settings,
@@ -88,179 +109,174 @@ export default function AdminDashboard() {
   ]
 
   const recentActivities = [
-    { action: 'New student enrolled', time: '2 minutes ago', type: 'student' },
-    { action: 'Teacher profile updated', time: '15 minutes ago', type: 'teacher' },
-    { action: 'Class schedule modified', time: '1 hour ago', type: 'class' },
-    { action: 'Admin created', time: '2 hours ago', type: 'admin' },
+    { id: 1, title: 'New student enrolled', description: 'John Doe', time: '2 minutes ago', type: 'student', icon: Users },
+    { id: 2, title: 'Teacher profile updated', description: 'Jane Smith', time: '15 minutes ago', type: 'teacher', icon: Users },
+    { id: 3, title: 'Class schedule modified', description: 'Math 101', time: '1 hour ago', type: 'class', icon: Clock },
+    { id: 4, title: 'Admin created', description: 'Alice Johnson', time: '2 hours ago', type: 'admin', icon: UserPlus },
   ]
 
   return (
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <div className="space-y-8 mx-auto max-w-7xl p-6 lg:p-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-fg-premium tracking-tight">Admin Dashboard</h1>
-            <p className="mt-2 text-fg-premium-muted">Welcome back! Here's what's happening in your school today.</p>
-          </div>
-          <div className="flex items-center gap-3">
-             <div className="text-right hidden md:block">
-                <div className="text-sm font-medium text-fg-premium">Academic Year</div>
-                <div className="text-xs text-fg-premium-muted">2024-2025</div>
-             </div>
-             <div className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                <Calendar className="h-5 w-5 text-accent-primary" />
-             </div>
-          </div>
-        </div>
-
-        {/* Setup Guidelines Banner */}
-        <Link 
-          href="/admin/guidelines"
-          className="block group relative overflow-hidden rounded-2xl border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 via-orange-500/5 to-transparent p-1 transition-all hover:border-yellow-500/50"
+    <div className="min-h-screen bg-bg-premium p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between"
         >
-          <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="relative p-6 flex items-start gap-5">
-            <div className="rounded-xl bg-yellow-500/20 p-3 group-hover:scale-110 transition-transform border border-yellow-500/20">
-              <Lightbulb className="h-6 w-6 text-yellow-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-fg-premium mb-1 flex items-center gap-2">
-                New to the system? View Setup Guidelines
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 text-yellow-400" />
-              </h3>
-              <p className="text-sm text-fg-premium-muted max-w-3xl">
-                Follow our step-by-step guide to properly configure your school: Setup school info → Create classes & subjects → Add teachers → Enroll students
-              </p>
-            </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text flex items-center gap-3">
+              <LayoutDashboard className="w-10 h-10 text-accent-primary" />
+              Admin Dashboard
+            </h1>
+            <p className="text-fg-premium-muted mt-2 text-lg">
+              Welcome back, {user?.username || 'Admin'}. Here's what's happening today.
+            </p>
           </div>
-        </Link>
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={fetchDashboardData}
+              className="border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white"
+            >
+              <RefreshCcw className="w-4 h-4 mr-2" />
+              Refresh Data
+            </Button>
+            <Button className="bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0 shadow-lg shadow-accent-primary/20">
+              <Download className="w-4 h-4 mr-2" />
+              Download Report
+            </Button>
+          </div>
+        </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.title}
-              className={`relative overflow-hidden rounded-2xl border ${stat.border} ${stat.bg} p-6 transition-all hover:scale-[1.02] hover:shadow-lg`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className={`rounded-lg p-2.5 ${stat.bg} border ${stat.border}`}>
-                  <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                </div>
-                <div className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full border border-emerald-400/20">
-                    <TrendingUp className="h-3 w-3" />
-                    {stat.change}
-                </div>
-              </div>
-              <div>
-                  <p className="text-sm font-medium text-fg-premium-muted">{stat.title}</p>
-                  <p className="mt-1 text-3xl font-bold text-fg-premium">{stat.value}</p>
-              </div>
-            </div>
+              <Card className="border-white/10 bg-white/5 glass-panel hover:bg-white/10 transition-all duration-300 group">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-fg-premium-muted group-hover:text-fg-premium transition-colors">
+                    {stat.title}
+                  </CardTitle>
+                  <div className={`p-2 rounded-lg ${stat.bg} bg-opacity-10 group-hover:bg-opacity-20 transition-all`}>
+                    <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-fg-premium mb-1">{stat.value}</div>
+                  <p className="text-xs text-fg-premium-muted flex items-center gap-1">
+                    <span className="text-green-400 font-medium flex items-center">
+                      <TrendingUp className="w-3 h-3 mr-1" />
+                      {stat.trend}
+                    </span>
+                    from last month
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
-        {/* Quick Actions */}
-        <div>
-          <h2 className="mb-5 text-xl font-bold text-fg-premium flex items-center gap-2">
-            <span className="w-1 h-6 bg-accent-primary rounded-full"></span>
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {quickActions.map((action) => (
-              <Link
-                key={action.title}
-                href={action.href}
-                className="group relative flex flex-col rounded-2xl border border-white/5 bg-bg-premium-secondary p-6 transition-all hover:border-accent-primary/30 hover:shadow-lg hover:shadow-accent-primary/5"
-              >
-                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${action.bg} ${action.color} border border-white/5 group-hover:scale-110 transition-transform duration-300`}>
-                  <action.icon className="h-6 w-6" />
-                </div>
-                <h3 className="mb-2 font-semibold text-fg-premium group-hover:text-accent-primary transition-colors">
-                  {action.title}
-                </h3>
-                <p className="text-sm text-fg-premium-muted mb-4 line-clamp-2">{action.description}</p>
-                <div className="mt-auto flex items-center text-xs font-medium text-accent-primary opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                  <span>Get started</span>
-                  <ArrowRight className="ml-1 h-3 w-3" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom Grid - Recent Activity & Upcoming Events */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Activity */}
-          <div className="glass-panel rounded-2xl p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-fg-premium flex items-center gap-2">
-                <Clock className="h-5 w-5 text-accent-primary" />
-                Recent Activity
-              </h2>
-              <Button variant="ghost" size="sm" className="text-xs text-fg-premium-muted hover:text-white hover:bg-white/5">
-                View all
-              </Button>
-            </div>
-            <div className="space-y-1">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                  <div className="mt-1.5 h-2 w-2 rounded-full bg-accent-primary shadow-[0_0_8px_rgba(94,106,210,0.6)]" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-fg-premium group-hover:text-white transition-colors">{activity.action}</p>
-                    <p className="text-xs text-fg-premium-muted">{activity.time}</p>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="lg:col-span-2"
+          >
+            <Card className="border-white/10 bg-white/5 glass-panel h-full">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-fg-premium flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-accent-primary" />
+                      Recent Activity
+                    </CardTitle>
+                    <CardDescription className="text-fg-premium-muted">
+                      Latest actions across the system
+                    </CardDescription>
                   </div>
+                  <Button variant="ghost" size="sm" className="text-accent-primary hover:text-accent-primary hover:bg-accent-primary/10">
+                    View All
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {recentActivities.map((activity, index) => (
+                    <div key={activity.id} className="flex items-start gap-4 group">
+                      <div className={`mt-1 p-2 rounded-full bg-white/5 border border-white/10 group-hover:border-accent-primary/50 transition-colors`}>
+                        <activity.icon className="w-4 h-4 text-accent-primary" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm font-medium text-fg-premium leading-none">
+                          {activity.title}
+                        </p>
+                        <p className="text-xs text-fg-premium-muted">
+                          {activity.description}
+                        </p>
+                      </div>
+                      <div className="text-xs text-fg-premium-muted font-mono">
+                        {activity.time}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          {/* Upcoming Events */}
-          <div className="glass-panel rounded-2xl p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-fg-premium flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-purple-400" />
-                Upcoming Events
-              </h2>
-              <Button variant="ghost" size="sm" className="text-xs text-fg-premium-muted hover:text-white hover:bg-white/5">
-                View calendar
-              </Button>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/20">
-                  <span className="text-[10px] font-bold uppercase">Oct</span>
-                  <span className="text-lg font-bold leading-none">15</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-fg-premium text-sm">Parent-Teacher Meeting</h3>
-                  <p className="text-xs text-fg-premium-muted">10:00 AM - Main Hall</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/20">
-                  <span className="text-[10px] font-bold uppercase">Oct</span>
-                  <span className="text-lg font-bold leading-none">20</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-fg-premium text-sm">Annual Sports Day</h3>
-                  <p className="text-xs text-fg-premium-muted">9:00 AM - Sports Ground</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 rounded-xl bg-white/5 p-4 border border-white/5 hover:border-white/10 transition-colors">
-                <div className="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/20">
-                  <span className="text-[10px] font-bold uppercase">Oct</span>
-                  <span className="text-lg font-bold leading-none">25</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-fg-premium text-sm">Exam Week Begins</h3>
-                  <p className="text-xs text-fg-premium-muted">All day - All classes</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Card className="border-white/10 bg-white/5 glass-panel h-full">
+              <CardHeader>
+                <CardTitle className="text-fg-premium flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  Quick Actions
+                </CardTitle>
+                <CardDescription className="text-fg-premium-muted">
+                  Commonly used administrative tasks
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                {quickActions.map((action, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="w-full justify-start h-auto py-4 border-white/10 bg-white/5 text-fg-premium hover:bg-white/10 hover:text-white hover:border-accent-primary/50 group transition-all"
+                    onClick={() => router.push(action.href)}
+                  >
+                    <div className={`p-2 rounded-lg ${action.color} bg-opacity-10 mr-4 group-hover:scale-110 transition-transform`}>
+                      <action.icon className={`w-5 h-5 ${action.color.replace('bg-', 'text-')}`} />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-semibold group-hover:text-accent-primary transition-colors">
+                        {action.label}
+                      </div>
+                      <div className="text-xs text-fg-premium-muted font-normal">
+                        {action.description}
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-accent-primary" />
+                  </Button>
+                ))}
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
-    </ProtectedRoute>
+    </div>
   )
 }
