@@ -1,8 +1,7 @@
 'use client'
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import Link from 'next/link'
-import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb, ArrowRight, Clock, LayoutDashboard, ChevronRight } from 'lucide-react'
+import { Users, GraduationCap, UserPlus, Settings, TrendingUp, Calendar, BookOpen, Award, Lightbulb, ArrowRight, Clock, LayoutDashboard, ChevronRight, AlertCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import {
@@ -15,57 +14,114 @@ import {
 import { Activity, RefreshCcw, Download, Zap } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/store/authStore'
+import { useQuery } from '@tanstack/react-query'
+import { studentApi } from '@/lib/student-api'
+import { teacherApi } from '@/lib/teacher-api'
+import { activityApi } from '@/lib/activity-api'
+import { getAllClasses } from '@/lib/academics-api'
+import { formatDistanceToNow } from 'date-fns'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function AdminDashboard() {
   const router = useRouter()
   const { user } = useAuth()
 
+  // Fetch students stats
+  const { data: studentStats, isLoading: isLoadingStudents, refetch: refetchStudents } = useQuery({
+    queryKey: ['studentStats'],
+    queryFn: () => studentApi.getStats(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+
+  // Fetch teachers stats
+  const { data: teacherStats, isLoading: isLoadingTeachers, refetch: refetchTeachers } = useQuery({
+    queryKey: ['teacherStats'],
+    queryFn: () => teacherApi.getStats(),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  // Fetch recent activities
+  const { data: activitiesData, isLoading: isLoadingActivities, refetch: refetchActivities } = useQuery({
+    queryKey: ['recentActivities'],
+    queryFn: () => activityApi.getAll({ limit: 10, order: 'desc' }),
+    staleTime: 1 * 60 * 1000, // 1 minute for activities
+  })
+
+  // Fetch active classes
+  const { data: classesData, isLoading: isLoadingClasses, refetch: refetchClasses } = useQuery({
+    queryKey: ['activeClasses'],
+    queryFn: () => getAllClasses(undefined, true), // Get only active classes
+    staleTime: 5 * 60 * 1000,
+  })
+
   const fetchDashboardData = () => {
-    // Refresh logic here
-    console.log('Refreshing dashboard data...')
+    refetchStudents()
+    refetchTeachers()
+    refetchActivities()
+    refetchClasses()
   }
 
-  // Mock data - replace with real data from API
+  // Get icon for activity type
+  const getActivityIcon = (entityType: string, action: string) => {
+    if (entityType === 'STUDENT') return GraduationCap
+    if (entityType === 'TEACHER') return Users
+    if (entityType === 'ADMIN') return UserPlus
+    if (entityType === 'CLASS') return BookOpen
+    if (action === 'LOGIN' || action === 'LOGOUT') return Activity
+    return Clock
+  }
+
+  // Format activity description
+  const formatActivityDescription = (activity: { action: string; entityType: string; description: string; username?: string }) => {
+    const actionText = activity.action.toLowerCase()
+    const entityText = activity.entityType.toLowerCase()
+    return `${actionText} ${entityText}: ${activity.description}`
+  }
+
   const stats = [
     {
       title: 'Total Students',
-      value: '1,234',
+      value: isLoadingStudents ? '...' : studentStats?.total?.toString() || '0',
       change: '+12%',
       trend: 'up',
       icon: GraduationCap,
       color: 'text-blue-400',
       bg: 'bg-blue-500/10',
-      border: 'border-blue-500/20'
+      border: 'border-blue-500/20',
+      isLoading: isLoadingStudents
     },
     {
       title: 'Total Teachers',
-      value: '89',
+      value: isLoadingTeachers ? '...' : teacherStats?.total?.toString() || '0',
       change: '+3%',
       trend: 'up',
       icon: Users,
       color: 'text-emerald-400',
       bg: 'bg-emerald-500/10',
-      border: 'border-emerald-500/20'
+      border: 'border-emerald-500/20',
+      isLoading: isLoadingTeachers
     },
     {
       title: 'Active Classes',
-      value: '42',
+      value: isLoadingClasses ? '...' : classesData?.length?.toString() || '0',
       change: '+5%',
       trend: 'up',
       icon: BookOpen,
       color: 'text-purple-400',
       bg: 'bg-purple-500/10',
-      border: 'border-purple-500/20'
+      border: 'border-purple-500/20',
+      isLoading: isLoadingClasses
     },
     {
-      title: 'Attendance Rate',
-      value: '94.5%',
-      change: '+2.1%',
+      title: 'Total Activities',
+      value: isLoadingActivities ? '...' : activitiesData?.meta?.total?.toString() || '0',
+      change: '+15%',
       trend: 'up',
-      icon: Award,
+      icon: Activity,
       color: 'text-amber-400',
       bg: 'bg-amber-500/10',
-      border: 'border-amber-500/20'
+      border: 'border-amber-500/20',
+      isLoading: isLoadingActivities
     },
   ]
 
@@ -89,30 +145,23 @@ export default function AdminDashboard() {
       hover: 'group-hover:bg-emerald-500/20'
     },
     {
-      label: 'Create Admin',
-      description: 'Add a new administrator',
-      href: '/supersuperadmin/add-admin',
-      icon: UserPlus,
+      label: 'View Students',
+      description: 'Browse all students',
+      href: '/admin/students',
+      icon: GraduationCap,
       color: 'text-purple-400',
       bg: 'bg-purple-500/10',
       hover: 'group-hover:bg-purple-500/20'
     },
     {
-      label: 'System Settings',
-      description: 'Configure system preferences',
-      href: '/admin/settings',
-      icon: Settings,
+      label: 'Activity Logs',
+      description: 'View system activity',
+      href: '/admin/logs',
+      icon: Activity,
       color: 'text-gray-400',
       bg: 'bg-white/5',
       hover: 'group-hover:bg-white/10'
     },
-  ]
-
-  const recentActivities = [
-    { id: 1, title: 'New student enrolled', description: 'John Doe', time: '2 minutes ago', type: 'student', icon: Users },
-    { id: 2, title: 'Teacher profile updated', description: 'Jane Smith', time: '15 minutes ago', type: 'teacher', icon: Users },
-    { id: 3, title: 'Class schedule modified', description: 'Math 101', time: '1 hour ago', type: 'class', icon: Clock },
-    { id: 4, title: 'Admin created', description: 'Alice Johnson', time: '2 hours ago', type: 'admin', icon: UserPlus },
   ]
 
   return (
@@ -165,15 +214,23 @@ export default function AdminDashboard() {
                     {stat.title}
                   </CardTitle>
                   <div className={`p-2 rounded-lg ${stat.bg} bg-opacity-10 group-hover:bg-opacity-20 transition-all`}>
-                    <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                    {stat.isLoading ? (
+                      <Loader2 className={`w-5 h-5 ${stat.color} animate-spin`} />
+                    ) : (
+                      <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-fg-premium mb-1">{stat.value}</div>
+                  {stat.isLoading ? (
+                    <Skeleton className="h-9 w-20 mb-1" />
+                  ) : (
+                    <div className="text-3xl font-bold text-fg-premium mb-1">{stat.value}</div>
+                  )}
                   <p className="text-xs text-fg-premium-muted flex items-center gap-1">
                     <span className="text-green-400 font-medium flex items-center">
                       <TrendingUp className="w-3 h-3 mr-1" />
-                      {stat.trend}
+                      {stat.change}
                     </span>
                     from last month
                   </p>
@@ -203,33 +260,62 @@ export default function AdminDashboard() {
                       Latest actions across the system
                     </CardDescription>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-accent-primary hover:text-accent-primary hover:bg-accent-primary/10">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-accent-primary hover:text-accent-primary hover:bg-accent-primary/10"
+                    onClick={() => router.push('/admin/logs')}
+                  >
                     View All
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  {recentActivities.map((activity, index) => (
-                    <div key={activity.id} className="flex items-start gap-4 group">
-                      <div className={`mt-1 p-2 rounded-full bg-white/5 border border-white/10 group-hover:border-accent-primary/50 transition-colors`}>
-                        <activity.icon className="w-4 h-4 text-accent-primary" />
+                {isLoadingActivities ? (
+                  <div className="space-y-6">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="flex items-start gap-4">
+                        <Skeleton className="w-10 h-10 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-4 w-3/4" />
+                          <Skeleton className="h-3 w-1/2" />
+                        </div>
+                        <Skeleton className="h-3 w-20" />
                       </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium text-fg-premium leading-none">
-                          {activity.title}
-                        </p>
-                        <p className="text-xs text-fg-premium-muted">
-                          {activity.description}
-                        </p>
-                      </div>
-                      <div className="text-xs text-fg-premium-muted font-mono">
-                        {activity.time}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : activitiesData?.data && activitiesData.data.length > 0 ? (
+                  <div className="space-y-6">
+                    {activitiesData.data.slice(0, 8).map((activity) => {
+                      const ActivityIcon = getActivityIcon(activity.entityType, activity.action)
+                      return (
+                        <div key={activity.id} className="flex items-start gap-4 group">
+                          <div className="mt-1 p-2 rounded-full bg-white/5 border border-white/10 group-hover:border-accent-primary/50 transition-colors">
+                            <ActivityIcon className="w-4 h-4 text-accent-primary" />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            <p className="text-sm font-medium text-fg-premium leading-none">
+                              {activity.action.charAt(0) + activity.action.slice(1).toLowerCase()} {activity.entityType.toLowerCase()}
+                            </p>
+                            <p className="text-xs text-fg-premium-muted">
+                              {activity.username && <span className="font-medium">{activity.username}: </span>}
+                              {activity.description}
+                            </p>
+                          </div>
+                          <div className="text-xs text-fg-premium-muted font-mono">
+                            {formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <AlertCircle className="w-12 h-12 text-fg-premium-muted mx-auto mb-3 opacity-50" />
+                    <p className="text-fg-premium-muted text-sm">No recent activities</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
