@@ -119,6 +119,10 @@ export function Hero() {
             <div className="hero-cta flex flex-col sm:flex-row gap-5 mb-16">
               <Button 
                 size="lg" 
+                onClick={() => {
+                  const aboutSection = document.getElementById('about');
+                  aboutSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="bg-accent-primary hover:bg-accent-primary/90 text-white font-semibold px-8 py-6 text-lg shadow-[0_0_20px_rgba(94,106,210,0.3)] hover:shadow-[0_0_30px_rgba(94,106,210,0.5)] transition-all duration-300 rounded-xl"
               >
                 <BookOpen className="h-5 w-5 mr-2" />
@@ -138,10 +142,23 @@ export function Hero() {
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl bg-bg-premium border-white/10 p-0 overflow-hidden rounded-2xl">
                   <DialogHeader className="sr-only">
-                    <DialogTitle>Virtual Tour</DialogTitle>
+                    <DialogTitle>Virtual Campus Tour</DialogTitle>
                   </DialogHeader>
-                  <div className="aspect-video bg-black flex items-center justify-center">
-                    <p className="text-fg-premium-muted">Virtual Tour Video Placeholder</p>
+                  <div className="aspect-video bg-black relative">
+                    {/* YouTube embed placeholder - replace with actual video URL */}
+                    <iframe
+                      className="w-full h-full"
+                      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                      title="School Virtual Tour"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                    {/* Overlay with note */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4">
+                      <p className="text-white text-xs text-center">
+                        Note: This is a template. For real deployment, record a professional virtual tour video of your campus and facilities, then replace the YouTube URL above.
+                      </p>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>

@@ -76,7 +76,7 @@ export function Gallery() {
   }
 
   return (
-    <section ref={containerRef} className="py-24 lg:py-32 bg-premium relative overflow-hidden">
+    <section id="gallery" ref={containerRef} className="py-24 lg:py-32 bg-premium relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-primary/10 rounded-full blur-[100px]" />

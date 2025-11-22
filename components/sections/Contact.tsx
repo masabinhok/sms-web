@@ -10,16 +10,21 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useSchool } from '@/components/SchoolProvider'
+import { submitContactInquiry } from '@/lib/contact-api'
+import { useToast } from '@/hooks/use-toast'
+import { useMessage } from '@/store/messageStore'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Contact() {
   const { school } = useSchool();
+  const { addMessage } = useMessage();
   const containerRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<HTMLDivElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
   const [formData, setFormData] = useState({
     name: '',
@@ -86,10 +91,31 @@ export function Contact() {
     return () => ctx.revert()
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log('Form submitted:', formData)
+    setIsSubmitting(true)
+    
+    try {
+      await submitContactInquiry(formData)
+      
+      // Success feedback
+      addMessage('Thank you for contacting us! We will get back to you soon.', 'success')
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      })
+    } catch (error) {
+      // Error feedback
+      addMessage('Failed to submit inquiry. Please try again or contact us directly via phone/email.', 'error')
+      console.error('Contact form error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -247,11 +273,15 @@ export function Contact() {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-accent-primary hover:bg-accent-primary/90 text-white font-bold py-6 text-lg shadow-lg shadow-accent-primary/20 hover:shadow-accent-primary/40 transition-all duration-300"
+                    disabled={isSubmitting}
+                    className="w-full bg-accent-primary hover:bg-accent-primary/90 text-white font-bold py-6 text-lg shadow-lg shadow-accent-primary/20 hover:shadow-accent-primary/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-5 h-5 mr-2" />
-                    Send Message
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </Button>
+                  <p className="text-xs text-center text-fg-premium-muted mt-2">
+                    Note: This is a template. For real school deployment, contact submissions will be saved to the database and notification emails will be sent.
+                  </p>
                 </form>
               </CardContent>
             </Card>
@@ -268,14 +298,26 @@ export function Contact() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full h-96 bg-black/40 flex items-center justify-center relative group">
-                <div className="text-center text-gray-500">
-                  <MapPin className="w-16 h-16 mx-auto mb-4 text-accent-primary/50" />
-                  <p className="font-semibold text-lg text-gray-400">Interactive Map Placeholder</p>
-                  <p className="text-sm mt-2 text-gray-500">Replace with Google Maps embed or custom map</p>
+              <div className="w-full h-96 bg-black/40 relative group">
+                {/* Google Maps Embed */}
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.0755917853807!2d85.3239581!3d27.6710482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb5137c1bf18db1ea!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2sus!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full"
+                />
+                {/* Overlay with school info */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                  <p className="text-white font-semibold mb-1">{school?.name || 'Our School'}</p>
+                  <p className="text-gray-300 text-sm">{school?.address || ''}, {school?.city || ''}</p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Note: For real deployment, update the Google Maps embed URL with the actual school location coordinates.
+                  </p>
                 </div>
-                {/* Overlay hint */}
-                <div className="absolute inset-0 bg-accent-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </CardContent>
           </Card>

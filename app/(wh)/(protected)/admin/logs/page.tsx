@@ -5,6 +5,7 @@ import { activityApi, Activity, ActivityQueryParams } from '@/lib/activity-api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useMessage } from '@/store/messageStore';
 import {
   Select,
   SelectContent,
@@ -77,6 +78,7 @@ const actionIcons: Record<string, React.ComponentType<{ className?: string }>> =
 };
 
 const ActivityLogPage = () => {
+  const { addMessage } = useMessage();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -176,6 +178,48 @@ const ActivityLogPage = () => {
 
   const stats = getActivityStats();
 
+  const handleExportLogs = () => {
+    try {
+      // Prepare CSV data
+      const headers = ['Date & Time', 'User', 'Role', 'Action', 'Entity Type', 'Description', 'IP Address', 'Entity ID'];
+      const csvRows = [headers.join(',')];
+
+      // Add activity data
+      activities.forEach(activity => {
+        const row = [
+          formatDate(activity.createdAt),
+          activity.username || 'Unknown',
+          activity.userRole,
+          activity.action,
+          activity.entityType || 'N/A',
+          `"${(activity.description || 'N/A').replace(/"/g, '""')}"`, // Escape quotes
+          activity.ipAddress || 'N/A',
+          activity.entityId ? `"${activity.entityId.replace(/"/g, '""')}"` : 'N/A'
+        ];
+        csvRows.push(row.join(','));
+      });
+
+      // Create CSV blob
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      
+      // Create download link
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `activity-logs-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      addMessage('Logs exported successfully!', 'success');
+    } catch (error) {
+      console.error('Export error:', error);
+      addMessage('Failed to export logs. Please try again.', 'error');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-bg-premium p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -204,7 +248,10 @@ const ActivityLogPage = () => {
               <RefreshCcw className="w-4 h-4 mr-2" />
               Refresh
             </Button>
-            <Button className="bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0">
+            <Button 
+              onClick={handleExportLogs}
+              className="bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0"
+            >
               <Download className="w-4 h-4 mr-2" />
               Export Logs
             </Button>

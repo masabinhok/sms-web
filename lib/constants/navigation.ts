@@ -25,31 +25,31 @@ import {
 export const NAVIGATION_MENU = [
   {
     title: "About",
-    href: "#about",
+    href: "/about",
     icon: Building,
     description: "Discover our heritage and mission",
     items: [
       { 
         title: "Our Story", 
-        href: "#story", 
+        href: "/about#story", 
         description: "Founded with a vision for excellence",
         icon: BookOpen 
       },
       { 
         title: "Mission & Vision", 
-        href: "#mission", 
+        href: "/about#mission", 
         description: "Our guiding principles and goals",
         icon: Star 
       },
       { 
         title: "Leadership Team", 
-        href: "#team", 
+        href: "/about#team", 
         description: "Meet our dedicated educators",
         icon: Users 
       },
       { 
         title: "Awards & Recognition", 
-        href: "#awards", 
+        href: "/about#awards", 
         description: "Celebrating our achievements",
         icon: Trophy 
       },
@@ -57,31 +57,31 @@ export const NAVIGATION_MENU = [
   },
   {
     title: "Academics",
-    href: "#academics",
+    href: "/academics",
     icon: BookOpen,
     description: "Excellence in education",
     items: [
       { 
         title: "Curriculum", 
-        href: "#curriculum", 
+        href: "/academics#curriculum", 
         description: "Comprehensive academic framework",
         icon: BookOpen 
       },
       { 
         title: "Programs", 
-        href: "#programs", 
+        href: "/academics#programs", 
         description: "Early Years to Higher Secondary",
         icon: GraduationCap 
       },
       { 
         title: "Facilities", 
-        href: "#facilities", 
+        href: "/academics#facilities", 
         description: "Modern learning environments",
         icon: Building 
       },
       { 
         title: "Digital Learning", 
-        href: "#technology", 
+        href: "/academics#technology", 
         description: "Technology-enhanced education",
         icon: Globe 
       },
@@ -121,31 +121,31 @@ export const NAVIGATION_MENU = [
   },
   {
     title: "Admissions",
-    href: "#admissions",
+    href: "/admissions",
     icon: GraduationCap,
     description: "Join our community",
     items: [
       { 
         title: "Application Process", 
-        href: "#application", 
+        href: "/admissions#application", 
         description: "Step-by-step admission guide",
         icon: BookOpen 
       },
       { 
         title: "Requirements", 
-        href: "#requirements", 
+        href: "/admissions#requirements", 
         description: "Eligibility and documentation",
         icon: Star 
       },
       { 
         title: "Fee Structure", 
-        href: "#fees", 
+        href: "/admissions#fees", 
         description: "Transparent pricing information",
         icon: Building 
       },
       { 
         title: "Scholarships", 
-        href: "#scholarships", 
+        href: "/admissions#scholarships", 
         description: "Financial assistance programs",
         icon: Award 
       },
@@ -153,31 +153,31 @@ export const NAVIGATION_MENU = [
   },
   {
     title: "Contact",
-    href: "#contact",
+    href: "/contact",
     icon: MessageSquare,
     description: "Get in touch with us",
     items: [
       { 
         title: "Contact Information", 
-        href: "#contact-info", 
+        href: "/contact#contact-info", 
         description: "Phone, email, and address details",
         icon: Phone 
       },
       { 
         title: "Visit Campus", 
-        href: "#visit", 
+        href: "/contact#visit", 
         description: "Schedule a campus tour",
         icon: MapPin 
       },
       { 
         title: "Send Message", 
-        href: "#message", 
+        href: "/contact#message", 
         description: "Contact form and inquiries",
         icon: Mail 
       },
       { 
         title: "Directions", 
-        href: "#directions", 
+        href: "/contact#directions", 
         description: "Location and travel information",
         icon: Globe 
       },

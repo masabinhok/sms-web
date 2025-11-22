@@ -48,7 +48,7 @@ export function Highlights() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 lg:py-32 bg-bg-premium relative overflow-hidden">
+    <section id="highlights" ref={sectionRef} className="py-20 lg:py-32 bg-bg-premium relative overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-primary/5 rounded-full blur-3xl" />

@@ -39,7 +39,7 @@ export function Programs() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 lg:py-32 bg-bg-premium relative overflow-hidden">
+    <section id="programs" ref={sectionRef} className="py-20 lg:py-32 bg-bg-premium relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent-primary/5 rounded-full blur-3xl" />
@@ -69,9 +69,9 @@ export function Programs() {
             return (
               <div
                 key={program.id}
-                className="program-card opacity-0"
+                className="program-card opacity-0 flex"
               >
-                <Card className="h-full bg-white/5 backdrop-blur-md border-white/10 hover:border-accent-primary/50 shadow-lg hover:shadow-2xl hover:shadow-accent-primary/20 transition-all duration-500 group relative overflow-hidden">
+                <Card className="flex flex-col w-full bg-white/5 backdrop-blur-md border-white/10 hover:border-accent-primary/50 shadow-lg hover:shadow-2xl hover:shadow-accent-primary/20 transition-all duration-500 group relative overflow-hidden">
                   {/* Gradient Overlay on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/10 via-transparent to-purple-600/10 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                   
@@ -89,18 +89,18 @@ export function Programs() {
                     </Badge>
                   </CardHeader>
                   
-                  <CardContent className="text-center space-y-6 relative z-10">
-                    <CardDescription className="text-white/60 leading-relaxed min-h-[3rem]">
+                  <CardContent className="text-center flex flex-col flex-1 relative z-10">
+                    <CardDescription className="text-white/60 leading-relaxed mb-6 h-12 flex items-center justify-center">
                       {program.description}
                     </CardDescription>
                     
-                    <div className="space-y-3 py-4 border-t border-white/5">
-                      {program.features.map((feature: string, idx: number) => (
+                    <div className="space-y-3 py-4 border-t border-white/5 flex-1">
+                      {program.features.slice(0, 5).map((feature: string, idx: number) => (
                         <div 
                           key={idx} 
-                          className="flex items-center text-sm text-white/70 group-hover:text-white transition-colors"
+                          className="flex items-start text-sm text-white/70 group-hover:text-white transition-colors"
                         >
-                          <div className="w-1.5 h-1.5 bg-accent-primary rounded-full mr-3 flex-shrink-0 shadow-[0_0_8px_rgba(var(--accent-primary),0.8)]" />
+                          <div className="w-1.5 h-1.5 bg-accent-primary rounded-full mr-3 flex-shrink-0 mt-1.5 shadow-[0_0_8px_rgba(var(--accent-primary),0.8)]" />
                           <span className="text-left">{feature}</span>
                         </div>
                       ))}
@@ -108,7 +108,7 @@ export function Programs() {
 
                     <Button 
                       variant="outline" 
-                      className="w-full border-white/10 text-white hover:bg-accent-primary hover:text-white hover:border-accent-primary transition-all duration-300 font-semibold group-hover:shadow-lg mt-4 bg-white/5 backdrop-blur-sm"
+                      className="w-full border-white/10 text-white hover:bg-accent-primary hover:text-white hover:border-accent-primary transition-all duration-300 font-semibold group-hover:shadow-lg mt-6 bg-white/5 backdrop-blur-sm"
                       asChild
                     >
                       <Link href={`/academics/programs/${program.id}`} className="flex items-center justify-center">

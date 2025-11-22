@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useSchool } from '@/components/SchoolProvider'
+import { ScheduleVisitDialog, BrochureDialog } from '@/components/VisitBrochureDialogs'
 import { 
   Target, 
   Eye, 
@@ -24,6 +25,8 @@ import { ABOUT_IMAGE, PATTERN_IMAGE } from '@/lib/constants/media'
 export function About() {
   const { school } = useSchool();
   const sectionRef = useRef<HTMLElement>(null);
+  const [visitDialogOpen, setVisitDialogOpen] = useState(false);
+  const [brochureDialogOpen, setBrochureDialogOpen] = useState(false);
   
   const features = [
     {
@@ -270,13 +273,15 @@ export function About() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg" 
+                  onClick={() => setVisitDialogOpen(true)}
                   className="bg-white text-blue-900 hover:bg-gray-100 font-semibold shadow-xl transition-all duration-300"
                 >
                   Schedule a Visit
                 </Button>
                 <Button 
                   size="lg" 
-                  variant="outline" 
+                  variant="outline"
+                  onClick={() => setBrochureDialogOpen(true)}
                   className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                 >
                   Download Brochure
@@ -286,6 +291,10 @@ export function About() {
           </Card>
         </div>
       </div>
+
+      {/* Dialogs */}
+      <ScheduleVisitDialog open={visitDialogOpen} onOpenChange={setVisitDialogOpen} />
+      <BrochureDialog open={brochureDialogOpen} onOpenChange={setBrochureDialogOpen} />
     </section>
   )
 }

@@ -109,19 +109,26 @@ export function Footer() {
             <h4 className="text-lg font-bold mb-6 text-white">Programs</h4>
             <ul className="space-y-3 text-gray-400">
               {[
-                { name: 'Early Years', href: '/programs/early-years' },
-                { name: 'Primary Level', href: '/programs/primary' },
-                { name: 'Secondary Level', href: '/programs/secondary' },
-                { name: 'Higher Secondary', href: '/programs/higher-secondary' }
+                { name: 'Early Years', href: '/programs/early-years', disabled: true },
+                { name: 'Primary Level', href: '/programs/primary', disabled: true },
+                { name: 'Secondary Level', href: '/programs/secondary', disabled: true },
+                { name: 'Higher Secondary', href: '/programs/higher-secondary', disabled: true }
               ].map((program) => (
                 <li key={program.href}>
-                  <Link 
-                    href={program.href} 
-                    className="hover:text-accent-primary transition-all duration-300 flex items-center group"
-                  >
-                    <ArrowRight className="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all text-accent-primary" />
-                    <span className="group-hover:translate-x-1 transition-transform">{program.name}</span>
-                  </Link>
+                  {program.disabled ? (
+                    <span className="flex items-center cursor-not-allowed opacity-50">
+                      <span>{program.name}</span>
+                      <span className="ml-2 text-xs text-accent-primary/70">(Coming Soon)</span>
+                    </span>
+                  ) : (
+                    <Link 
+                      href={program.href} 
+                      className="hover:text-accent-primary transition-all duration-300 flex items-center group"
+                    >
+                      <ArrowRight className="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all text-accent-primary" />
+                      <span className="group-hover:translate-x-1 transition-transform">{program.name}</span>
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
