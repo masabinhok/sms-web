@@ -145,7 +145,7 @@ export default function EditTeacherPage() {
 
   const handleBlur = (name: string) => {
     setTouched(prev => new Set(prev).add(name))
-    const value = (formData as any)[name] || ''
+    const value = String((formData as Record<string, unknown>)[name] || '')
     const error = validateField(name, value)
     setErrors(prev => ({ ...prev, [name]: error }))
   }
@@ -173,7 +173,7 @@ export default function EditTeacherPage() {
     const requiredFields = ['fullName', 'email', 'dob', 'phone', 'address']
     
     requiredFields.forEach(field => {
-      const value = (formData as any)[field] || ''
+      const value = String((formData as Record<string, unknown>)[field] || '')
       const error = validateField(field, value)
       if (error) {
         newErrors[field as keyof FormErrors] = error
@@ -204,16 +204,17 @@ export default function EditTeacherPage() {
       const dataToSubmit = {
         ...formData,
         dob: formData.dob ? new Date(formData.dob).toISOString() : undefined,
-        subjects: selectedSubjects.length > 0 ? selectedSubjects as any : undefined,
-        classes: selectedClasses.length > 0 ? selectedClasses as any : undefined,
+        subjects: selectedSubjects.length > 0 ? selectedSubjects : undefined,
+        classes: selectedClasses.length > 0 ? selectedClasses : undefined,
       }
       
       await teacherApi.update(teacherId, dataToSubmit)
       addMessage('Teacher profile updated successfully!', 'success')
       router.push(`/admin/teachers/${teacherId}`)
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error('Failed to update teacher:', error)
-      addMessage(error?.message || 'Failed to update teacher', 'error')
+      addMessage(err?.message || 'Failed to update teacher', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -243,12 +244,12 @@ export default function EditTeacherPage() {
     name: keyof UpdateTeacherData
     type?: string
     placeholder?: string
-    icon?: any
+    icon?: React.ComponentType<{ className?: string }>
     required?: boolean
     maxLength?: number
   }) => {
     const hasError = touched.has(name) && errors[name as keyof FormErrors]
-    const isValid = touched.has(name) && !errors[name as keyof FormErrors] && (formData as any)[name]
+    const isValid = Boolean(touched.has(name) && !errors[name as keyof FormErrors] && (formData as Record<string, unknown>)[name])
 
     return (
       <div>
@@ -260,7 +261,7 @@ export default function EditTeacherPage() {
           <Input
             id={name}
             type={type}
-            value={(formData as any)[name] || ''}
+            value={(formData as Record<string, unknown>)[name] as string || ''}
             onChange={(e) => handleFieldChange(name, e.target.value)}
             onBlur={() => handleBlur(name)}
             placeholder={placeholder}

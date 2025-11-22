@@ -52,7 +52,7 @@ export const staggerList = (elements: string | Element[] | NodeListOf<Element>, 
   if (typeof elements === 'string') {
     document.querySelectorAll(elements).forEach(el => el.setAttribute('data-premium', 'list-item'));
   } else if (Array.isArray(elements) || elements instanceof NodeList) {
-    elements.forEach((el: any) => el.setAttribute && el.setAttribute('data-premium', 'list-item'));
+    elements.forEach((el: Element) => el.setAttribute && el.setAttribute('data-premium', 'list-item'));
   }
 
   return gsap.fromTo(elements, 
@@ -126,7 +126,7 @@ export const revealOnScroll = (element: string | Element, vars: gsap.TweenVars =
         trigger: element,
         start: 'top 85%',
         toggleActions: 'play none none reverse',
-        ...vars.scrollTrigger as any
+        ...(vars.scrollTrigger as Record<string, unknown>)
       },
       ...vars
     }

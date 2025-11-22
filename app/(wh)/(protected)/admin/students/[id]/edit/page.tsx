@@ -131,7 +131,7 @@ export default function EditStudentPage() {
 
   const handleBlur = (name: string) => {
     setTouched(prev => new Set(prev).add(name))
-    const value = (formData as any)[name] || ''
+    const value = String((formData as Record<string, unknown>)[name] || '')
     const error = validateField(name, value)
     setErrors(prev => ({ ...prev, [name]: error }))
   }
@@ -143,7 +143,7 @@ export default function EditStudentPage() {
     const requiredFields = ['fullName', 'email', 'dob', 'class', 'section', 'rollNumber', 'guardianName', 'guardianContact']
     
     requiredFields.forEach(field => {
-      const value = (formData as any)[field] || ''
+      const value = String((formData as Record<string, unknown>)[field] || '')
       const error = validateField(field, value)
       if (error) {
         newErrors[field as keyof FormErrors] = error
@@ -188,9 +188,10 @@ export default function EditStudentPage() {
       await studentApi.update(studentId, dataToSubmit)
       addMessage('Student profile updated successfully!', 'success')
       router.push(`/admin/students/${studentId}`)
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error('Failed to update student:', error)
-      addMessage(error?.message || 'Failed to update student', 'error')
+      addMessage(err?.message || 'Failed to update student', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -224,12 +225,12 @@ export default function EditStudentPage() {
     name: keyof UpdateStudentData
     type?: string
     placeholder?: string
-    icon?: any
+    icon?: React.ComponentType<{ className?: string }>
     required?: boolean
     maxLength?: number
   }) => {
     const hasError = touched.has(name) && errors[name as keyof FormErrors]
-    const isValid = touched.has(name) && !errors[name as keyof FormErrors] && (formData as any)[name]
+    const isValid = Boolean(touched.has(name) && !errors[name as keyof FormErrors] && (formData as Record<string, unknown>)[name])
 
     return (
       <div>
@@ -241,7 +242,7 @@ export default function EditStudentPage() {
           <Input
             id={name}
             type={type}
-            value={(formData as any)[name] || ''}
+            value={(formData as Record<string, unknown>)[name] as string || ''}
             onChange={(e) => handleFieldChange(name, e.target.value)}
             onBlur={() => handleBlur(name)}
             placeholder={placeholder}

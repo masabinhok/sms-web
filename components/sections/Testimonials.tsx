@@ -100,8 +100,8 @@ export function Testimonials() {
           <div ref={slideRef} className="relative">
             <Card className="bg-white/5 border-white/10 backdrop-blur-md shadow-2xl overflow-hidden relative">
               {/* Decorative quote marks */}
-              <div className="absolute top-0 left-0 text-accent-primary/10 text-9xl font-serif leading-none select-none">"</div>
-              <div className="absolute bottom-0 right-0 text-blue-500/10 text-9xl font-serif leading-none select-none rotate-180">"</div>
+              <div className="absolute top-0 left-0 text-accent-primary/10 text-9xl font-serif leading-none select-none">&quot;</div>
+              <div className="absolute bottom-0 right-0 text-blue-500/10 text-9xl font-serif leading-none select-none rotate-180">&quot;</div>
               
               <CardContent className="p-6 md:p-12 lg:p-16 text-center relative z-10">
                 <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-accent-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-lg shadow-accent-primary/20">

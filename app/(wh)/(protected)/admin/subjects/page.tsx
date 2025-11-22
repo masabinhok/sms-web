@@ -145,8 +145,9 @@ export default function SubjectManagementPage() {
       }
       setIsDialogOpen(false)
       fetchSubjects()
-    } catch (error: any) {
-      addMessage(error.message || 'Failed to save subject', 'error')
+    } catch (error) {
+      const err = error as { message?: string };
+      addMessage(err.message || 'Failed to save subject', 'error')
     }
   }
 
@@ -158,8 +159,9 @@ export default function SubjectManagementPage() {
       addMessage('Subject deleted successfully', 'success')
       setIsDeleteDialogOpen(false)
       fetchSubjects()
-    } catch (error: any) {
-      addMessage(error.message || 'Failed to delete subject', 'error')
+    } catch (error) {
+      const err = error as { message?: string };
+      addMessage(err.message || 'Failed to delete subject', 'error')
     }
   }
 

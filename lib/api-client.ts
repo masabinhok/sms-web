@@ -5,19 +5,19 @@ import { logger, logError, authLogger } from './logger';
 const API_BASE_URL = getApiUrl();
 
 interface ApiOptions extends RequestInit {
-  data?: any
+  data?: unknown
 }
 
 interface ApiError {
   status: number
   message: string
-  data?: any
+  data?: unknown
 }
 
 class ApiClient {
   private baseUrl: string
   private isRefreshing = false
-  private refreshPromise: Promise<any> | null = null
+  private refreshPromise: Promise<boolean> | null = null
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
@@ -80,7 +80,7 @@ class ApiClient {
     return responseData
   }
 
-  private createApiError(status: number, message: string, data?: any): ApiError {
+  private createApiError(status: number, message: string, data?: unknown): ApiError {
     return { status, message, data }
   }
 
@@ -155,15 +155,15 @@ class ApiClient {
     return this.request<T>(endpoint, { ...options, method: 'GET' })
   }
 
-  async post<T>(endpoint: string, data?: any, options?: ApiOptions): Promise<T> {
+  async post<T>(endpoint: string, data?: unknown, options?: ApiOptions): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'POST', data })
   }
 
-  async put<T>(endpoint: string, data?: any, options?: ApiOptions): Promise<T> {
+  async put<T>(endpoint: string, data?: unknown, options?: ApiOptions): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'PUT', data })
   }
 
-  async patch<T>(endpoint: string, data?: any, options?: ApiOptions): Promise<T> {
+  async patch<T>(endpoint: string, data?: unknown, options?: ApiOptions): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'PATCH', data })
   }
 

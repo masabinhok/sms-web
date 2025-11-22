@@ -45,7 +45,7 @@ export interface CreateStudentData {
   address?: string;
 }
 
-export interface UpdateStudentData extends Partial<CreateStudentData> {}
+export type UpdateStudentData = Partial<CreateStudentData>
 
 export const studentApi = {
   // Get all students with pagination and filtering

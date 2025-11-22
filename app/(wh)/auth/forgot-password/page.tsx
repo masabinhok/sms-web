@@ -29,8 +29,9 @@ const ForgotPasswordPage = () => {
       setTimeout(() => {
         router.push('/auth/login')
       }, 2000)
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Failed to send reset link. Please try again.')
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error?.response?.data?.message || 'Failed to send reset link. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -41,7 +42,7 @@ const ForgotPasswordPage = () => {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 space-y-6 border border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900 text-center">Forgot Password</h2>
         <p className="text-gray-600 text-center text-sm mb-4">
-          Enter your username or email and we'll send you a link to reset your password.
+          Enter your username or email and we&apos;ll send you a link to reset your password.
         </p>
 
         {success && (

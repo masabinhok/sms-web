@@ -30,12 +30,12 @@ interface InputFieldProps {
   name: keyof AdminProfileFormData;
   type?: string;
   placeholder?: string;
-  icon?: any;
+  icon?: React.ComponentType<{ className?: string }>;
   required?: boolean;
   helpText?: string;
-  register: any;
-  errors: any;
-  dirtyFields: any;
+  register: ReturnType<typeof useForm<AdminProfileFormData>>['register'];
+  errors: ReturnType<typeof useForm<AdminProfileFormData>>['formState']['errors'];
+  dirtyFields: ReturnType<typeof useForm<AdminProfileFormData>>['formState']['dirtyFields'];
 }
 
 const InputField = ({ 
@@ -192,7 +192,7 @@ export default function CreateAdminProfilePage() {
               </h3>
               <p className="text-sm text-purple-700 leading-relaxed">
                 Admins have full access to the system including creating students, teachers, and other admins. 
-                Please ensure you trust the person you're granting administrator access to. This action cannot be undone easily.
+                Please ensure you trust the person you&apos;re granting administrator access to. This action cannot be undone easily.
               </p>
             </div>
           </div>

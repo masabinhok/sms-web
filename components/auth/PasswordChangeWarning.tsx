@@ -99,8 +99,9 @@ export function PasswordChangeWarning({
         await logout();
         router.push('/');
       }, 2000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to change password');
+    } catch (err) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to change password');
       setIsSubmitting(false);
     }
   };

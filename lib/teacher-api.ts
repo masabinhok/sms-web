@@ -45,7 +45,7 @@ export interface CreateTeacherData {
   classIds?: string[];
 }
 
-export interface UpdateTeacherData extends Partial<CreateTeacherData> {}
+export type UpdateTeacherData = Partial<CreateTeacherData>
 
 export const teacherApi = {
   // Get all teachers with pagination and filtering

@@ -56,7 +56,7 @@ export const SCHOOL_CONFIG = {
   },
 
   // Programs
-  PROGRAMS: PROGRAMS.map((program: any) => ({
+  PROGRAMS: PROGRAMS.map((program: typeof PROGRAMS[number]) => ({
     id: program.id,
     title: program.title,
     description: program.description,
@@ -66,14 +66,14 @@ export const SCHOOL_CONFIG = {
   })),
 
   // Highlights/Features
-  HIGHLIGHTS: HIGHLIGHTS.map((highlight: any) => ({
+  HIGHLIGHTS: HIGHLIGHTS.map((highlight: typeof HIGHLIGHTS[number]) => ({
     title: highlight.title,
     description: highlight.description,
     icon: highlight.icon
   })),
 
   // Testimonials
-  TESTIMONIALS: TESTIMONIALS.map((testimonial: any) => ({
+  TESTIMONIALS: TESTIMONIALS.map((testimonial: typeof TESTIMONIALS[number]) => ({
     id: testimonial.id,
     name: testimonial.name,
     role: testimonial.role,

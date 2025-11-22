@@ -9,7 +9,7 @@ export interface Activity {
   description: string;
   entityType: 'USER' | 'STUDENT' | 'TEACHER' | 'ADMIN' | 'CLASS' | 'SUBJECT' | 'ASSIGNMENT' | 'GRADE' | 'ATTENDANCE' | 'SCHOOL_SETTINGS';
   entityId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   ipAddress?: string;
   createdAt: string;
 }

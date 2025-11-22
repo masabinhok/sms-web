@@ -21,9 +21,9 @@ export async function validateSchoolInfoSetup(): Promise<ValidationResult> {
     // Check if critical fields are not default/empty values
     const requiredFields = [
       { field: 'name', value: SCHOOL_INFO.name },
-      { field: 'address', value: SCHOOL_INFO.contact.address },
-      { field: 'phone', value: SCHOOL_INFO.contact.phone },
-      { field: 'email', value: SCHOOL_INFO.contact.email },
+      { field: 'address', value: SCHOOL_INFO.address },
+      { field: 'phone', value: SCHOOL_INFO.phone },
+      { field: 'email', value: SCHOOL_INFO.email },
     ]
 
     const emptyFields = requiredFields.filter(

@@ -131,8 +131,9 @@ export default function ClassManagementPage() {
       }
       setIsDialogOpen(false)
       fetchClasses()
-    } catch (error: any) {
-      addMessage(error.message || 'Failed to save class', 'error')
+    } catch (error) {
+      const err = error as { message?: string };
+      addMessage(err.message || 'Failed to save class', 'error')
     }
   }
 
@@ -144,8 +145,9 @@ export default function ClassManagementPage() {
       setIsDeleteDialogOpen(false)
       fetchClasses()
       addMessage(`Successfully deleted ${selectedClass.name}!`, 'success')
-    } catch (error: any) {
-      addMessage(error.message || 'Failed to delete class', 'error')
+    } catch (error) {
+      const err = error as { message?: string };
+      addMessage(err.message || 'Failed to delete class', 'error')
     }
   }
 

@@ -135,7 +135,7 @@ export default function ClassDetailPage() {
   function updateSubjectSelection(
     index: number,
     field: 'subjectId' | 'isCompulsory' | 'weeklyPeriods',
-    value: any
+    value: string | boolean | number
   ) {
     const updated = [...selectedSubjects]
     updated[index] = { ...updated[index], [field]: value }
@@ -178,9 +178,10 @@ export default function ClassDetailPage() {
       
       const className = classData?.name || 'class'
       addMessage(`Successfully assigned ${selectedSubjects.length} subject(s) to ${className}!`, 'success')
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error('Assignment error:', error)
-      addMessage(error.message || 'Failed to assign subjects. Please try again.', 'error')
+      addMessage(err.message || 'Failed to assign subjects. Please try again.', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -208,9 +209,10 @@ export default function ClassDetailPage() {
       await removeSubjectFromClass(classId, subjectId)
       await fetchData()
       addMessage(`Successfully removed "${subjectName}" from ${classData?.name}!`, 'success')
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error('Remove subject error:', error)
-      addMessage(error.message || 'Failed to remove subject. Please try again.', 'error')
+      addMessage(err.message || 'Failed to remove subject. Please try again.', 'error')
     }
   }
 
@@ -243,7 +245,7 @@ export default function ClassDetailPage() {
             <XCircle className="h-8 w-8 text-red-600" />
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">Class not found</h2>
-          <p className="text-slate-600 mb-6">The class you're looking for doesn't exist or has been deleted.</p>
+          <p className="text-slate-600 mb-6">The class you&apos;re looking for doesn&apos;t exist or has been deleted.</p>
           <Button onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
           </Button>

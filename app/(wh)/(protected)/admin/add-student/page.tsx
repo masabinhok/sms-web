@@ -38,12 +38,12 @@ interface InputFieldProps {
   name: keyof StudentProfileFormData;
   type?: string;
   placeholder?: string;
-  icon?: any;
+  icon?: React.ComponentType<{ className?: string }>;
   required?: boolean;
   maxLength?: number;
-  register: any;
-  errors: any;
-  dirtyFields: any;
+  register: ReturnType<typeof useForm<StudentProfileFormData>>['register'];
+  errors: ReturnType<typeof useForm<StudentProfileFormData>>['formState']['errors'];
+  dirtyFields: ReturnType<typeof useForm<StudentProfileFormData>>['formState']['dirtyFields'];
 }
 
 const InputField = ({ 

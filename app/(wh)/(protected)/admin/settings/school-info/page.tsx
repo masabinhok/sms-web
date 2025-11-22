@@ -136,23 +136,23 @@ export default function SchoolInfoSettings() {
     tagline: SCHOOL_INFO.tagline,
     motto: SCHOOL_INFO.motto,
     
-    address: SCHOOL_INFO.contact.address,
-    city: SCHOOL_INFO.contact.city,
-    phone: SCHOOL_INFO.contact.phone,
-    email: SCHOOL_INFO.contact.email,
+    address: SCHOOL_INFO.address,
+    city: SCHOOL_INFO.city,
+    phone: SCHOOL_INFO.phone,
+    email: SCHOOL_INFO.email,
     
-    facebook: SCHOOL_INFO.social.facebook,
-    instagram: SCHOOL_INFO.social.instagram,
-    twitter: SCHOOL_INFO.social.twitter,
-    youtube: SCHOOL_INFO.social.youtube,
+    facebook: SCHOOL_INFO.facebook,
+    instagram: SCHOOL_INFO.instagram,
+    twitter: SCHOOL_INFO.twitter,
+    youtube: SCHOOL_INFO.youtube,
     
-    description: SCHOOL_INFO.about.description,
-    mission: SCHOOL_INFO.about.mission,
-    vision: SCHOOL_INFO.about.vision,
+    description: SCHOOL_INFO.description,
+    mission: SCHOOL_INFO.mission,
+    vision: SCHOOL_INFO.vision,
     
-    heroTitle: SCHOOL_INFO.hero.title,
-    heroSubtitle: SCHOOL_INFO.hero.subtitle,
-    heroCTA: SCHOOL_INFO.hero.ctaPrimary,
+    heroTitle: SCHOOL_INFO.heroTitle,
+    heroSubtitle: SCHOOL_INFO.heroSubtitle,
+    heroCTA: SCHOOL_INFO.heroCTA,
   })
 
   // Fetch school info on mount
@@ -161,30 +161,31 @@ export default function SchoolInfoSettings() {
       try {
         const response = await api.get<{
           message: string
-          school: any
+          school: Record<string, unknown>
         }>('/academics/school')
         
         if (response.school) {
-          setSchoolId(response.school.id)
+          const school = response.school as Record<string, string>;
+          setSchoolId(school.id as string)
           // Update form data with actual school data
           setFormData({
-            name: response.school.name,
-            tagline: response.school.tagline,
-            motto: response.school.motto,
-            address: response.school.address,
-            city: response.school.city,
-            phone: response.school.phone,
-            email: response.school.email,
-            facebook: response.school.facebook,
-            instagram: response.school.instagram,
-            twitter: response.school.twitter,
-            youtube: response.school.youtube,
-            description: response.school.description,
-            mission: response.school.mission,
-            vision: response.school.vision,
-            heroTitle: response.school.heroTitle,
-            heroSubtitle: response.school.heroSubtitle,
-            heroCTA: response.school.heroCTA,
+            name: school.name as string,
+            tagline: school.tagline as string,
+            motto: school.motto as string,
+            address: school.address as string,
+            city: school.city as string,
+            phone: school.phone as string,
+            email: school.email as string,
+            facebook: school.facebook as string,
+            instagram: school.instagram as string,
+            twitter: school.twitter as string,
+            youtube: school.youtube as string,
+            description: school.description as string,
+            mission: school.mission as string,
+            vision: school.vision as string,
+            heroTitle: school.heroTitle as string,
+            heroSubtitle: school.heroSubtitle as string,
+            heroCTA: school.heroCTA as string,
           })
         }
       } catch (error) {

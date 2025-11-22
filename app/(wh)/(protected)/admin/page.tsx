@@ -131,7 +131,7 @@ export default function AdminDashboard() {
               Admin Dashboard
             </h1>
             <p className="text-fg-premium-muted mt-2 text-lg">
-              Welcome back, {user?.username || 'Admin'}. Here's what's happening today.
+              Welcome back, {user?.username || 'Admin'}. Here&apos;s what&apos;s happening today.
             </p>
           </div>
           <div className="flex gap-3">

@@ -97,9 +97,10 @@ export default function AdminProfile() {
         newPassword: '',
         confirmPassword: '',
       });
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error('Password change failed:', error);
-      addMessage(error.message || 'Password change failed', 'error');
+      addMessage(err.message || 'Password change failed', 'error');
     } finally {
       setIsLoading(false);
     }

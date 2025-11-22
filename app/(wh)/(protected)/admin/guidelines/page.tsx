@@ -452,7 +452,7 @@ export default function AdminGuidelines() {
                     </li>
                     <li className="flex items-start gap-2">
                       <AlertCircle className="w-3 h-3 mt-1 flex-shrink-0" />
-                      <span>You'll receive warnings if you try to skip ahead</span>
+                      <span>You&apos;ll receive warnings if you try to skip ahead</span>
                     </li>
                   </ul>
                 </div>
@@ -640,7 +640,7 @@ export default function AdminGuidelines() {
             </CardHeader>
             <CardContent>
               <p className="text-fg-premium-muted mb-4">
-                If you encounter any issues or need assistance with the setup process, please don't hesitate to reach out to our support team.
+                If you encounter any issues or need assistance with the setup process, please don&apos;t hesitate to reach out to our support team.
               </p>
               <div className="flex gap-3">
                 <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 bg-transparent">

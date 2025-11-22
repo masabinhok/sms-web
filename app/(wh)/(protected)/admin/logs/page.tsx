@@ -65,7 +65,7 @@ const roleColors: Record<string, string> = {
   STUDENT: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700',
 };
 
-const actionIcons: Record<string, any> = {
+const actionIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   CREATE: FileText,
   UPDATE: Edit,
   DELETE: Trash2,
@@ -104,8 +104,9 @@ const ActivityLogPage = () => {
       const response = await activityApi.getAll(filters);
       setActivities(response.data);
       setMeta(response.meta);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch activity logs');
+    } catch (err) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to fetch activity logs');
       console.error('Error fetching activities:', err);
     } finally {
       setLoading(false);
