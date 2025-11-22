@@ -13,7 +13,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (hasInitialized.current) return
     hasInitialized.current = true
 
-    // Only fetch user if already authenticated or have cookies
+    // Only fetch user if already authenticated or have cookies/tokens
     if (isAuthenticated) {
       return
     }
@@ -22,7 +22,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const hasTokenCookie = document.cookie.includes('access_token=') || 
                           document.cookie.includes('refresh_token=')
     
-    if (hasTokenCookie) {
+    // Also check localStorage for cross-domain authentication
+    const hasLocalStorageToken = localStorage.getItem('access_token')
+    
+    if (hasTokenCookie || hasLocalStorageToken) {
       fetchUser()
     }
   }, []) // Empty deps array - only run once on mount

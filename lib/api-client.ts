@@ -29,10 +29,14 @@ class ApiClient {
   ): Promise<T> {
     const { data, headers, ...restOptions } = options
 
+    // Get token from localStorage for cross-domain scenarios
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+
     const config: RequestInit = {
       ...restOptions,
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...headers,
       },
       credentials: 'include', // Important for cookies
@@ -139,6 +143,17 @@ class ApiClient {
       })
 
       if (response.ok) {
+        // Store new access token in localStorage for cross-domain requests
+        if (typeof window !== 'undefined') {
+          try {
+            const data = await response.json()
+            if (data.newAccessToken) {
+              localStorage.setItem('access_token', data.newAccessToken)
+            }
+          } catch {
+            // Response might not have JSON body, that's okay
+          }
+        }
         authLogger.tokenRefresh(true);
         return true
       } else {
@@ -176,8 +191,19 @@ export const api = new ApiClient(API_BASE_URL)
 
 // Auth API methods with improved error handling
 export const authApi = {
-  login: (username: string, password: string, role: string) =>
-    api.post<{message?: string, requiresPasswordChange?: boolean, passwordChangeCount?: number}>('/auth/login', { username, password, role }),
+  login: async (username: string, password: string, role: string) => {
+    const response = await api.post<{message?: string, requiresPasswordChange?: boolean, passwordChangeCount?: number, access_token?: string, refresh_token?: string}>('/auth/login', { username, password, role });
+    
+    // Store tokens in localStorage for cross-domain scenarios
+    if (typeof window !== 'undefined' && response.access_token) {
+      localStorage.setItem('access_token', response.access_token);
+      if (response.refresh_token) {
+        localStorage.setItem('refresh_token', response.refresh_token);
+      }
+    }
+    
+    return response;
+  },
 
   logout: async () => {
     // Use Next.js API route for logout to properly clear cookies

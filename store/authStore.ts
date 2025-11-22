@@ -114,6 +114,9 @@ export const useAuth = create<AuthState>()(
         // Robustly clear persisted storage keys used by zustand/persist
         if (typeof window !== 'undefined') {
           try {
+            // Clear access token for cross-domain authentication
+            localStorage.removeItem('access_token');
+            
             // Standard key used by this persist middleware
             localStorage.removeItem('auth-storage');
             // Some environments prefix with 'persist:'

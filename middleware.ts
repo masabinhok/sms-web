@@ -23,13 +23,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if this is a logout action (no tokens present)
-  // This prevents redirect loops after logout
+  // In production with cross-domain API, cookies may not be available
+  // Check if we should skip middleware for client-side auth
   const hasNoTokens = !req.cookies.get('access_token')?.value && !req.cookies.get('refresh_token')?.value;
+  
+  // Allow the request to proceed if no cookies - client-side will handle auth
+  // This is necessary for cross-domain API scenarios in production
   if (hasNoTokens) {
-    const loginUrl = new URL('/auth/login', req.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+    // Let it through - AuthProvider will handle redirects on client
+    return NextResponse.next();
   }
 
   const accessToken = req.cookies.get('access_token')?.value;
