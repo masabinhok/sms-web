@@ -168,10 +168,30 @@ export default function StudentsPage() {
           </Button>
         </motion.div>
 
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-4 gap-4"
+        >
+          <div className="glass-panel p-4 rounded-lg border border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-accent-primary/20 rounded-lg">
+                <Users className="w-6 h-6 text-accent-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-fg-premium-muted">Total Students</p>
+                <p className="text-2xl font-bold text-fg-premium">{total}</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Card className="border-white/10 bg-white/5 glass-panel">
             <CardHeader>
@@ -225,7 +245,7 @@ export default function StudentsPage() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
-                            className="group hover:bg-white/5 transition-colors border-b border-white/5"
+                            className="group hover:bg-white/5 transition-colors border-b border-white/5 cursor-pointer"
                             onClick={() => router.push(`/admin/students/${student.id}`)}
                           >
                             <TableCell className="font-medium text-fg-premium">

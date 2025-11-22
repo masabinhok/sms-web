@@ -141,7 +141,10 @@ export default function TeacherDetailPage() {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Loading teacher details...</div>
+        <div className="glass-panel p-8 flex items-center gap-3">
+          <div className="w-6 h-6 border-3 border-green-400 border-t-transparent rounded-full animate-spin" />
+          <span className="text-fg-premium">Loading teacher details...</span>
+        </div>
       </div>
     )
   }
@@ -151,7 +154,7 @@ export default function TeacherDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
+    <div className="min-h-screen bg-bg-premium">
       <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -160,7 +163,7 @@ export default function TeacherDetailPage() {
               variant="outline"
               size="sm"
               onClick={() => router.push('/admin/teachers')}
-              className="hover:bg-gray-100"
+              className="glass-panel border-white/10 text-fg-premium hover:bg-white/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Teachers
@@ -169,7 +172,7 @@ export default function TeacherDetailPage() {
           <div className="flex items-center gap-2">
             <Button
               onClick={() => router.push(`/admin/teachers/${teacher.id}/edit`)}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+              className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:opacity-90"
             >
               <Edit className="w-4 h-4" />
               Edit Profile
@@ -177,7 +180,7 @@ export default function TeacherDetailPage() {
             <Button
               variant="destructive"
               onClick={() => setDeleteDialog(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-red-500/80 hover:bg-red-600"
             >
               <Trash2 className="w-4 h-4" />
               Delete
@@ -186,43 +189,43 @@ export default function TeacherDetailPage() {
         </div>
 
         {/* Teacher Profile Card */}
-        <div className="bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 rounded-2xl p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
+        <div className="glass-panel border-white/10 rounded-2xl p-8 md:p-10 relative overflow-hidden">
           {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-32 translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full translate-y-48 -translate-x-48"></div>
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full -translate-y-32 translate-x-32"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full translate-y-48 -translate-x-48"></div>
           </div>
           
           <div className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
             {/* Avatar */}
-            <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-5xl md:text-6xl font-bold shadow-lg ring-4 ring-white/30">
+            <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-green-600 to-emerald-600 flex items-center justify-center text-5xl md:text-6xl font-bold text-white shadow-lg ring-4 ring-white/20">
               {teacher.fullName.charAt(0).toUpperCase()}
             </div>
             
             {/* Teacher Info */}
             <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold mb-3">{teacher.fullName}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-3 text-fg-premium">{teacher.fullName}</h1>
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <Badge className={`${getGenderBadgeColor(teacher.gender)} border px-3 py-1 text-sm font-medium`}>
+                <Badge className="bg-green-400/20 border-green-400 text-green-400 px-3 py-1 text-sm font-medium">
                   {teacher.gender || 'Not specified'}
                 </Badge>
-                <Badge className="bg-white/20 border-white/30 text-white px-3 py-1 text-sm font-medium">
+                <Badge className="bg-emerald-400/20 border-emerald-400 text-emerald-400 px-3 py-1 text-sm font-medium">
                   {calculateAge(teacher.dob)} years old
                 </Badge>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/90">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-fg-premium">
                 <div className="flex items-center gap-2">
-                  <Mail className="w-5 h-5" />
+                  <Mail className="w-5 h-5 text-green-400" />
                   <div>
-                    <p className="text-xs text-white/70">Email</p>
-                    <p className="font-semibold text-sm break-all">{teacher.email}</p>
+                    <p className="text-xs text-fg-premium-muted">Email</p>
+                    <p className="font-semibold text-sm break-all text-fg-premium">{teacher.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
+                  <Phone className="w-5 h-5 text-green-400" />
                   <div>
-                    <p className="text-xs text-white/70">Phone</p>
-                    <p className="font-semibold">{teacher.phone}</p>
+                    <p className="text-xs text-fg-premium-muted">Phone</p>
+                    <p className="font-semibold text-fg-premium">{teacher.phone}</p>
                   </div>
                 </div>
               </div>
@@ -233,77 +236,77 @@ export default function TeacherDetailPage() {
         {/* Information Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Personal Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+          <div className="glass-panel border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all">
+            <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-green-400/10 to-emerald-400/10">
               <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
+                <User className="w-5 h-5 text-green-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Personal Information</h3>
               </div>
             </div>
             <div className="p-6 space-y-5">
               {/* Full Name */}
               <div className="flex items-start gap-4">
-                <div className="bg-green-50 text-green-600 p-2.5 rounded-lg">
+                <div className="bg-green-400/10 text-green-400 p-2.5 rounded-lg border border-white/10">
                   <IdCard className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Full Name</p>
-                  <p className="text-base text-gray-900 font-medium">{teacher.fullName}</p>
+                  <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-1">Full Name</p>
+                  <p className="text-base text-fg-premium font-medium">{teacher.fullName}</p>
                 </div>
               </div>
 
               {/* Date of Birth */}
               <div className="flex items-start gap-4">
-                <div className="bg-purple-50 text-purple-600 p-2.5 rounded-lg">
+                <div className="bg-purple-400/10 text-purple-400 p-2.5 rounded-lg border border-white/10">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Date of Birth</p>
-                  <p className="text-base text-gray-900 font-medium">{formatDate(teacher.dob)}</p>
+                  <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-1">Date of Birth</p>
+                  <p className="text-base text-fg-premium font-medium">{formatDate(teacher.dob)}</p>
                 </div>
               </div>
 
               {/* Address */}
               <div className="flex items-start gap-4">
-                <div className="bg-amber-50 text-amber-600 p-2.5 rounded-lg">
+                <div className="bg-amber-400/10 text-amber-400 p-2.5 rounded-lg border border-white/10">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Home Address</p>
-                  <p className="text-base text-gray-900 font-medium">{teacher.address}</p>
+                  <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-1">Home Address</p>
+                  <p className="text-base text-fg-premium font-medium">{teacher.address}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Teaching Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="glass-panel border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all">
+            <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-blue-400/10 to-indigo-400/10">
               <div className="flex items-center gap-2">
-                <GraduationCap className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Teaching Information</h3>
+                <GraduationCap className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Teaching Information</h3>
               </div>
             </div>
             <div className="p-6 space-y-5">
               {/* Subjects */}
               <div className="flex items-start gap-4">
-                <div className="bg-blue-50 text-blue-600 p-2.5 rounded-lg">
+                <div className="bg-green-400/10 text-green-400 p-2.5 rounded-lg border border-white/10">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Subjects</p>
+                  <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-2">Subjects</p>
                   <div className="flex flex-wrap gap-2">
                     {teacher.subjectIds && teacher.subjectIds.length > 0 ? (
                       teacher.subjectIds.map((subject, idx) => (
                         <Badge 
                           key={idx}
-                          className="bg-blue-100 text-blue-700 border-blue-200"
+                          className="bg-green-400/20 text-green-400 border-green-400/50"
                         >
                           {SUBJECTS_MAP[subject] || subject}
                         </Badge>
                       ))
                     ) : (
-                      <span className="text-sm text-gray-400">No subjects assigned</span>
+                      <span className="text-sm text-fg-premium-muted">No subjects assigned</span>
                     )}
                   </div>
                 </div>
@@ -311,23 +314,23 @@ export default function TeacherDetailPage() {
 
               {/* Classes */}
               <div className="flex items-start gap-4">
-                <div className="bg-purple-50 text-purple-600 p-2.5 rounded-lg">
+                <div className="bg-purple-400/10 text-purple-400 p-2.5 rounded-lg border border-white/10">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Classes</p>
+                  <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-2">Classes</p>
                   <div className="flex flex-wrap gap-2">
                     {teacher.classIds && teacher.classIds.length > 0 ? (
                       teacher.classIds.map((cls, idx) => (
                         <Badge 
                           key={idx}
-                          className="bg-purple-100 text-purple-700 border-purple-200"
+                          className="bg-purple-400/20 text-purple-400 border-purple-400/50"
                         >
                           {CLASSES_MAP[cls] || cls}
                         </Badge>
                       ))
                     ) : (
-                      <span className="text-sm text-gray-400">No classes assigned</span>
+                      <span className="text-sm text-fg-premium-muted">No classes assigned</span>
                     )}
                   </div>
                 </div>
@@ -336,34 +339,34 @@ export default function TeacherDetailPage() {
           </div>
 
           {/* Record Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow lg:col-span-2">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-slate-50">
+          <div className="glass-panel border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all lg:col-span-2">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-gray-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Record Timestamps</h3>
+                <Clock className="w-5 h-5 text-fg-premium" />
+                <h3 className="text-lg font-semibold text-fg-premium">Record Timestamps</h3>
               </div>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Created At */}
                 <div className="flex items-start gap-4">
-                  <div className="bg-blue-50 text-blue-600 p-2.5 rounded-lg">
+                  <div className="bg-blue-400/10 text-blue-400 p-2.5 rounded-lg border border-white/10">
                     <Calendar className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Profile Created</p>
-                    <p className="text-base text-gray-900 font-medium">{formatDate(teacher.createdAt)}</p>
+                    <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-1">Profile Created</p>
+                    <p className="text-base text-fg-premium font-medium">{formatDate(teacher.createdAt)}</p>
                   </div>
                 </div>
 
                 {/* Last Updated */}
                 <div className="flex items-start gap-4">
-                  <div className="bg-green-50 text-green-600 p-2.5 rounded-lg">
+                  <div className="bg-green-400/10 text-green-400 p-2.5 rounded-lg border border-white/10">
                     <Calendar className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Last Updated</p>
-                    <p className="text-base text-gray-900 font-medium">{formatDate(teacher.updatedAt)}</p>
+                    <p className="text-xs font-medium text-fg-premium-muted uppercase tracking-wider mb-1">Last Updated</p>
+                    <p className="text-base text-fg-premium font-medium">{formatDate(teacher.updatedAt)}</p>
                   </div>
                 </div>
               </div>
@@ -374,10 +377,10 @@ export default function TeacherDetailPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="glass-panel border-white/10 sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Delete Teacher</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-fg-premium">Delete Teacher</DialogTitle>
+            <DialogDescription className="text-fg-premium-muted">
               Are you sure you want to delete {teacher.fullName}? This action cannot be undone and will also remove their login credentials.
             </DialogDescription>
           </DialogHeader>
@@ -385,13 +388,14 @@ export default function TeacherDetailPage() {
             <Button
               variant="outline"
               onClick={() => setDeleteDialog(false)}
+              className="border-white/10 text-fg-premium hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
-              variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
+              className="bg-red-500/80 hover:bg-red-600 text-white"
             >
               {deleting ? 'Deleting...' : 'Delete'}
             </Button>

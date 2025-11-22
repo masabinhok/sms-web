@@ -222,10 +222,10 @@ export default function EditTeacherPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30 flex items-center justify-center p-6">
-        <div className="bg-white rounded-xl p-8 shadow-lg flex items-center gap-3">
-          <div className="animate-spin rounded-full h-6 w-6 border-2 border-green-600 border-t-transparent"></div>
-          <span className="text-gray-700 font-medium">Loading teacher details...</span>
+      <div className="min-h-screen bg-bg-premium flex items-center justify-center p-6">
+        <div className="glass-panel rounded-xl p-8 shadow-2xl flex items-center gap-3 border-white/10">
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-green-500 border-t-transparent"></div>
+          <span className="text-fg-premium font-medium">Loading teacher details...</span>
         </div>
       </div>
     )
@@ -253,9 +253,9 @@ export default function EditTeacherPage() {
 
     return (
       <div>
-        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-          {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-          {label} {required && <span className="text-red-500">*</span>}
+        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+          {Icon && <Icon className="w-4 h-4 text-fg-premium-muted" />}
+          {label} {required && <span className="text-red-400">*</span>}
         </Label>
         <div className="relative">
           <Input
@@ -266,14 +266,14 @@ export default function EditTeacherPage() {
             onBlur={() => handleBlur(name)}
             placeholder={placeholder}
             maxLength={maxLength}
-            className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
+            className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted ${hasError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : ''} ${isValid ? 'border-green-400 focus:border-green-500 focus:ring-green-500/20' : ''}`}
           />
           {isValid && (
-            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
           )}
         </div>
         {hasError && (
-          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
             <AlertCircle className="w-4 h-4" />
             <span>{errors[name as keyof FormErrors]}</span>
           </div>
@@ -283,7 +283,7 @@ export default function EditTeacherPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
+    <div className="min-h-screen bg-bg-premium">
       <div className="p-4 md:p-8 space-y-6 max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -292,14 +292,14 @@ export default function EditTeacherPage() {
               variant="outline"
               size="sm"
               onClick={() => router.push(`/admin/teachers/${teacherId}`)}
-              className="hover:bg-gray-100"
+              className="glass-panel border-white/10 text-fg-premium hover:bg-white/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Profile
             </Button>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Edit Teacher Profile</h1>
-              <p className="text-gray-600 mt-1">Update teacher information</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-fg-premium">Edit Teacher Profile</h1>
+              <p className="text-fg-premium-muted mt-1">Update teacher information</p>
             </div>
           </div>
         </div>
@@ -307,11 +307,11 @@ export default function EditTeacherPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
+                <User className="w-5 h-5 text-green-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Personal Information</h3>
               </div>
             </div>
             <div className="p-6 space-y-5">
@@ -355,18 +355,18 @@ export default function EditTeacherPage() {
                 />
 
                 <div>
-                  <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <UserCircle className="w-4 h-4 text-gray-500" />
+                  <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+                    <UserCircle className="w-4 h-4 text-fg-premium-muted" />
                     Gender
                   </Label>
                   <Select 
                     value={formData.gender || ''} 
                     onValueChange={(value) => handleFieldChange('gender', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-fg-premium">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-panel border-white/10">
                       <SelectItem value="Male">Male</SelectItem>
                       <SelectItem value="Female">Female</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
@@ -375,9 +375,9 @@ export default function EditTeacherPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <MapPin className="w-4 h-4 text-gray-500" />
-                    Home Address <span className="text-red-500">*</span>
+                  <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+                    <MapPin className="w-4 h-4 text-fg-premium-muted" />
+                    Home Address <span className="text-red-400">*</span>
                   </Label>
                   <Textarea
                     id="address"
@@ -387,15 +387,15 @@ export default function EditTeacherPage() {
                     placeholder="Enter complete home address"
                     rows={3}
                     maxLength={200}
-                    className={touched.has('address') && errors.address ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}
+                    className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted ${touched.has('address') && errors.address ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : ''}`}
                   />
                   {touched.has('address') && errors.address && (
-                    <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                    <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
                       <AlertCircle className="w-4 h-4" />
                       <span>{errors.address}</span>
                     </div>
                   )}
-                  <p className="mt-1.5 text-xs text-gray-500">
+                  <p className="mt-1.5 text-xs text-fg-premium-muted">
                     {(formData.address?.length || 0)}/200 characters
                   </p>
                 </div>
@@ -404,15 +404,15 @@ export default function EditTeacherPage() {
           </div>
 
           {/* Teaching Subjects */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Teaching Subjects</h3>
+                <BookOpen className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Teaching Subjects</h3>
               </div>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-sm text-gray-600">Select the subjects this teacher can teach</p>
+              <p className="text-sm text-fg-premium-muted">Select the subjects this teacher can teach</p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {SUBJECTS.map((subject) => (
                   <button
@@ -421,8 +421,8 @@ export default function EditTeacherPage() {
                     onClick={() => toggleSubject(subject.value)}
                     className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
                       selectedSubjects.includes(subject.value)
-                        ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 text-green-700 shadow-md'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50/50'
+                        ? 'border-green-500 bg-green-500/20 text-green-300 shadow-md'
+                        : 'border-white/10 bg-white/5 text-fg-premium hover:border-green-400 hover:bg-green-400/10'
                     }`}
                   >
                     {subject.label}
@@ -430,7 +430,7 @@ export default function EditTeacherPage() {
                 ))}
               </div>
               {selectedSubjects.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 text-sm text-green-400 bg-green-500/10 rounded-lg p-3 border border-green-500/20">
                   <CheckCircle className="w-4 h-4" />
                   <span>Selected: {selectedSubjects.length} subject{selectedSubjects.length !== 1 ? 's' : ''}</span>
                 </div>
@@ -439,15 +439,15 @@ export default function EditTeacherPage() {
           </div>
 
           {/* Teaching Classes */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <GraduationCap className="w-5 h-5 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Teaching Classes</h3>
+                <GraduationCap className="w-5 h-5 text-purple-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Teaching Classes</h3>
               </div>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-sm text-gray-600">Select the classes this teacher can teach</p>
+              <p className="text-sm text-fg-premium-muted">Select the classes this teacher can teach</p>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-6">
                 {CLASSES.map((classItem) => (
                   <button
@@ -456,8 +456,8 @@ export default function EditTeacherPage() {
                     onClick={() => toggleClass(classItem.value)}
                     className={`rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all transform hover:scale-105 ${
                       selectedClasses.includes(classItem.value)
-                        ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 text-purple-700 shadow-md'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50/50'
+                        ? 'border-purple-500 bg-purple-500/20 text-purple-300 shadow-md'
+                        : 'border-white/10 bg-white/5 text-fg-premium hover:border-purple-400 hover:bg-purple-400/10'
                     }`}
                   >
                     {classItem.label}
@@ -465,7 +465,7 @@ export default function EditTeacherPage() {
                 ))}
               </div>
               {selectedClasses.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-purple-600 bg-purple-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 text-sm text-purple-400 bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
                   <CheckCircle className="w-4 h-4" />
                   <span>Selected: {selectedClasses.length} class{selectedClasses.length !== 1 ? 'es' : ''}</span>
                 </div>
@@ -474,17 +474,17 @@ export default function EditTeacherPage() {
           </div>
 
           {/* Actions */}
-          <div className="sticky bottom-0 bg-white rounded-xl border border-gray-200 shadow-lg p-6">
+          <div className="sticky bottom-0 glass-panel rounded-xl border-white/10 shadow-2xl p-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-fg-premium-muted">
                 {Object.keys(errors).length === 0 && (
-                  <div className="flex items-center gap-1.5 text-green-600">
+                  <div className="flex items-center gap-1.5 text-green-400">
                     <CheckCircle className="w-4 h-4" />
                     <span>Ready to save</span>
                   </div>
                 )}
                 {Object.keys(errors).length > 0 && (
-                  <div className="flex items-center gap-1.5 text-red-600">
+                  <div className="flex items-center gap-1.5 text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{Object.keys(errors).length} validation error{Object.keys(errors).length !== 1 ? 's' : ''}</span>
                   </div>
@@ -495,7 +495,7 @@ export default function EditTeacherPage() {
                   type="button"
                   variant="outline"
                   onClick={() => router.push(`/admin/teachers/${teacherId}`)}
-                  className="min-w-[100px]"
+                  className="min-w-[100px] glass-panel border-white/10 text-fg-premium hover:bg-white/10"
                 >
                   <X className="w-4 h-4 mr-2" />
                   Cancel
@@ -503,7 +503,7 @@ export default function EditTeacherPage() {
                 <Button
                   type="submit"
                   disabled={submitting || Object.keys(errors).length > 0}
-                  className="min-w-[140px] bg-green-600 hover:bg-green-700"
+                  className="min-w-[140px] bg-gradient-to-r from-green-600 to-emerald-600 hover:opacity-90"
                 >
                   {submitting ? (
                     <>

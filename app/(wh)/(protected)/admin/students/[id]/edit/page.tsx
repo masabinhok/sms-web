@@ -203,10 +203,10 @@ export default function EditStudentPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 flex items-center justify-center p-6">
-        <div className="bg-white rounded-xl p-8 shadow-lg flex items-center gap-3">
-          <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
-          <span className="text-gray-700 font-medium">Loading student details...</span>
+      <div className="min-h-screen bg-bg-premium flex items-center justify-center p-6">
+        <div className="glass-panel rounded-xl p-8 shadow-2xl flex items-center gap-3 border-white/10">
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-accent-primary border-t-transparent"></div>
+          <span className="text-fg-premium font-medium">Loading student details...</span>
         </div>
       </div>
     )
@@ -234,9 +234,9 @@ export default function EditStudentPage() {
 
     return (
       <div>
-        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-          {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-          {label} {required && <span className="text-red-500">*</span>}
+        <Label htmlFor={name} className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+          {Icon && <Icon className="w-4 h-4 text-fg-premium-muted" />}
+          {label} {required && <span className="text-red-400">*</span>}
         </Label>
         <div className="relative">
           <Input
@@ -247,14 +247,14 @@ export default function EditStudentPage() {
             onBlur={() => handleBlur(name)}
             placeholder={placeholder}
             maxLength={maxLength}
-            className={`${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''} ${isValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' : ''}`}
+            className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted ${hasError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : ''} ${isValid ? 'border-green-400 focus:border-green-500 focus:ring-green-500/20' : ''}`}
           />
           {isValid && (
-            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+            <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
           )}
         </div>
         {hasError && (
-          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+          <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
             <AlertCircle className="w-4 h-4" />
             <span>{errors[name as keyof FormErrors]}</span>
           </div>
@@ -264,7 +264,7 @@ export default function EditStudentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+    <div className="min-h-screen bg-bg-premium">
       <div className="p-4 md:p-8 space-y-6 max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -273,14 +273,14 @@ export default function EditStudentPage() {
               variant="outline"
               size="sm"
               onClick={() => router.push(`/admin/students/${studentId}`)}
-              className="hover:bg-gray-100"
+              className="glass-panel border-white/10 text-fg-premium hover:bg-white/10"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Profile
             </Button>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Edit Student Profile</h1>
-              <p className="text-gray-600 mt-1">Update student information</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-fg-premium">Edit Student Profile</h1>
+              <p className="text-fg-premium-muted mt-1">Update student information</p>
             </div>
           </div>
         </div>
@@ -288,11 +288,11 @@ export default function EditStudentPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
+                <User className="w-5 h-5 text-accent-primary" />
+                <h3 className="text-lg font-semibold text-fg-premium">Personal Information</h3>
               </div>
             </div>
             <div className="p-6 space-y-5">
@@ -324,18 +324,18 @@ export default function EditStudentPage() {
                   required
                 />
                 <div>
-                  <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <UserCircle className="w-4 h-4 text-gray-500" />
+                  <Label htmlFor="gender" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+                    <UserCircle className="w-4 h-4 text-fg-premium-muted" />
                     Gender
                   </Label>
                   <Select 
                     value={formData.gender || ''} 
                     onValueChange={(value) => handleFieldChange('gender', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/5 border-white/10 text-fg-premium">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="glass-panel border-white/10">
                       <SelectItem value="Male">Male</SelectItem>
                       <SelectItem value="Female">Female</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
@@ -347,11 +347,11 @@ export default function EditStudentPage() {
           </div>
 
           {/* Academic Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <School className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Academic Information</h3>
+                <School className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Academic Information</h3>
               </div>
             </div>
             <div className="p-6">
@@ -369,11 +369,11 @@ export default function EditStudentPage() {
           </div>
 
           {/* Guardian Information */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-teal-50 to-cyan-50">
+          <div className="glass-panel rounded-xl border-white/10 shadow-xl overflow-hidden hover:shadow-2xl transition-shadow">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/5">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-teal-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Guardian Information</h3>
+                <Users className="w-5 h-5 text-teal-400" />
+                <h3 className="text-lg font-semibold text-fg-premium">Guardian Information</h3>
               </div>
             </div>
             <div className="p-6 space-y-5">
@@ -398,8 +398,8 @@ export default function EditStudentPage() {
               </div>
 
               <div>
-                <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                  <MapPin className="w-4 h-4 text-gray-500" />
+                <Label htmlFor="address" className="mb-2 flex items-center gap-2 text-sm font-medium text-fg-premium">
+                  <MapPin className="w-4 h-4 text-fg-premium-muted" />
                   Home Address
                 </Label>
                 <Textarea
@@ -410,15 +410,15 @@ export default function EditStudentPage() {
                   placeholder="Enter complete home address"
                   rows={3}
                   maxLength={200}
-                  className={touched.has('address') && errors.address ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}
+                  className={`bg-white/5 border-white/10 text-fg-premium placeholder:text-fg-premium-muted ${touched.has('address') && errors.address ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : ''}`}
                 />
                 {touched.has('address') && errors.address && (
-                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+                  <div className="mt-1.5 flex items-center gap-1 text-sm text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{errors.address}</span>
                   </div>
                 )}
-                <p className="mt-1.5 text-xs text-gray-500">
+                <p className="mt-1.5 text-xs text-fg-premium-muted">
                   {(formData.address?.length || 0)}/200 characters
                 </p>
               </div>
@@ -426,17 +426,17 @@ export default function EditStudentPage() {
           </div>
 
           {/* Actions */}
-          <div className="sticky bottom-0 bg-white rounded-xl border border-gray-200 shadow-lg p-6">
+          <div className="sticky bottom-0 glass-panel rounded-xl border-white/10 shadow-2xl p-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-fg-premium-muted">
                 {hasChanges() && Object.keys(errors).length === 0 && (
-                  <div className="flex items-center gap-1.5 text-green-600">
+                  <div className="flex items-center gap-1.5 text-green-400">
                     <CheckCircle className="w-4 h-4" />
                     <span>Ready to save</span>
                   </div>
                 )}
                 {Object.keys(errors).length > 0 && (
-                  <div className="flex items-center gap-1.5 text-red-600">
+                  <div className="flex items-center gap-1.5 text-red-400">
                     <AlertCircle className="w-4 h-4" />
                     <span>{Object.keys(errors).length} validation error{Object.keys(errors).length !== 1 ? 's' : ''}</span>
                   </div>
@@ -447,7 +447,7 @@ export default function EditStudentPage() {
                   type="button"
                   variant="outline"
                   onClick={() => router.push(`/admin/students/${studentId}`)}
-                  className="min-w-[100px]"
+                  className="min-w-[100px] glass-panel border-white/10 text-fg-premium hover:bg-white/10"
                 >
                   <X className="w-4 h-4 mr-2" />
                   Cancel
@@ -455,7 +455,7 @@ export default function EditStudentPage() {
                 <Button
                   type="submit"
                   disabled={submitting || Object.keys(errors).length > 0}
-                  className="min-w-[140px] bg-blue-600 hover:bg-blue-700"
+                  className="min-w-[140px] bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90"
                 >
                   {submitting ? (
                     <>
